@@ -60,6 +60,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Siswa Routes
     Route::middleware(['role:siswa'])->prefix('siswa')->name('siswa.')->group(function () {
-        Route::get('/dashboard', [SiswaDashboard::class, 'index'])->name('dashboard');
+        Route::get('/dashboard', [\App\Http\Controllers\Siswa\DashboardController::class, 'index'])->name('dashboard');
+
+        // Pembelajaran
+        Route::get('/pembelajaran', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'index'])->name('pembelajaran.index');
+        Route::get('/pembelajaran/{jadwal}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'show'])->name('pembelajaran.show');
+        Route::get('/pertemuan/{pertemuan}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'pertemuan'])->name('pembelajaran.pertemuan');
     });
 });

@@ -91,42 +91,14 @@
                         </li>
                     @endcan
 
-                    <li class="menu-item">
-                        <a href="#" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-calendar"></i>
+                    <li class="menu-item {{ request()->routeIs('siswa.pembelajaran.*') ? 'active' : '' }}">
+                        <a href="{{ route('siswa.pembelajaran.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-collection"></i>
                             <div>Jadwal Pelajaran</div>
                         </a>
                     </li>
 
-                    <!-- Pembelajaran -->
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Pembelajaran</span></li>
 
-                    @can('lihat pendahuluan')
-                        <li class="menu-item">
-                            <a href="#" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-info-circle"></i>
-                                <div>Pendahuluan</div>
-                            </a>
-                        </li>
-                    @endcan
-
-                    @can('lihat pertemuan')
-                        <li class="menu-item">
-                            <a href="#" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-time"></i>
-                                <div>Pertemuan</div>
-                            </a>
-                        </li>
-                    @endcan
-
-                    @can('lihat materi')
-                        <li class="menu-item">
-                            <a href="#" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-file"></i>
-                                <div>Materi Pembelajaran</div>
-                            </a>
-                        </li>
-                    @endcan
 
                     <!-- Tugas & Evaluasi -->
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Tugas & Evaluasi</span>

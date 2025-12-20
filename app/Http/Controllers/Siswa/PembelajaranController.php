@@ -1,0 +1,86 @@
+<?php
+
+namespace App\Http\Controllers\Siswa;
+
+use App\Http\Controllers\Controller;
+use App\Models\GuruMengajar;
+use App\Models\Pertemuan;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class PembelajaranController extends Controller
+{
+    /**
+     * Menampilkan daftar mata pelajaran yang diikuti siswa.
+     * Berdasarkan Kelas yang sedang aktif diikuti siswa.
+     */
+    public function index()
+    {
+        $siswa = User::with('kelas')->find(Auth::id());
+
+        // Ambil kelas terakhir/aktif siswa (Asumsi 1 siswa 1 kelas aktif per semester)
+        // Logikanya bisa dikembangkan jika siswa punya history kelas.
+        // Kita ambil kelas yang paling baru daftarnya (descending ID pivot)
+        $kelasSiswa = $siswa->kelas()->orderByPivot('id', 'desc')->first();
+
+        $jadwalPelajaran = collect();
+        $kelas = null;
+
+        if ($kelasSiswa) {
+            $kelas = $kelasSiswa;
+            // Ambil semua jadwal pelajaran untuk kelas ini
+            $jadwalPelajaran = GuruMengajar::with(['mataPelajaran', 'guru'])
+                ->where('kelas_id', $kelas->id)
+                ->where('tahun_ajaran', '2024/2025') // Sebaiknya dinamis
+                ->orderBy('hari')
+                ->get();
+        }
+
+        return view('siswa.pembelajaran.index', compact('jadwalPelajaran', 'kelas'));
+    }
+
+    /**
+     * Menampilkan detail mata pelajaran (List Pertemuan).
+     */
+    public function show(GuruMengajar $jadwal)
+    {
+        // Validasi: Pastikan siswa ini anggota dari kelas jadwal ini
+        $siswa = Auth::user();
+        $isAnggotaKelas = $siswa->kelas()->where('kelas.id', $jadwal->kelas_id)->exists();
+
+        if (!$isAnggotaKelas) {
+            abort(403, 'Anda tidak terdaftar di kelas ini.');
+        }
+
+        $jadwal->load(['mataPelajaran', 'guru', 'pertemuan' => function($q) {
+            // Tampilkan pertemuan yang statusnya berlangsung atau selesai, atau dijadwalkan tapi aktif
+            $q->where('aktif', true)
+              ->orderBy('pertemuan_ke');
+        }]);
+
+        return view('siswa.pembelajaran.show', compact('jadwal'));
+    }
+
+    /**
+     * Menampilkan detail pertemuan dan materi (Read-only).
+     */
+    public function pertemuan(Pertemuan $pertemuan)
+    {
+        // Validasi akses siswa ke pertemuan ini via Jadwal -> Kelas
+        $siswa = Auth::user();
+        $jadwal = $pertemuan->guruMengajar;
+        $isAnggotaKelas = $siswa->kelas()->where('kelas.id', $jadwal->kelas_id)->exists();
+
+        if (!$isAnggotaKelas) {
+            abort(403, 'Anda tidak memiliki akses ke pertemuan ini.');
+        }
+
+        // Load materi, tugas, dll
+        $pertemuan->load(['materiPembelajaran' => function($q) {
+            $q->where('aktif', true)->orderBy('urutan');
+        }, 'guruMengajar.mataPelajaran', 'guruMengajar.guru']);
+
+        return view('siswa.pembelajaran.pertemuan', compact('pertemuan'));
+    }
+}
