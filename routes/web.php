@@ -107,10 +107,20 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/tugas', [\App\Http\Controllers\Siswa\TugasController::class, 'store'])->name('tugas.store');
 
         // Kuis & Ujian
+        // Kuis
         Route::get('kuis/{kuis}', [\App\Http\Controllers\Siswa\KuisController::class, 'show'])->name('kuis.show');
         Route::post('kuis/{kuis}/start', [\App\Http\Controllers\Siswa\KuisController::class, 'start'])->name('kuis.start');
-        Route::get('ujian/{jawabanKuis}', [\App\Http\Controllers\Siswa\KuisController::class, 'kerjakan'])->name('kuis.kerjakan');
-        Route::post('ujian/simpan', [\App\Http\Controllers\Siswa\KuisController::class, 'simpanJawaban'])->name('kuis.simpan');
-        Route::post('ujian/{jawabanKuis}/finish', [\App\Http\Controllers\Siswa\KuisController::class, 'finish'])->name('kuis.finish');
+        Route::get('kuis/do/{jawabanKuis}', [\App\Http\Controllers\Siswa\KuisController::class, 'kerjakan'])->name('kuis.kerjakan');
+        Route::post('kuis/do/simpan', [\App\Http\Controllers\Siswa\KuisController::class, 'simpanJawaban'])->name('kuis.simpan');
+        Route::post('kuis/do/{jawabanKuis}/finish', [\App\Http\Controllers\Siswa\KuisController::class, 'finish'])->name('kuis.finish');
+
+        // Ujian (Exam)
+        Route::get('ujian', [\App\Http\Controllers\Siswa\UjianController::class, 'index'])->name('ujian.index');
+        Route::get('ujian/{jadwal}', [\App\Http\Controllers\Siswa\UjianController::class, 'show'])->name('ujian.show');
+        Route::post('ujian/{jadwal}/start', [\App\Http\Controllers\Siswa\UjianController::class, 'start'])->name('ujian.start');
+
+        Route::get('ujian/do/{jawabanUjian}', [\App\Http\Controllers\Siswa\UjianController::class, 'kerjakan'])->name('ujian.kerjakan');
+        Route::post('ujian/do/simpan', [\App\Http\Controllers\Siswa\UjianController::class, 'simpanJawaban'])->name('ujian.simpan');
+        Route::post('ujian/do/{jawabanUjian}/finish', [\App\Http\Controllers\Siswa\UjianController::class, 'finish'])->name('ujian.finish');
     });
 });
