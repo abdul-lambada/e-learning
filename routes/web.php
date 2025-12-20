@@ -60,6 +60,9 @@ Route::middleware(['auth'])->group(function () {
         // Tugas
         Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class);
         Route::post('tugas/nilai/{pengumpulan}', [\App\Http\Controllers\Guru\TugasController::class, 'nilai'])->name('tugas.nilai');
+
+        Route::resource('kuis', \App\Http\Controllers\Guru\KuisController::class);
+        Route::resource('kuis.soal', \App\Http\Controllers\Guru\SoalKuisController::class)->shallow();
     });
 
     // Siswa Routes

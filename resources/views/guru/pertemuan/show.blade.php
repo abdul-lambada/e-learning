@@ -272,11 +272,73 @@
                     </div>
 
                     <!-- Tab Kuis (Placeholder) -->
+                    <!-- Tab Kuis -->
                     <div class="tab-pane fade" id="navs-kuis" role="tabpanel">
-                        <div class="text-center py-5">
-                            <i class="bx bx-edit" style="font-size: 3rem; color: #d1d5db;"></i>
-                            <p class="mt-2 text-muted">Fitur Kuis belum tersedia.</p>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">Daftar Kuis & Ujian</h5>
+                            <a href="{{ route('guru.kuis.create', ['pertemuan_id' => $pertemuan->id]) }}"
+                                class="btn btn-primary btn-sm">
+                                <i class="bx bx-plus me-1"></i> Buat Kuis Baru
+                            </a>
                         </div>
+
+                        @forelse($pertemuan->kuis as $kuis)
+                            <div class="card mb-3 border shadow-none">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <h5 class="mb-1">{{ $kuis->judul_kuis }}</h5>
+                                                @if (!$kuis->aktif)
+                                                    <span class="badge bg-label-secondary">Non-Aktif</span>
+                                                @endif
+                                            </div>
+                                            <p class="mb-2 text-muted small">
+                                                {{ $kuis->deskripsi ?? 'Tidak ada deskripsi' }}</p>
+                                            <div class="d-flex gap-3 text-muted small flex-wrap">
+                                                <span><i class="bx bx-time me-1"></i> {{ $kuis->durasi_menit }}
+                                                    Menit</span>
+                                                <span><i class="bx bx-list-check me-1"></i> {{ $kuis->soalKuis->count() }}
+                                                    Soal</span>
+                                                <span><i class="bx bx-calendar me-1"></i>
+                                                    {{ \Carbon\Carbon::parse($kuis->tanggal_mulai)->format('d M H:i') }}</span>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-0" type="button" id="kuisOpt{{ $kuis->id }}"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end"
+                                                aria-labelledby="kuisOpt{{ $kuis->id }}">
+                                                <a class="dropdown-item"
+                                                    href="{{ route('guru.kuis.show', $kuis->id) }}">Kelola Soal</a>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('guru.kuis.edit', $kuis->id) }}">Edit Pengaturan</a>
+                                                <form action="{{ route('guru.kuis.destroy', $kuis->id) }}" method="POST"
+                                                    onsubmit="return confirm('Hapus kuis ini? Semua soal dan nilai siswa akan hilang.')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="dropdown-item text-danger">Hapus</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <a href="{{ route('guru.kuis.show', $kuis->id) }}"
+                                            class="btn btn-sm btn-outline-primary">
+                                            <i class="bx bx-cog me-1"></i> Kelola Kuis & Soal
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center py-4">
+                                <i class="bx bx-edit" style="font-size: 3rem; color: #d1d5db;"></i>
+                                <p class="mt-2 text-muted">Belum ada kuis yang dibuat.</p>
+                            </div>
+                        @endforelse
                     </div>
                 </div>
             </div>

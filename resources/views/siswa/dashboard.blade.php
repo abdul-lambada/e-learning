@@ -43,9 +43,8 @@
                                 </div>
                             </div>
                             <span class="fw-semibold d-block mb-1">Tugas Aktif</span>
-                            <h3 class="card-title mb-2">0</h3>
-                            <small class="text-danger fw-semibold"><i class="bx bx-down-arrow-alt"></i> Belum
-                                Dikerjakan</small>
+                            <h3 class="card-title mb-2">{{ $tugasPending->count() }}</h3>
+                            <small class="text-danger fw-semibold"><i class="bx bx-error-circle"></i> Segera</small>
                         </div>
                     </div>
                 </div>
@@ -57,10 +56,9 @@
                                     <i class='bx bxs-edit' style="font-size: 40px; color: #03c3ec;"></i>
                                 </div>
                             </div>
-                            <span class="fw-semibold d-block mb-1">Kuis Tersedia</span>
-                            <h3 class="card-title mb-2">0</h3>
-                            <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> Siap
-                                Dikerjakan</small>
+                            <span class="fw-semibold d-block mb-1">Mata Pelajaran</span>
+                            <h3 class="card-title mb-2">{{ $kelas ? $kelas->guruMengajar()->count() : 0 }}</h3>
+                            <small class="text-info fw-semibold">Total Mapel</small>
                         </div>
                     </div>
                 </div>
@@ -75,27 +73,12 @@
                 <div class="card-body">
                     <div class="card-title d-flex align-items-start justify-content-between">
                         <div class="avatar flex-shrink-0">
-                            <i class='bx bxs-book' style="font-size: 40px; color: #ffab00;"></i>
-                        </div>
-                    </div>
-                    <span class="d-block mb-1">Mata Pelajaran</span>
-                    <h3 class="card-title text-nowrap mb-2">0</h3>
-                    <small class="text-muted">Mapel Aktif</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
                             <i class='bx bxs-check-circle' style="font-size: 40px; color: #28c76f;"></i>
                         </div>
                     </div>
-                    <span class="d-block mb-1">Kehadiran</span>
-                    <h3 class="card-title text-nowrap mb-2">0%</h3>
-                    <small class="text-muted">Persentase Hadir</small>
+                    <span class="d-block mb-1">Jadwal Hari Ini</span>
+                    <h3 class="card-title text-nowrap mb-2">{{ $jadwalHariIni->count() }}</h3>
+                    <small class="text-muted">Sesi</small>
                 </div>
             </div>
         </div>
@@ -108,9 +91,24 @@
                             <i class='bx bxs-bar-chart-alt-2' style="font-size: 40px; color: #ea5455;"></i>
                         </div>
                     </div>
-                    <span class="d-block mb-1">Rata-rata Nilai</span>
-                    <h3 class="card-title text-nowrap mb-2">0</h3>
-                    <small class="text-muted">Dari semua mapel</small>
+                    <span class="d-block mb-1">Nilai Rata-rata</span>
+                    <h3 class="card-title text-nowrap mb-2">-</h3>
+                    <small class="text-muted">Coming Soon</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="card-title d-flex align-items-start justify-content-between">
+                        <div class="avatar flex-shrink-0">
+                            <i class='bx bxs-trophy' style="font-size: 40px; color: #ffab00;"></i>
+                        </div>
+                    </div>
+                    <span class="d-block mb-1">Ranking</span>
+                    <h3 class="card-title text-nowrap mb-2">-</h3>
+                    <small class="text-muted">Di Kelas</small>
                 </div>
             </div>
         </div>
@@ -124,7 +122,7 @@
                         </div>
                     </div>
                     <span class="d-block mb-1">Ujian Mendatang</span>
-                    <h3 class="card-title text-nowrap mb-2">0</h3>
+                    <h3 class="card-title text-nowrap mb-2">-</h3>
                     <small class="text-muted">Jadwal Ujian</small>
                 </div>
             </div>
@@ -133,38 +131,41 @@
 
     <!-- Content Row -->
     <div class="row">
-        <!-- Tugas Terbaru -->
+        <!-- Tugas Terbaru (Deadline Terdekat) -->
         <div class="col-md-6 col-lg-8 mb-4">
             <div class="card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title m-0 me-2">Tugas Terbaru</h5>
+                    <h5 class="card-title m-0 me-2">Tugas Perlu Dikerjakan</h5>
                     <a href="#" class="btn btn-sm btn-primary">Lihat Semua</a>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-info" role="alert">
-                        <i class="bx bx-info-circle me-2"></i>
-                        Belum ada tugas yang tersedia saat ini.
-                    </div>
-
-                    <!-- Example Task Item (Hidden by default) -->
-                    <div class="d-none">
+                    @forelse($tugasPending as $tugas)
                         <ul class="p-0 m-0">
-                            <li class="d-flex mb-4 pb-1">
+                            <li class="d-flex mb-4 pb-1 border-bottom">
                                 <div class="avatar flex-shrink-0 me-3">
                                     <span class="avatar-initial rounded bg-label-warning"><i class="bx bx-task"></i></span>
                                 </div>
                                 <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
                                     <div class="me-2">
-                                        <h6 class="mb-0">Matematika - Tugas Bab 5</h6>
-                                        <small class="text-muted">Deadline: 25 Desember 2025</small>
+                                        <h6 class="mb-0">{{ $tugas->judul_tugas }}</h6>
+                                        <small class="text-muted">
+                                            {{ $tugas->pertemuan->guruMengajar->mataPelajaran->nama_mapel }} -
+                                            Deadline: {{ $tugas->tanggal_deadline->format('d M, H:i') }}
+                                        </small>
                                     </div>
-                                    <div class="user-progress">
-                                        <span class="badge bg-label-warning">Belum Dikerjakan</span>
+                                    <div class="user-progress text-end">
+                                        <a href="{{ route('siswa.tugas.show', $tugas->id) }}"
+                                            class="btn btn-sm btn-outline-warning">Kerjakan</a>
                                     </div>
                                 </div>
                             </li>
                         </ul>
-                    </div>
+                    @empty
+                        <div class="alert alert-success" role="alert">
+                            <i class="bx bx-check-circle me-2"></i>
+                            Hore! Tidak ada tugas yang mendesak.
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -176,26 +177,29 @@
                     <h5 class="card-title m-0">Jadwal Hari Ini</h5>
                 </div>
                 <div class="card-body">
-                    <div class="alert alert-info" role="alert">
-                        <i class="bx bx-info-circle me-2"></i>
-                        Tidak ada jadwal pelajaran hari ini.
-                    </div>
-
-                    <!-- Example Schedule (Hidden by default) -->
-                    <div class="d-none">
-                        <ul class="timeline">
-                            <li class="timeline-item timeline-item-transparent">
+                    @forelse($jadwalHariIni as $jadwal)
+                        <ul class="timeline mb-4">
+                            <li class="timeline-item timeline-item-transparent pb-3 border-left-dashed">
                                 <span class="timeline-point timeline-point-primary"></span>
-                                <div class="timeline-event">
+                                <div class="timeline-event pb-0">
                                     <div class="timeline-header mb-1">
-                                        <h6 class="mb-0">Matematika</h6>
-                                        <small class="text-muted">08:00 - 09:30</small>
+                                        <h6 class="mb-0">{{ $jadwal->mataPelajaran->nama_mapel }}</h6>
+                                        <small
+                                            class="text-muted">{{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }}
+                                            - {{ \Carbon\Carbon::parse($jadwal->jam_selesai)->format('H:i') }}</small>
                                     </div>
-                                    <p class="mb-0">Ruang: X IPA 1</p>
+                                    <p class="mb-0 small">{{ $jadwal->guru->nama_lengkap }}</p>
+                                    <a href="{{ route('siswa.pembelajaran.show', $jadwal->id) }}"
+                                        class="btn btn-xs btn-label-primary mt-2">Masuk</a>
                                 </div>
                             </li>
                         </ul>
-                    </div>
+                    @empty
+                        <div class="alert alert-info" role="alert">
+                            <i class="bx bx-info-circle me-2"></i>
+                            Libur / Tidak ada jadwal.
+                        </div>
+                    @endforelse
                 </div>
             </div>
         </div>
