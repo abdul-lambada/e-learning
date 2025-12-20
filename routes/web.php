@@ -59,6 +59,15 @@ Route::middleware(['auth'])->group(function () {
         // Materi (Resource tanpa index & show, karena diakses via Pertemuan)
         Route::resource('materi', \App\Http\Controllers\Guru\MateriController::class)->except(['index', 'show']);
 
+        // Pendahuluan
+        Route::get('pendahuluan', [\App\Http\Controllers\Guru\PendahuluanController::class, 'index'])->name('pendahuluan.index');
+        Route::get('pendahuluan/mapel/{mataPelajaran}', [\App\Http\Controllers\Guru\PendahuluanController::class, 'show'])->name('pendahuluan.show');
+        Route::get('pendahuluan/create/{mataPelajaran}', [\App\Http\Controllers\Guru\PendahuluanController::class, 'create'])->name('pendahuluan.create');
+        Route::post('pendahuluan', [\App\Http\Controllers\Guru\PendahuluanController::class, 'store'])->name('pendahuluan.store');
+        Route::get('pendahuluan/{pendahuluan}/edit', [\App\Http\Controllers\Guru\PendahuluanController::class, 'edit'])->name('pendahuluan.edit');
+        Route::put('pendahuluan/{pendahuluan}', [\App\Http\Controllers\Guru\PendahuluanController::class, 'update'])->name('pendahuluan.update');
+        Route::delete('pendahuluan/{pendahuluan}', [\App\Http\Controllers\Guru\PendahuluanController::class, 'destroy'])->name('pendahuluan.destroy');
+
         // Tugas
         Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class);
         Route::post('tugas/nilai/{pengumpulan}', [\App\Http\Controllers\Guru\TugasController::class, 'nilai'])->name('tugas.nilai');

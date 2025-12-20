@@ -115,7 +115,7 @@
 
                     @can('lihat pendahuluan')
                         <li class="menu-item">
-                            <a href="#" class="menu-link">
+                            <a href="{{ route('guru.pendahuluan.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-info-circle"></i>
                                 <div>Pendahuluan</div>
                             </a>
