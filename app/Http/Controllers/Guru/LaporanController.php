@@ -115,4 +115,24 @@ class LaporanController extends Controller
 
         return view('guru.laporan.absensi', compact('daftarKelas', 'selectedJadwal', 'dataAbsensi'));
     }
+
+    public function pembelajaran(Request $request)
+    {
+        /** @var \App\Models\User $guru */
+        $guru = Auth::user();
+
+        // Ambil data pertemuan (Jurnal Mengajar)
+        $jurnal = \App\Models\Pertemuan::whereHas('guruMengajar', function($q) use ($guru) {
+            $q->where('guru_id', $guru->id);
+        })
+        ->with(['guruMengajar.kelas', 'guruMengajar.mataPelajaran'])
+        ->withCount(['absensi as hadir_count' => function($q) {
+             $q->where('status', 'hadir');
+        }])
+        ->orderBy('tanggal_pertemuan', 'desc')
+        ->limit(50)
+        ->get();
+
+        return view('guru.laporan.pembelajaran', compact('jurnal'));
+    }
 }

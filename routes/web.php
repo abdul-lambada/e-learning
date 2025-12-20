@@ -48,6 +48,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [GuruDashboard::class, 'index'])->name('dashboard');
 
         // Manajemen Pembelajaran
+        Route::get('/siswa', [\App\Http\Controllers\Guru\SiswaController::class, 'index'])->name('siswa.index');
         Route::get('/jadwal', [\App\Http\Controllers\Guru\JadwalSayaController::class, 'index'])->name('jadwal.index');
         Route::get('/jadwal/{jadwal}', [\App\Http\Controllers\Guru\JadwalSayaController::class, 'show'])->name('jadwal.show');
 
@@ -73,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
         // Laporan
         Route::get('laporan/nilai', [\App\Http\Controllers\Guru\LaporanController::class, 'nilai'])->name('laporan.nilai');
         Route::get('laporan/absensi', [\App\Http\Controllers\Guru\LaporanController::class, 'absensi'])->name('laporan.absensi');
+        Route::get('laporan/pembelajaran', [\App\Http\Controllers\Guru\LaporanController::class, 'pembelajaran'])->name('laporan.pembelajaran');
     });
 
     // Siswa Routes

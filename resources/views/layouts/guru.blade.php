@@ -75,7 +75,7 @@
 
                     @can('lihat kelas')
                         <li class="menu-item">
-                            <a href="#" class="menu-link">
+                            <a href="{{ route('guru.jadwal.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-buildings"></i>
                                 <div>Kelas yang Diampu</div>
                             </a>
@@ -84,7 +84,7 @@
 
                     @can('lihat mata pelajaran')
                         <li class="menu-item">
-                            <a href="#" class="menu-link">
+                            <a href="{{ route('guru.jadwal.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-book"></i>
                                 <div>Mata Pelajaran</div>
                             </a>
@@ -93,7 +93,7 @@
 
                     @can('kelola siswa kelas')
                         <li class="menu-item">
-                            <a href="#" class="menu-link">
+                            <a href="{{ route('guru.siswa.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-group"></i>
                                 <div>Daftar Siswa</div>
                             </a>
@@ -303,7 +303,7 @@
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                    <a href="{{ route('guru.laporan.pembelajaran') }}" class="menu-link">
                                         <div>Laporan Pembelajaran</div>
                                     </a>
                                 </li>
