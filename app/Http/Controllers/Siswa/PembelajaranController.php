@@ -79,6 +79,8 @@ class PembelajaranController extends Controller
         // Load materi, tugas, dll
         $pertemuan->load(['materiPembelajaran' => function($q) {
             $q->where('aktif', true)->orderBy('urutan');
+        }, 'tugas' => function($q) {
+            $q->where('aktif', true);
         }, 'guruMengajar.mataPelajaran', 'guruMengajar.guru']);
 
         return view('siswa.pembelajaran.pertemuan', compact('pertemuan'));

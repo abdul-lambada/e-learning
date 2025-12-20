@@ -182,12 +182,93 @@
                         @endforelse
                     </div>
 
-                    <!-- Tab Tugas (Placeholder) -->
+                    <!-- Tab Tugas -->
                     <div class="tab-pane fade" id="navs-tugas" role="tabpanel">
-                        <div class="text-center py-5">
-                            <i class="bx bx-task" style="font-size: 3rem; color: #d1d5db;"></i>
-                            <p class="mt-2 text-muted">Fitur Tugas belum tersedia.</p>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">Daftar Tugas</h5>
+                            <a href="{{ route('guru.tugas.create', ['pertemuan_id' => $pertemuan->id]) }}"
+                                class="btn btn-primary btn-sm">
+                                <i class="bx bx-plus me-1"></i> Buat Tugas Baru
+                            </a>
                         </div>
+
+                        @if (session('success'))
+                            <div class="alert alert-success alert-dismissible mb-3" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
+                            </div>
+                        @endif
+
+                        @forelse($pertemuan->tugas as $tugas)
+                            <div class="card mb-3 border shadow-none">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start justify-content-between">
+                                        <div class="d-flex align-items-start">
+                                            <div class="avatar avatar-md me-3">
+                                                <span class="avatar-initial rounded bg-label-primary"><i
+                                                        class="bx bx-task"></i></span>
+                                            </div>
+                                            <div>
+                                                <h5 class="mb-1">
+                                                    <a href="{{ route('guru.tugas.show', $tugas->id) }}"
+                                                        class="text-body">
+                                                        {{ $tugas->judul_tugas }}
+                                                    </a>
+                                                </h5>
+                                                <p class="text-muted mb-2 small">{{ Str::limit($tugas->deskripsi, 100) }}
+                                                </p>
+
+                                                <div class="d-flex gap-2 text-muted small">
+                                                    <span><i class="bx bx-calendar me-1"></i> Deadline:
+                                                        <strong>{{ $tugas->tanggal_deadline->format('d M Y, H:i') }}</strong></span>
+                                                    @if ($tugas->upload_file)
+                                                        <span class="badge bg-label-secondary">File Upload</span>
+                                                    @endif
+                                                    @if ($tugas->upload_link)
+                                                        <span class="badge bg-label-info">Link</span>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="dropdown">
+                                            <button class="btn p-0" type="button" id="tugasOpt{{ $tugas->id }}"
+                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="bx bx-dots-vertical-rounded"></i>
+                                            </button>
+                                            <div class="dropdown-menu dropdown-menu-end"
+                                                aria-labelledby="tugasOpt{{ $tugas->id }}">
+                                                <a class="dropdown-item"
+                                                    href="{{ route('guru.tugas.show', $tugas->id) }}">
+                                                    <i class="bx bx-show me-1"></i> Lihat & Nilai
+                                                </a>
+                                                <a class="dropdown-item"
+                                                    href="{{ route('guru.tugas.edit', $tugas->id) }}">Edit</a>
+                                                <form action="{{ route('guru.tugas.destroy', $tugas->id) }}"
+                                                    method="POST"
+                                                    onsubmit="return confirm('Hapus tugas ini? Semua pengumpulan siswa akan terhapus.')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit"
+                                                        class="dropdown-item text-danger">Hapus</button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-3">
+                                        <a href="{{ route('guru.tugas.show', $tugas->id) }}"
+                                            class="btn btn-sm btn-outline-primary">
+                                            Lihat Pengumpulan
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        @empty
+                            <div class="text-center py-4">
+                                <i class="bx bx-task" style="font-size: 3rem; color: #d1d5db;"></i>
+                                <p class="mt-2 text-muted">Belum ada tugas yang dibuat.</p>
+                            </div>
+                        @endforelse
                     </div>
 
                     <!-- Tab Kuis (Placeholder) -->

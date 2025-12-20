@@ -56,6 +56,10 @@ Route::middleware(['auth'])->group(function () {
 
         // Materi (Resource tanpa index & show, karena diakses via Pertemuan)
         Route::resource('materi', \App\Http\Controllers\Guru\MateriController::class)->except(['index', 'show']);
+
+        // Tugas
+        Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class);
+        Route::post('tugas/nilai/{pengumpulan}', [\App\Http\Controllers\Guru\TugasController::class, 'nilai'])->name('tugas.nilai');
     });
 
     // Siswa Routes
@@ -66,5 +70,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pembelajaran', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'index'])->name('pembelajaran.index');
         Route::get('/pembelajaran/{jadwal}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'show'])->name('pembelajaran.show');
         Route::get('/pertemuan/{pertemuan}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'pertemuan'])->name('pembelajaran.pertemuan');
+
+        // Tugas Siswa
+        Route::get('/tugas/{tugas}', [\App\Http\Controllers\Siswa\TugasController::class, 'show'])->name('tugas.show');
+        Route::post('/tugas', [\App\Http\Controllers\Siswa\TugasController::class, 'store'])->name('tugas.store');
     });
 });

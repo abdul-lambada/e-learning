@@ -124,18 +124,42 @@
                     <h5 class="mb-0">Aktivitas</h5>
                 </div>
                 <div class="card-body">
-                    <!-- Tugas Placeholder -->
+                    <!-- Tugas List -->
                     <div class="d-flex mb-4 pb-1">
                         <div class="avatar flex-shrink-0 me-3">
                             <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-task"></i></span>
                         </div>
                         <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-0">Tugas</h6>
-                                <small class="text-muted">Tidak ada tugas</small>
-                            </div>
-                            <div class="user-progress">
-                                <small class="fw-semibold">0</small>
+                            <div class="me-2 w-100">
+                                <h6 class="mb-0">Tugas ({{ $pertemuan->tugas->count() }})</h6>
+                                @if ($pertemuan->tugas->count() > 0)
+                                    <ul class="list-unstyled mb-0 mt-2">
+                                        @foreach ($pertemuan->tugas as $tgs)
+                                            @php
+                                                // Check status (query ringan)
+                                                $isDone = \App\Models\PengumpulanTugas::where('tugas_id', $tgs->id)
+                                                    ->where('siswa_id', auth()->id())
+                                                    ->exists();
+                                                $color = $isDone ? 'success' : 'warning';
+                                                $icon = $isDone ? 'bx-check-circle' : 'bx-time';
+                                            @endphp
+                                            <li class="mb-2 w-100">
+                                                <a href="{{ route('siswa.tugas.show', $tgs->id) }}"
+                                                    class="text-body d-flex align-items-center w-100 justify-content-between">
+                                                    <span class="d-flex align-items-center">
+                                                        <i
+                                                            class="bx {{ $icon }} text-{{ $color }} me-2"></i>
+                                                        <small>{{ Str::limit($tgs->judul_tugas, 18) }}</small>
+                                                    </span>
+                                                    <i class="bx bx-chevron-right text-muted"
+                                                        style="font-size: 0.8rem;"></i>
+                                                </a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <small class="text-muted">Tidak ada tugas</small>
+                                @endif
                             </div>
                         </div>
                     </div>
