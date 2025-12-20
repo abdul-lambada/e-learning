@@ -68,6 +68,9 @@ Route::middleware(['auth'])->group(function () {
         Route::put('pendahuluan/{pendahuluan}', [\App\Http\Controllers\Guru\PendahuluanController::class, 'update'])->name('pendahuluan.update');
         Route::delete('pendahuluan/{pendahuluan}', [\App\Http\Controllers\Guru\PendahuluanController::class, 'destroy'])->name('pendahuluan.destroy');
 
+        // Ujian
+        Route::resource('ujian', \App\Http\Controllers\Guru\UjianController::class);
+
         // Tugas
         Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class);
         Route::post('tugas/nilai/{pengumpulan}', [\App\Http\Controllers\Guru\TugasController::class, 'nilai'])->name('tugas.nilai');

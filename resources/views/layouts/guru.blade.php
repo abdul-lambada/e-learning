@@ -200,13 +200,13 @@
                             </a>
                             <ul class="menu-sub">
                                 <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                    <a href="{{ route('guru.ujian.index') }}" class="menu-link">
                                         <div>Daftar Ujian</div>
                                     </a>
                                 </li>
                                 @can('tambah ujian')
                                     <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                        <a href="{{ route('guru.ujian.create') }}" class="menu-link">
                                             <div>Buat Ujian Baru</div>
                                         </a>
                                     </li>
