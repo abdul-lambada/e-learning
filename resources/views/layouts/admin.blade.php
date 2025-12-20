@@ -75,24 +75,24 @@
                     </li>
 
                     @can('lihat pengguna')
-                        <li class="menu-item">
+                        <li class="menu-item {{ request()->routeIs('admin.users.*') ? 'active open' : '' }}">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons bx bx-user"></i>
                                 <div>Pengguna</div>
                             </a>
                             <ul class="menu-sub">
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                <li class="menu-item {{ request()->routeIs('admin.users.index') ? 'active' : '' }}">
+                                    <a href="{{ route('admin.users.index') }}" class="menu-link">
                                         <div>Semua Pengguna</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                    <a href="{{ route('admin.users.index', ['role' => 'guru']) }}" class="menu-link">
                                         <div>Guru</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                    <a href="{{ route('admin.users.index', ['role' => 'siswa']) }}" class="menu-link">
                                         <div>Siswa</div>
                                     </a>
                                 </li>
@@ -101,8 +101,8 @@
                     @endcan
 
                     @can('lihat kelas')
-                        <li class="menu-item">
-                            <a href="#" class="menu-link">
+                        <li class="menu-item {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.kelas.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-buildings"></i>
                                 <div>Kelas</div>
                             </a>
@@ -110,8 +110,8 @@
                     @endcan
 
                     @can('lihat mata pelajaran')
-                        <li class="menu-item">
-                            <a href="#" class="menu-link">
+                        <li class="menu-item {{ request()->routeIs('admin.mata-pelajaran.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.mata-pelajaran.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-book"></i>
                                 <div>Mata Pelajaran</div>
                             </a>
@@ -121,8 +121,8 @@
                     <!-- Pembelajaran -->
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Pembelajaran</span></li>
 
-                    <li class="menu-item">
-                        <a href="#" class="menu-link">
+                    <li class="menu-item {{ request()->routeIs('admin.jadwal-pelajaran.*') ? 'active' : '' }}">
+                        <a href="{{ route('admin.jadwal-pelajaran.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-calendar"></i>
                             <div>Jadwal Pelajaran</div>
                         </a>

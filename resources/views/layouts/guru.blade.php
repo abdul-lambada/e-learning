@@ -104,10 +104,11 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Pembelajaran</span></li>
 
                     @can('lihat pertemuan')
-                        <li class="menu-item">
-                            <a href="#" class="menu-link">
+                        <li
+                            class="menu-item {{ request()->routeIs('guru.jadwal.*') || request()->routeIs('guru.pertemuan.*') || request()->routeIs('guru.materi.*') ? 'active' : '' }}">
+                            <a href="{{ route('guru.jadwal.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-calendar"></i>
-                                <div>Pertemuan</div>
+                                <div>Jadwal Mengajar</div>
                             </a>
                         </li>
                     @endcan
@@ -117,15 +118,6 @@
                             <a href="#" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-info-circle"></i>
                                 <div>Pendahuluan</div>
-                            </a>
-                        </li>
-                    @endcan
-
-                    @can('lihat materi')
-                        <li class="menu-item">
-                            <a href="#" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-file"></i>
-                                <div>Materi Pembelajaran</div>
                             </a>
                         </li>
                     @endcan
