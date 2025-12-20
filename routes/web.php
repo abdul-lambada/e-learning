@@ -70,6 +70,8 @@ Route::middleware(['auth'])->group(function () {
 
         // Ujian
         Route::resource('ujian', \App\Http\Controllers\Guru\UjianController::class);
+        Route::resource('ujian.soal', \App\Http\Controllers\Guru\SoalUjianController::class)->except(['index', 'show']);
+        Route::resource('ujian.jadwal', \App\Http\Controllers\Guru\JadwalUjianController::class)->only(['create', 'store', 'destroy']);
 
         // Tugas
         Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class);

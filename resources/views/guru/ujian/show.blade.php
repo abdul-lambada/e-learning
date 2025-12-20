@@ -52,19 +52,36 @@
                             <div class="d-flex justify-content-between mb-3 align-items-center">
                                 <h6 class="m-0">Daftar Soal ({{ $ujian->soalUjian->count() }} /
                                     {{ $ujian->jumlah_soal }})</h6>
-                                <button class="btn btn-primary btn-sm" disabled title="Akan hadir di update berikutnya">+
-                                    Kelola Soal</button>
+                                <a href="{{ route('guru.ujian.soal.create', $ujian->id) }}"
+                                    class="btn btn-primary btn-sm">+ Kelola Soal</a>
                             </div>
 
                             @if ($ujian->soalUjian->count() > 0)
-                                <ul class="list-group list-group-flush">
+                                <div class="list-group list-group-flush">
                                     @foreach ($ujian->soalUjian as $soal)
-                                        <li class="list-group-item">
-                                            <strong>No. {{ $soal->nomor_soal }}</strong>
-                                            {{ Str::limit(strip_tags($soal->pertanyaan), 100) }}
-                                        </li>
+                                        <div
+                                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                                            <div class="w-75">
+                                                <strong>No. {{ $soal->nomor_soal }}
+                                                    ({{ ucfirst(str_replace('_', ' ', $soal->tipe_soal)) }})
+                                                </strong><br>
+                                                <span
+                                                    class="text-muted small">{{ Str::limit(strip_tags($soal->pertanyaan), 150) }}</span>
+                                            </div>
+                                            <div class="btn-group">
+                                                <a href="{{ route('guru.ujian.soal.edit', [$ujian->id, $soal->id]) }}"
+                                                    class="btn btn-sm btn-outline-secondary"><i class="bx bx-edit"></i></a>
+                                                <form
+                                                    action="{{ route('guru.ujian.soal.destroy', [$ujian->id, $soal->id]) }}"
+                                                    method="POST" onsubmit="return confirm('Hapus soal ini?')">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i
+                                                            class="bx bx-trash"></i></button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     @endforeach
-                                </ul>
+                                </div>
                             @else
                                 <div class="alert alert-info py-3 text-center">
                                     <i class='bx bx-info-circle mb-2' style="font-size: 2rem;"></i><br>
@@ -75,7 +92,8 @@
                         <div class="tab-pane fade" id="jadwal" role="tabpanel">
                             <div class="d-flex justify-content-between mb-3 align-items-center">
                                 <h6 class="m-0">Jadwal Pelaksanaan</h6>
-                                <button class="btn btn-primary btn-sm" disabled>+ Jadwalkan</button>
+                                <a href="{{ route('guru.ujian.jadwal.create', $ujian->id) }}"
+                                    class="btn btn-primary btn-sm">+ Jadwalkan</a>
                             </div>
 
                             <div class="table-responsive">
@@ -86,19 +104,31 @@
                                             <th>Jam</th>
                                             <th>Ruang</th>
                                             <th>Pengawas</th>
+                                            <th class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @forelse($ujian->jadwalUjian as $jadwal)
                                             <tr>
                                                 <td>{{ $jadwal->tanggal_ujian->format('d/m/Y') }}</td>
-                                                <td>{{ $jadwal->jam_mulai->format('H:i') }}</td>
+                                                <td>{{ $jadwal->jam_mulai->format('H:i') }} -
+                                                    {{ $jadwal->jam_selesai->format('H:i') }}</td>
                                                 <td>{{ $jadwal->ruangan }}</td>
                                                 <td>{{ $jadwal->pengawasUser->nama_lengkap ?? '-' }}</td>
+                                                <td class="text-center">
+                                                    <form
+                                                        action="{{ route('guru.ujian.jadwal.destroy', [$ujian->id, $jadwal->id]) }}"
+                                                        method="POST" onsubmit="return confirm('Hapus jadwal ini?')">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit"
+                                                            class="btn btn-xs btn-icon btn-outline-danger"><i
+                                                                class="bx bx-trash"></i></button>
+                                                    </form>
+                                                </td>
                                             </tr>
                                         @empty
                                             <tr>
-                                                <td colspan="4" class="text-center">Belum dijadwalkan.</td>
+                                                <td colspan="5" class="text-center">Belum dijadwalkan.</td>
                                             </tr>
                                         @endforelse
                                     </tbody>
