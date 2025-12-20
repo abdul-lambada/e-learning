@@ -146,4 +146,63 @@ class KuisController extends Controller
         return redirect()->route('guru.pertemuan.show', $pertemuanId)
                          ->with('success', 'Kuis berhasil dihapus.');
     }
+    // Menampilkan daftar hasil pengerjaan siswa
+    public function hasil(Kuis $kuis)
+    {
+        if ($kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) abort(403);
+
+        $hasil = \App\Models\JawabanKuis::with('siswa')
+                    ->where('kuis_id', $kuis->id)
+                    ->orderBy('nilai', 'desc')
+                    ->get();
+
+        return view('guru.kuis.hasil', compact('kuis', 'hasil'));
+    }
+
+    // Halaman koreksi jawaban siswa (untuk essay)
+    public function review(\App\Models\JawabanKuis $jawabanKuis)
+    {
+        if ($jawabanKuis->kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) abort(403);
+
+        $jawabanKuis->load(['siswa', 'detailJawaban.soalKuis']);
+
+        return view('guru.kuis.review', compact('jawabanKuis'));
+    }
+
+    // Simpan nilai koreksi (Essay)
+    public function simpanKoreksi(Request $request, \App\Models\JawabanKuis $jawabanKuis)
+    {
+        if ($jawabanKuis->kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) abort(403);
+
+        $input = $request->validate([
+            'nilai_essay' => 'array',
+            'nilai_essay.*' => 'numeric|min:0',
+        ]);
+
+        $totalNilai = 0;
+        $detailJawabans = $jawabanKuis->detailJawaban()->with('soalKuis')->get();
+
+        foreach ($detailJawabans as $detail) {
+            // Update nilai essay jika ada input
+            if (isset($input['nilai_essay'][$detail->id])) {
+                $detail->nilai_diperoleh = $input['nilai_essay'][$detail->id];
+                // Tandai benar jika nilai > 0 (opsional logic)
+                $detail->benar = $detail->nilai_diperoleh > 0;
+                $detail->save();
+            }
+            $totalNilai += $detail->nilai_diperoleh;
+        }
+
+        // Hitung ulang nilai akhir (Skala 100)
+        $totalBobotSoal = $jawabanKuis->kuis->soalKuis()->sum('bobot_nilai');
+        $nilaiAkhir = $totalBobotSoal > 0 ? ($totalNilai / $totalBobotSoal) * 100 : 0;
+
+        $jawabanKuis->update([
+            'nilai' => $nilaiAkhir,
+            'lulus' => $nilaiAkhir >= $jawabanKuis->kuis->nilai_minimal_lulus
+        ]);
+
+        return redirect()->route('guru.kuis.hasil', $jawabanKuis->kuis_id)
+                         ->with('success', 'Penilaian berhasil disimpan.');
+    }
 }

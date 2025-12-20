@@ -72,6 +72,12 @@
                             <i class="bx bx-edit me-1"></i> Kuis
                         </button>
                     </li>
+                    <li class="nav-item">
+                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                            data-bs-target="#navs-absensi" aria-controls="navs-absensi" aria-selected="false">
+                            <i class="bx bx-user-check me-1"></i> Kehadiran
+                        </button>
+                    </li>
                 </ul>
                 <div class="tab-content">
                     <!-- Tab Materi -->
@@ -339,6 +345,68 @@
                                 <p class="mt-2 text-muted">Belum ada kuis yang dibuat.</p>
                             </div>
                         @endforelse
+                    </div>
+
+                    <!-- Tab Absensi -->
+                    <div class="tab-pane fade" id="navs-absensi" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h5 class="mb-0">Daftar Kehadiran Siswa</h5>
+                            <div>
+                                <span class="badge bg-label-success me-1">H : Hadir</span>
+                                <span class="badge bg-label-info me-1">I : Izin</span>
+                                <span class="badge bg-label-warning me-1">S : Sakit</span>
+                                <span class="badge bg-label-danger">A : Alpha</span>
+                            </div>
+                        </div>
+                        <form action="{{ route('pertemuan.absensi', $pertemuan->id) }}" method="POST">
+                            @csrf
+                            <div class="table-responsive text-nowrap border rounded mb-3">
+                                <table class="table table-hover table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Siswa</th>
+                                            <th class="text-center">H</th>
+                                            <th class="text-center">I</th>
+                                            <th class="text-center">S</th>
+                                            <th class="text-center">A</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($pertemuan->guruMengajar->kelas->siswa as $siswa)
+                                            @php
+                                                $abs = $pertemuan->absensi->where('siswa_id', $siswa->id)->first();
+                                                $st = $abs ? $abs->status : 'hadir';
+                                            @endphp
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex flex-column">
+                                                        <span class="fw-semibold">{{ $siswa->nama_lengkap }}</span>
+                                                        <small class="text-muted">{{ $siswa->nis }}</small>
+                                                    </div>
+                                                </td>
+                                                <td class="text-center"><input class="form-check-input" type="radio"
+                                                        name="status[{{ $siswa->id }}]" value="hadir"
+                                                        {{ $st == 'hadir' ? 'checked' : '' }}></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio"
+                                                        name="status[{{ $siswa->id }}]" value="izin"
+                                                        {{ $st == 'izin' ? 'checked' : '' }}></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio"
+                                                        name="status[{{ $siswa->id }}]" value="sakit"
+                                                        {{ $st == 'sakit' ? 'checked' : '' }}></td>
+                                                <td class="text-center"><input class="form-check-input" type="radio"
+                                                        name="status[{{ $siswa->id }}]" value="alpha"
+                                                        {{ $st == 'alpha' ? 'checked' : '' }}></td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="bx bx-save me-1"></i> Simpan Absensi
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

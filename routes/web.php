@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Pertemuan (Resource tanpa index, karena diakses via Jadwal)
         Route::resource('pertemuan', \App\Http\Controllers\Guru\PertemuanController::class)->except(['index']);
+        Route::post('pertemuan/{pertemuan}/absensi', [\App\Http\Controllers\Guru\PertemuanController::class, 'simpanAbsensi'])->name('pertemuan.absensi');
 
         // Materi (Resource tanpa index & show, karena diakses via Pertemuan)
         Route::resource('materi', \App\Http\Controllers\Guru\MateriController::class)->except(['index', 'show']);
@@ -63,6 +64,11 @@ Route::middleware(['auth'])->group(function () {
 
         Route::resource('kuis', \App\Http\Controllers\Guru\KuisController::class);
         Route::resource('kuis.soal', \App\Http\Controllers\Guru\SoalKuisController::class)->shallow();
+
+        // Kuis Hasil & Review
+        Route::get('kuis/{kuis}/hasil', [\App\Http\Controllers\Guru\KuisController::class, 'hasil'])->name('kuis.hasil');
+        Route::get('kuis/review/{jawabanKuis}', [\App\Http\Controllers\Guru\KuisController::class, 'review'])->name('kuis.review');
+        Route::post('kuis/review/{jawabanKuis}/simpan', [\App\Http\Controllers\Guru\KuisController::class, 'simpanKoreksi'])->name('kuis.simpan_koreksi');
     });
 
     // Siswa Routes

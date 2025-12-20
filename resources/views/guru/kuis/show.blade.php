@@ -48,6 +48,9 @@
                         </ul>
                         <hr>
                         <div class="d-grid gap-2">
+                            <a href="{{ route('guru.kuis.hasil', $kuis->id) }}" class="btn btn-outline-primary mb-2">
+                                <i class="bx bx-bar-chart-alt-2 me-1"></i> Hasil & Evaluasi
+                            </a>
                             <a href="{{ route('guru.kuis.soal.create', $kuis->id) }}" class="btn btn-primary">
                                 <i class="bx bx-plus me-1"></i> Tambah Soal
                             </a>

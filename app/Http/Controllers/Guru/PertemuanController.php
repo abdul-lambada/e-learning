@@ -68,7 +68,7 @@ class PertemuanController extends Controller
             abort(403);
         }
 
-        $pertemuan->load(['guruMengajar.kelas', 'guruMengajar.mataPelajaran', 'materiPembelajaran', 'tugas', 'kuis']);
+        $pertemuan->load(['guruMengajar.kelas.siswa', 'guruMengajar.mataPelajaran', 'materiPembelajaran', 'tugas', 'kuis', 'absensi']);
 
         return view('guru.pertemuan.show', compact('pertemuan'));
     }
@@ -124,5 +124,25 @@ class PertemuanController extends Controller
 
         return redirect()->route('guru.jadwal.show', $jadwalId)
             ->with('success', 'Pertemuan berhasil dihapus!');
+    }
+    public function simpanAbsensi(Request $request, Pertemuan $pertemuan)
+    {
+        if ($pertemuan->guruMengajar->guru_id !== Auth::id()) abort(403);
+
+        $request->validate([
+            'status' => 'array',
+            'status.*' => 'in:hadir,sakit,izin,alpha',
+        ]);
+
+        if($request->has('status')){
+            foreach ($request->status as $siswaId => $status) {
+                \App\Models\Absensi::updateOrCreate(
+                    ['pertemuan_id' => $pertemuan->id, 'siswa_id' => $siswaId],
+                    ['status' => $status, 'waktu_absen' => now()]
+                );
+            }
+        }
+
+        return back()->with('success', 'Absensi berhasil diperbarui.');
     }
 }
