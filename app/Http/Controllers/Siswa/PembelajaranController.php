@@ -46,6 +46,7 @@ class PembelajaranController extends Controller
     public function show(GuruMengajar $jadwal)
     {
         // Validasi: Pastikan siswa ini anggota dari kelas jadwal ini
+        /** @var \App\Models\User $siswa */
         $siswa = Auth::user();
         $isAnggotaKelas = $siswa->kelas()->where('kelas.id', $jadwal->kelas_id)->exists();
 
@@ -68,6 +69,7 @@ class PembelajaranController extends Controller
     public function pertemuan(Pertemuan $pertemuan)
     {
         // Validasi akses siswa ke pertemuan ini via Jadwal -> Kelas
+        /** @var \App\Models\User $siswa */
         $siswa = Auth::user();
         $jadwal = $pertemuan->guruMengajar;
         $isAnggotaKelas = $siswa->kelas()->where('kelas.id', $jadwal->kelas_id)->exists();
@@ -90,6 +92,7 @@ class PembelajaranController extends Controller
     }
     public function absenMandiri(Pertemuan $pertemuan)
     {
+        /** @var \App\Models\User $siswa */
         $siswa = Auth::user();
 
         // Validasi akses pertemuan

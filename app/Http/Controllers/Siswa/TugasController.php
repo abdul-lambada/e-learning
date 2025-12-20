@@ -14,6 +14,7 @@ class TugasController extends Controller
 {
     public function show(Tugas $tugas)
     {
+        /** @var \App\Models\User $siswa */
         $siswa = Auth::user();
 
         // Cek akses: Siswa harus anggota kelas dari tugas ini
@@ -42,6 +43,7 @@ class TugasController extends Controller
         ]);
 
         $tugas = Tugas::findOrFail($request->tugas_id);
+        /** @var \App\Models\User $siswa */
         $siswa = Auth::user();
 
         // Cek deadline

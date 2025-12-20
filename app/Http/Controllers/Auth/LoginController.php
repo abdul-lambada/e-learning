@@ -23,6 +23,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
 
+            /** @var \App\Models\User $user */
             $user = Auth::user();
 
             // Redirect based on role

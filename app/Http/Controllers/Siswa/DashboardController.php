@@ -9,6 +9,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        /** @var \App\Models\User $siswa */
         $siswa = auth()->user();
         $kelas = $siswa->kelas()->first();
 
