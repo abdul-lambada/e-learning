@@ -164,19 +164,52 @@
                         </div>
                     </div>
 
-                    <!-- Kuis Placeholder -->
-                    <div class="d-flex">
+                    <!-- Kuis -->
+                    <div class="d-flex mt-3">
                         <div class="avatar flex-shrink-0 me-3">
-                            <span class="avatar-initial rounded bg-label-warning"><i class="bx bx-edit"></i></span>
+                            <span class="avatar-initial rounded bg-label-danger"><i class="bx bx-joystick"></i></span>
                         </div>
-                        <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                            <div class="me-2">
-                                <h6 class="mb-0">Kuis</h6>
-                                <small class="text-muted">Tidak ada kuis</small>
-                            </div>
-                            <div class="user-progress">
-                                <small class="fw-semibold">0</small>
-                            </div>
+                        <div class="w-100">
+                            <h6 class="mb-1">Kuis & Ujian</h6>
+                            @if ($pertemuan->kuis->count() > 0)
+                                <ul class="list-unstyled mb-0 mt-2">
+                                    @foreach ($pertemuan->kuis as $qz)
+                                        @php
+                                            $attempt = \App\Models\JawabanKuis::where('kuis_id', $qz->id)
+                                                ->where('siswa_id', auth()->id())
+                                                ->orderBy('id', 'desc')
+                                                ->first();
+                                            $isDone = $attempt && $attempt->status == 'selesai';
+                                            $isRunning = $attempt && $attempt->status == 'sedang_dikerjakan';
+
+                                            $badgeColor = 'secondary';
+                                            $statusText = 'Mulai';
+
+                                            if ($isDone) {
+                                                $badgeColor = 'success';
+                                                $statusText = 'Nilai: ' . (float) $attempt->nilai;
+                                            } elseif ($isRunning) {
+                                                $badgeColor = 'warning';
+                                                $statusText = 'Lanjut';
+                                            }
+                                        @endphp
+                                        <li class="mb-2 w-100">
+                                            <a href="{{ route('siswa.kuis.show', $qz->id) }}"
+                                                class="text-body d-flex align-items-center w-100 justify-content-between">
+                                                <span class="d-flex align-items-center">
+                                                    <i class="bx bx-chevron-right me-1 text-muted"></i>
+                                                    <small
+                                                        class="{{ $isDone ? 'text-decoration-line-through text-muted' : '' }}">{{ Str::limit($qz->judul_kuis, 15) }}</small>
+                                                </span>
+                                                <span class="badge bg-label-{{ $badgeColor }} p-1"
+                                                    style="font-size: 0.7rem;">{{ $statusText }}</span>
+                                            </a>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <small class="text-muted">Tidak ada kuis aktif</small>
+                            @endif
                         </div>
                     </div>
                 </div>

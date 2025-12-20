@@ -44,6 +44,18 @@ class DashboardController extends Controller
             ->get();
         }
 
-        return view('siswa.dashboard', compact('kelas', 'jadwalHariIni', 'tugasPending'));
+        // 3. Kuis Aktif
+        $kuisAktif = 0;
+        if ($kelas) {
+             $kuisAktif = \App\Models\Kuis::whereHas('pertemuan.guruMengajar', function($q) use ($kelas) {
+                $q->where('kelas_id', $kelas->id);
+            })
+            ->where('aktif', true)
+            ->where('tanggal_selesai', '>', now())
+            ->where('tanggal_mulai', '<=', now())
+            ->count();
+        }
+
+        return view('siswa.dashboard', compact('kelas', 'jadwalHariIni', 'tugasPending', 'kuisAktif'));
     }
 }

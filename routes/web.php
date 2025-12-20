@@ -77,5 +77,12 @@ Route::middleware(['auth'])->group(function () {
         // Tugas Siswa
         Route::get('/tugas/{tugas}', [\App\Http\Controllers\Siswa\TugasController::class, 'show'])->name('tugas.show');
         Route::post('/tugas', [\App\Http\Controllers\Siswa\TugasController::class, 'store'])->name('tugas.store');
+
+        // Kuis & Ujian
+        Route::get('kuis/{kuis}', [\App\Http\Controllers\Siswa\KuisController::class, 'show'])->name('kuis.show');
+        Route::post('kuis/{kuis}/start', [\App\Http\Controllers\Siswa\KuisController::class, 'start'])->name('kuis.start');
+        Route::get('ujian/{jawabanKuis}', [\App\Http\Controllers\Siswa\KuisController::class, 'kerjakan'])->name('kuis.kerjakan');
+        Route::post('ujian/simpan', [\App\Http\Controllers\Siswa\KuisController::class, 'simpanJawaban'])->name('kuis.simpan');
+        Route::post('ujian/{jawabanKuis}/finish', [\App\Http\Controllers\Siswa\KuisController::class, 'finish'])->name('kuis.finish');
     });
 });

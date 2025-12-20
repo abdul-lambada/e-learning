@@ -118,12 +118,12 @@
                 <div class="card-body">
                     <div class="card-title d-flex align-items-start justify-content-between">
                         <div class="avatar flex-shrink-0">
-                            <i class='bx bxs-notepad' style="font-size: 40px; color: #7367f0;"></i>
+                            <i class='bx bxs-joystick' style="font-size: 40px; color: #ff3e1d;"></i>
                         </div>
                     </div>
-                    <span class="d-block mb-1">Ujian Mendatang</span>
-                    <h3 class="card-title text-nowrap mb-2">-</h3>
-                    <small class="text-muted">Jadwal Ujian</small>
+                    <span class="d-block mb-1">Kuis & Ujian Aktif</span>
+                    <h3 class="card-title text-nowrap mb-2">{{ $kuisAktif ?? 0 }}</h3>
+                    <small class="text-danger fw-semibold">Tersedia</small>
                 </div>
             </div>
         </div>
