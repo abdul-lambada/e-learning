@@ -308,12 +308,12 @@
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                    <a href="{{ route('guru.laporan.nilai') }}" class="menu-link">
                                         <div>Laporan Nilai</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                    <a href="{{ route('guru.laporan.absensi') }}" class="menu-link">
                                         <div>Laporan Absensi</div>
                                     </a>
                                 </li>
