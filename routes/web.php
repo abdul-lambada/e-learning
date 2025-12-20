@@ -79,6 +79,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pembelajaran', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'index'])->name('pembelajaran.index');
         Route::get('/pembelajaran/{jadwal}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'show'])->name('pembelajaran.show');
         Route::get('/pertemuan/{pertemuan}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'pertemuan'])->name('pembelajaran.pertemuan');
+        Route::post('/pertemuan/{pertemuan}/absen', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'absenMandiri'])->name('pembelajaran.absen');
+
 
         // Tugas Siswa
         Route::get('/tugas/{tugas}', [\App\Http\Controllers\Siswa\TugasController::class, 'show'])->name('tugas.show');

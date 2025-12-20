@@ -10,6 +10,15 @@ use Illuminate\Support\Facades\Auth;
 
 class KuisController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:lihat kuis')->only(['show', 'hasil', 'review']);
+        $this->middleware('permission:tambah kuis')->only(['create', 'store']);
+        $this->middleware('permission:ubah kuis')->only(['edit', 'update']);
+        $this->middleware('permission:hapus kuis')->only(['destroy']);
+        $this->middleware('permission:nilai kuis')->only(['simpanKoreksi']);
+    }
+
     /**
      * Show the form for creating a new resource.
      */

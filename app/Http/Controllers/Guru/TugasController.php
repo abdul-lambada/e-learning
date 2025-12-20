@@ -11,6 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class TugasController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:lihat tugas')->only(['show']);
+        $this->middleware('permission:tambah tugas')->only(['create', 'store']);
+        $this->middleware('permission:ubah tugas')->only(['edit', 'update']);
+        $this->middleware('permission:hapus tugas')->only(['destroy']);
+        $this->middleware('permission:nilai tugas')->only(['nilai']);
+    }
+
     /**
      * Show the form for creating a new task.
      */

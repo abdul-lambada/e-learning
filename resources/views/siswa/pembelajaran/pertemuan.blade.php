@@ -222,9 +222,30 @@
                         Silakan pelajari semua materi yang ada di sebelah kiri. Jika ada tugas, kerjakan sebelum tenggat
                         waktu. Jangan lupa isi presensi jika tersedia.
                     </p>
-                    <button class="btn btn-label-success w-100" disabled>
-                        <i class="bx bx-check-circle me-1"></i> Isi Presensi (Coming Soon)
-                    </button>
+                    @php
+                        $myAbsensi = \App\Models\Absensi::where('pertemuan_id', $pertemuan->id)
+                            ->where('siswa_id', auth()->id())
+                            ->first();
+                    @endphp
+
+                    @if ($myAbsensi)
+                        <div class="alert alert-success py-2 mb-0 text-center">
+                            <i class="bx bx-check-circle me-1"></i> Kehadiran:
+                            <strong>{{ ucfirst($myAbsensi->status) }}</strong>
+                        </div>
+                    @elseif($pertemuan->aktif)
+                        <form action="{{ route('siswa.pembelajaran.absen', $pertemuan->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="btn btn-success w-100"
+                                onclick="return confirm('Apakah Anda yakin ingin mengisi presensi sekarang?')">
+                                <i class="bx bx-user-check me-1"></i> Isi Presensi (Hadir)
+                            </button>
+                        </form>
+                    @else
+                        <div class="alert alert-secondary py-2 mb-0 text-center">
+                            <i class="bx bx-lock-alt me-1"></i> Presensi Ditutup
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

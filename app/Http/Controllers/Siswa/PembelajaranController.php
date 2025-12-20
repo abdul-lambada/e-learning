@@ -88,4 +88,22 @@ class PembelajaranController extends Controller
 
         return view('siswa.pembelajaran.pertemuan', compact('pertemuan'));
     }
+    public function absenMandiri(Pertemuan $pertemuan)
+    {
+        $siswa = Auth::user();
+
+        // Validasi akses pertemuan
+        $jadwal = $pertemuan->guruMengajar;
+        $isAnggotaKelas = $siswa->kelas()->where('kelas.id', $jadwal->kelas_id)->exists();
+        if (!$isAnggotaKelas) abort(403);
+
+        if (!$pertemuan->aktif) return back()->with('error', 'Pertemuan tidak aktif.');
+
+        \App\Models\Absensi::firstOrCreate(
+            ['pertemuan_id' => $pertemuan->id, 'siswa_id' => $siswa->id],
+            ['status' => 'hadir', 'waktu_absen' => now()]
+        );
+
+        return back()->with('success', 'Presensi berhasil dicatat (Hadir).');
+    }
 }
