@@ -13,9 +13,11 @@ class Kelas extends Model
     protected $table = 'kelas';
 
     protected $fillable = [
+        'kode_kelas',
         'nama_kelas',
         'tingkat',
         'jurusan',
+        'tahun_ajaran',
         'wali_kelas_id',
         'kapasitas',
         'keterangan',
@@ -25,6 +27,7 @@ class Kelas extends Model
     protected $casts = [
         'aktif' => 'boolean',
         'kapasitas' => 'integer',
+        'tingkat' => 'string',
     ];
 
     // Relationships
@@ -38,7 +41,7 @@ class Kelas extends Model
         return $this->hasMany(KelasSiswa::class);
     }
 
-    public function siswa()
+    public function users()
     {
         return $this->belongsToMany(User::class, 'kelas_siswa', 'kelas_id', 'siswa_id')
             ->withPivot('tahun_ajaran', 'semester')
