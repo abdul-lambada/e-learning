@@ -57,4 +57,42 @@ class KomponenNilaiController extends Controller
 
         return redirect()->route('guru.komponen-nilai.index')->with('success', 'Komponen nilai berhasil disimpan.');
     }
+
+    public function edit(KomponenNilai $komponen_nilai)
+    {
+        $guruId = Auth::id();
+        $mataPelajarans = MataPelajaran::whereHas('guruMengajar', function($q) use ($guruId) {
+            $q->where('guru_id', $guruId);
+        })->get();
+
+        return view('guru.komponen_nilai.edit', compact('komponen_nilai', 'mataPelajarans'));
+    }
+
+    public function update(Request $request, KomponenNilai $komponen_nilai)
+    {
+        $request->validate([
+            'bobot_pendahuluan' => 'required|numeric|min:0|max:100',
+            'bobot_absensi' => 'required|numeric|min:0|max:100',
+            'bobot_tugas' => 'required|numeric|min:0|max:100',
+            'bobot_kuis' => 'required|numeric|min:0|max:100',
+            'bobot_ujian' => 'required|numeric|min:0|max:100',
+            'kkm' => 'required|numeric|min:0|max:100',
+        ]);
+
+        $total = $request->bobot_pendahuluan + $request->bobot_absensi + $request->bobot_tugas + $request->bobot_kuis + $request->bobot_ujian;
+
+        if ($total != 100) {
+            return back()->with('error', 'Total bobot harus 100%. Saat ini: ' . $total . '%');
+        }
+
+        $komponen_nilai->update($request->all());
+
+        return redirect()->route('guru.komponen-nilai.index')->with('success', 'Komponen nilai berhasil diperbarui.');
+    }
+
+    public function destroy(KomponenNilai $komponen_nilai)
+    {
+        $komponen_nilai->delete();
+        return back()->with('success', 'Komponen nilai berhasil dihapus.');
+    }
 }

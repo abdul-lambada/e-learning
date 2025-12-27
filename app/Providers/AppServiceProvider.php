@@ -15,11 +15,14 @@ class AppServiceProvider extends ServiceProvider
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
         Paginator::defaultView('partials.pagination');
+
+        // Share settings to all views
+        \Illuminate\Support\Facades\View::composer('*', function ($view) {
+            $view->with('appSettings', \App\Models\PengaturanAplikasi::getSettings());
+            $view->with('activeAkademik', \App\Models\PengaturanAkademik::active());
+        });
     }
 }

@@ -51,7 +51,8 @@
                         <span class="app-brand-logo demo">
                             <i class='bx bxs-graduation' style="font-size: 32px; color: #696cff;"></i>
                         </span>
-                        <span class="app-brand-text demo menu-text fw-bolder ms-2">E-Learning</span>
+                        <span
+                            class="app-brand-text demo menu-text fw-bolder ms-2">{{ $appSettings->nama_sekolah }}</span>
                     </a>
                     <a href="javascript:void(0);"
                         class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -117,6 +118,27 @@
                             </a>
                         </li>
                     @endcan
+
+                    <li class="menu-item {{ request()->routeIs('admin.pengaturan-akademik.index') ? 'active' : '' }}">
+                        <a href="{{ route('admin.pengaturan-akademik.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-cog"></i>
+                            <div>Tahun Akademik</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('admin.pengaturan-sekolah.index') ? 'active' : '' }}">
+                        <a href="{{ route('admin.pengaturan-sekolah.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-info-circle"></i>
+                            <div>Identitas Sekolah</div>
+                        </a>
+                    </li>
+
+                    <li class="menu-item {{ request()->routeIs('perpustakaan.*') ? 'active' : '' }}">
+                        <a href="{{ route('perpustakaan.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-library"></i>
+                            <div>Perpustakaan</div>
+                        </a>
+                    </li>
 
                     <!-- Pembelajaran -->
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Pembelajaran</span></li>
@@ -184,13 +206,20 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Laporan</span></li>
 
                     @can('lihat laporan')
-                        <li class="menu-item">
+                        <li class="menu-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
                             <a href="#" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-file"></i>
                                 <div>Laporan</div>
                             </a>
                         </li>
                     @endcan
+
+                    <li class="menu-item {{ request()->routeIs('admin.audit-log.index') ? 'active' : '' }}">
+                        <a href="{{ route('admin.audit-log.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-history"></i>
+                            <div>Log Aktivitas</div>
+                        </a>
+                    </li>
                 </ul>
             </aside>
             <!-- / Menu -->
@@ -210,10 +239,19 @@
                         <div class="navbar-nav align-items-center">
                             <div class="nav-item d-flex align-items-center">
                                 <span class="fw-semibold">Selamat Datang, {{ auth()->user()->nama_lengkap }}</span>
+                                @if ($activeAkademik)
+                                    <span class="badge bg-label-primary ms-2">
+                                        {{ $activeAkademik->tahun_ajaran }} - {{ ucfirst($activeAkademik->semester) }}
+                                    </span>
+                                @endif
                             </div>
                         </div>
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
+                            <!-- Notifications -->
+                            @include('partials.notifications')
+                            <!--/ Notifications -->
+
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"

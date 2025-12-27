@@ -27,9 +27,9 @@
                     <div class="col-md-4 d-flex align-items-end">
                         <a href="{{ route('guru.laporan.nilai') }}" class="btn btn-secondary me-2">Reset</a>
                         @if ($selectedJadwal)
-                            <button type="button" onclick="window.print()" class="btn btn-primary">
-                                <i class="bx bx-printer me-1"></i> Cetak / PDF
-                            </button>
+                            <a href="{{ route('guru.laporan.nilai.cetak', $selectedJadwal->id) }}" class="btn btn-danger">
+                                <i class="bx bxs-file-pdf me-1"></i> Export PDF
+                            </a>
                         @endif
                     </div>
                 </form>

@@ -36,7 +36,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/forum/topik/{topik}', [\App\Http\Controllers\ForumController::class, 'show'])->name('forum.show');
     Route::post('/forum/topik', [\App\Http\Controllers\ForumController::class, 'store'])->name('forum.store');
     Route::post('/forum/topik/{topik}/balas', [\App\Http\Controllers\ForumController::class, 'reply'])->name('forum.reply');
-    Route::delete('/forum/topik/{topik}', [\App\Http\Controllers\ForumController::class, 'destroy'])->name('forum.destroy');
+    // Perpustakaan Routes
+    Route::get('/perpustakaan', [\App\Http\Controllers\PerpustakaanController::class, 'index'])->name('perpustakaan.index');
+    Route::post('/perpustakaan', [\App\Http\Controllers\PerpustakaanController::class, 'store'])->name('perpustakaan.store');
+    Route::delete('/perpustakaan/{materi}', [\App\Http\Controllers\PerpustakaanController::class, 'destroy'])->name('perpustakaan.destroy');
+
+    Route::post('/notifications/{id}/read', function ($id) {
+        auth()->user()->notifications()->findOrFail($id)->markAsRead();
+        return back();
+    })->name('notifications.read');
 
     // Admin Routes
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
@@ -53,6 +61,19 @@ Route::middleware(['auth'])->group(function () {
 
         // Jadwal Pelajaran (Guru Mengajar)
         Route::resource('jadwal-pelajaran', \App\Http\Controllers\Admin\JadwalPelajaranController::class)->parameters(['jadwal-pelajaran' => 'jadwalPelajaran']);
+
+        // Pengaturan Akademik
+        Route::get('pengaturan-akademik', [\App\Http\Controllers\Admin\PengaturanAkademikController::class, 'index'])->name('pengaturan-akademik.index');
+        Route::post('pengaturan-akademik', [\App\Http\Controllers\Admin\PengaturanAkademikController::class, 'store'])->name('pengaturan-akademik.store');
+        Route::patch('pengaturan-akademik/{akademik}/activate', [\App\Http\Controllers\Admin\PengaturanAkademikController::class, 'activate'])->name('pengaturan-akademik.activate');
+        Route::delete('pengaturan-akademik/{akademik}', [\App\Http\Controllers\Admin\PengaturanAkademikController::class, 'destroy'])->name('pengaturan-akademik.destroy');
+
+        // Pengaturan Aplikasi / Sekolah
+        Route::get('pengaturan-sekolah', [\App\Http\Controllers\Admin\PengaturanAplikasiController::class, 'index'])->name('pengaturan-sekolah.index');
+        Route::patch('pengaturan-sekolah', [\App\Http\Controllers\Admin\PengaturanAplikasiController::class, 'update'])->name('pengaturan-sekolah.update');
+
+        // Audit Log
+        Route::get('audit-log', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-log.index');
     });
 
     // Guru Routes
@@ -107,6 +128,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Laporan
         Route::get('laporan/nilai', [\App\Http\Controllers\Guru\LaporanController::class, 'nilai'])->name('laporan.nilai');
+        Route::get('laporan/nilai/{guruMengajar}/cetak', [\App\Http\Controllers\Guru\CetakLaporanController::class, 'cetakNilai'])->name('laporan.nilai.cetak');
         Route::get('laporan/absensi', [\App\Http\Controllers\Guru\LaporanController::class, 'absensi'])->name('laporan.absensi');
         Route::get('laporan/pembelajaran', [\App\Http\Controllers\Guru\LaporanController::class, 'pembelajaran'])->name('laporan.pembelajaran');
 
@@ -116,7 +138,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('wali-kelas/{kelasId}/siswa/{siswaId}', [\App\Http\Controllers\Guru\WaliKelasController::class, 'showSiswa'])->name('wali-kelas.siswa.show');
 
         // Pengaturan Nilai
-        Route::resource('komponen-nilai', \App\Http\Controllers\Guru\KomponenNilaiController::class)->only(['index', 'store']);
+        Route::resource('komponen-nilai', \App\Http\Controllers\Guru\KomponenNilaiController::class);
     });
 
     // Siswa Routes

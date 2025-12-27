@@ -51,7 +51,8 @@
                         <span class="app-brand-logo demo">
                             <i class='bx bxs-graduation' style="font-size: 32px; color: #696cff;"></i>
                         </span>
-                        <span class="app-brand-text demo menu-text fw-bolder ms-2">E-Learning</span>
+                        <span
+                            class="app-brand-text demo menu-text fw-bolder ms-2">{{ $appSettings->nama_sekolah }}</span>
                     </a>
                     <a href="javascript:void(0);"
                         class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -234,6 +235,13 @@
                             </a>
                         </li>
 
+                        <li class="menu-item {{ request()->routeIs('perpustakaan.*') ? 'active' : '' }}">
+                            <a href="{{ route('perpustakaan.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-library"></i>
+                                <div>Perpustakaan</div>
+                            </a>
+                        </li>
+
                         <li class="menu-item">
                             <a href="#" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-help-circle"></i>
@@ -259,72 +267,18 @@
                             <div class="navbar-nav align-items-center">
                                 <div class="nav-item d-flex align-items-center">
                                     <span class="fw-semibold">Selamat Datang, {{ auth()->user()->nama_lengkap }}</span>
+                                    @if ($activeAkademik)
+                                        <span class="badge bg-label-warning ms-2">
+                                            TA: {{ $activeAkademik->tahun_ajaran }}
+                                            ({{ ucfirst($activeAkademik->semester) }})
+                                        </span>
+                                    @endif
                                 </div>
                             </div>
 
                             <ul class="navbar-nav flex-row align-items-center ms-auto">
                                 <!-- Notifications -->
-                                <li class="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
-                                    <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
-                                        data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
-                                        <i class="bx bx-bell bx-sm"></i>
-                                        <span class="badge bg-danger rounded-pill badge-notifications">3</span>
-                                    </a>
-                                    <ul class="dropdown-menu dropdown-menu-end py-0">
-                                        <li class="dropdown-menu-header border-bottom">
-                                            <div class="dropdown-header d-flex align-items-center py-3">
-                                                <h5 class="text-body mb-0 me-auto">Notifikasi</h5>
-                                                <a href="javascript:void(0)" class="dropdown-notifications-all text-body"
-                                                    data-bs-toggle="tooltip" data-bs-placement="top"
-                                                    title="Mark all as read"><i class="bx fs-4 bx-envelope-open"></i></a>
-                                            </div>
-                                        </li>
-                                        <li class="dropdown-notifications-list scrollable-container">
-                                            <ul class="list-group list-group-flush">
-                                                <li
-                                                    class="list-group-item list-group-item-action dropdown-notifications-item">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar">
-                                                                <span
-                                                                    class="avatar-initial rounded-circle bg-label-warning"><i
-                                                                        class="bx bx-task"></i></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <h6 class="mb-1">Tugas baru tersedia</h6>
-                                                            <p class="mb-0">Matematika - Tugas Bab 5</p>
-                                                            <small class="text-muted">2 jam yang lalu</small>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                                <li
-                                                    class="list-group-item list-group-item-action dropdown-notifications-item">
-                                                    <div class="d-flex">
-                                                        <div class="flex-shrink-0 me-3">
-                                                            <div class="avatar">
-                                                                <span
-                                                                    class="avatar-initial rounded-circle bg-label-info"><i
-                                                                        class="bx bx-notepad"></i></span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="flex-grow-1">
-                                                            <h6 class="mb-1">Ujian akan dimulai</h6>
-                                                            <p class="mb-0">UTS Bahasa Indonesia besok</p>
-                                                            <small class="text-muted">1 hari yang lalu</small>
-                                                        </div>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="dropdown-menu-footer border-top">
-                                            <a href="javascript:void(0);"
-                                                class="dropdown-item d-flex justify-content-center p-3">
-                                                Lihat semua notifikasi
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
+                                @include('partials.notifications')
                                 <!--/ Notifications -->
 
                                 <!-- User -->

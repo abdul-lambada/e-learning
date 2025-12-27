@@ -48,9 +48,20 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-icon btn-outline-primary" title="Edit (Coming Soon)">
-                                        <i class="bx bx-edit"></i>
-                                    </button>
+                                    <div class="d-flex align-items-center">
+                                        <a href="{{ route('guru.komponen-nilai.edit', $k->id) }}"
+                                            class="btn btn-sm btn-icon btn-outline-primary me-1">
+                                            <i class="bx bx-edit"></i>
+                                        </a>
+                                        <form action="{{ route('guru.komponen-nilai.destroy', $k->id) }}" method="POST"
+                                            onsubmit="return confirm('Hapus pengaturan ini?')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-sm btn-icon btn-outline-danger">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 </td>
                             </tr>
                         @empty
@@ -85,13 +96,16 @@
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Tahun Ajaran</label>
-                            <input type="text" name="tahun_ajaran" class="form-control" placeholder="2024/2025" required>
+                            <input type="text" name="tahun_ajaran" class="form-control"
+                                value="{{ $activeAkademik->tahun_ajaran ?? '' }}" required>
                         </div>
                         <div class="col-md-3">
                             <label class="form-label">Semester</label>
                             <select name="semester" class="form-select" required>
-                                <option value="ganjil">Ganjil</option>
-                                <option value="genap">Genap</option>
+                                <option value="ganjil"
+                                    {{ ($activeAkademik->semester ?? '') == 'ganjil' ? 'selected' : '' }}>Ganjil</option>
+                                <option value="genap"
+                                    {{ ($activeAkademik->semester ?? '') == 'genap' ? 'selected' : '' }}>Genap</option>
                             </select>
                         </div>
 

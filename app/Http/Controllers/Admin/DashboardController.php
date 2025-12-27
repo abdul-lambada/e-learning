@@ -12,17 +12,15 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $data = [
-            'total_siswa' => User::role('siswa')->count(),
-            'total_guru' => User::role('guru')->count(),
-            'total_kelas' => Kelas::count(),
-            'total_mapel' => MataPelajaran::count(),
-            'absensi_hari_ini' => \App\Models\Absensi::whereDate('created_at', now())->count(),
-            'tugas_aktif' => \App\Models\Tugas::where('aktif', true)->where('tanggal_deadline', '>=', now())->count(),
-            'pertemuan_hari_ini' => \App\Models\Pertemuan::whereDate('tanggal_pertemuan', now())->count(),
-            'users_terbaru' => User::latest()->take(5)->get(),
-        ];
+        $total_siswa = User::role('siswa')->count();
+        $total_guru = User::role('guru')->count();
+        $total_kelas = Kelas::count();
+        $total_mapel = MataPelajaran::count();
+        $logs = \App\Models\AuditLog::with('user')->latest()->take(5)->get();
+        $recent_users = User::latest()->take(5)->get();
 
-        return view('admin.dashboard', $data);
+        return view('admin.dashboard', compact(
+            'total_siswa', 'total_guru', 'total_kelas', 'total_mapel', 'logs', 'recent_users'
+        ));
     }
 }

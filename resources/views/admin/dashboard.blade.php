@@ -191,61 +191,39 @@
             </div>
         </div>
 
-        <!-- Quick Actions Admin -->
+        <!-- Recent Activities -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title m-0">Aksi Cepat Admin</h5>
+                <div class="card-header d-flex align-items-center justify-content-between pb-3">
+                    <div class="card-title mb-0">
+                        <h5 class="m-0 me-2">Aktivitas Terkini</h5>
+                        <small class="text-muted">Log sistem terbaru</small>
+                    </div>
+                    <a href="{{ route('admin.audit-log.index') }}" class="btn btn-sm btn-label-secondary">Lihat Semua</a>
                 </div>
                 <div class="card-body">
-                    <div class="d-grid gap-3">
-                        <div class="d-flex align-items-center bg-label-primary p-3 rounded cursor-pointer"
-                            onclick="location.href='{{ route('admin.users.create') }}'">
-                            <div
-                                class="avatar bg-primary text-white p-2 rounded me-3 d-flex align-items-center justify-content-center">
-                                <i class="bx bx-user-plus"></i>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <h6 class="mb-0 fw-bold">Tambah Pengguna</h6>
-                                <small>Guru, Siswa, atau Staf</small>
-                            </div>
-                        </div>
-
-                        <div class="d-flex align-items-center bg-label-info p-3 rounded cursor-pointer"
-                            onclick="location.href='{{ route('admin.kelas.index') }}'">
-                            <div
-                                class="avatar bg-info text-white p-2 rounded me-3 d-flex align-items-center justify-content-center">
-                                <i class="bx bx-buildings"></i>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <h6 class="mb-0 fw-bold">Manajemen Kelas</h6>
-                                <small>Atur rombel dan wali kelas</small>
-                            </div>
-                        </div>
-
-                        <div class="d-flex align-items-center bg-label-warning p-3 rounded cursor-pointer"
-                            onclick="location.href='{{ route('admin.jadwal-pelajaran.index') }}'">
-                            <div
-                                class="avatar bg-warning text-white p-2 rounded me-3 d-flex align-items-center justify-content-center">
-                                <i class="bx bx-calendar"></i>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <h6 class="mb-0 fw-bold">Jadwal Pelajaran</h6>
-                                <small>Atur KBM Mingguan</small>
-                            </div>
-                        </div>
-
-                        <div class="d-flex align-items-center bg-label-dark p-3 rounded cursor-pointer">
-                            <div
-                                class="avatar bg-dark text-white p-2 rounded me-3 d-flex align-items-center justify-content-center">
-                                <i class="bx bx-cog"></i>
-                            </div>
-                            <div class="d-flex flex-column">
-                                <h6 class="mb-0 fw-bold">Pengaturan Sistem</h6>
-                                <small>Konfigurasi website</small>
-                            </div>
-                        </div>
-                    </div>
+                    <ul class="p-0 m-0">
+                        @foreach ($logs as $log)
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="avatar flex-shrink-0 me-3">
+                                    <span
+                                        class="avatar-initial rounded bg-label-{{ $log->user->peran == 'admin' ? 'danger' : 'primary' }}">
+                                        <i class="bx bx-user"></i>
+                                    </span>
+                                </div>
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <h6 class="mb-0">{{ $log->aktivitas }}</h6>
+                                        <small class="text-muted">{{ $log->user->nama_lengkap }}</small>
+                                    </div>
+                                    <div class="user-progress text-end">
+                                        <small
+                                            class="fw-semibold d-block text-nowrap">{{ $log->created_at->diffForHumans() }}</small>
+                                    </div>
+                                </div>
+                            </li>
+                        @endforeach
+                    </ul>
                 </div>
             </div>
         </div>

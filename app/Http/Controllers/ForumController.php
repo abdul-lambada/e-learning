@@ -82,11 +82,16 @@ class ForumController extends Controller
             'konten' => 'required|string',
         ]);
 
-        ForumBalasan::create([
+        $balasan = ForumBalasan::create([
             'forum_topik_id' => $topik->id,
             'user_id' => Auth::id(),
             'konten' => $request->konten,
         ]);
+
+        // Notify topic owner
+        if ($topik->user_id !== Auth::id()) {
+            $topik->user->notify(new \App\Notifications\ForumReplied($balasan));
+        }
 
         return back()->with('success', 'Balasan berhasil dikirim.');
     }

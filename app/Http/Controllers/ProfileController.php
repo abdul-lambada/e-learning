@@ -67,6 +67,8 @@ class ProfileController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        \App\Models\AuditLog::log('Mengubah password', 'Profil');
+
         return back()->with('success', 'Password berhasil diubah.');
     }
 }
