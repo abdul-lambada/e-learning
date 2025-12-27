@@ -74,7 +74,7 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Kelas Saya</span></li>
 
                     @can('lihat kelas')
-                        <li class="menu-item">
+                        <li class="menu-item {{ request()->routeIs('guru.jadwal.index') ? 'active' : '' }}">
                             <a href="{{ route('guru.jadwal.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-buildings"></i>
                                 <div>Kelas yang Diampu</div>
@@ -83,7 +83,7 @@
                     @endcan
 
                     @can('lihat mata pelajaran')
-                        <li class="menu-item">
+                        <li class="menu-item {{ request()->routeIs('guru.mapel.*') ? 'active' : '' }}">
                             <a href="{{ route('guru.jadwal.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-book"></i>
                                 <div>Mata Pelajaran</div>
@@ -128,27 +128,28 @@
                     @endcan
 
                     @can('lihat tugas')
-                        <li class="menu-item">
+                        <li class="menu-item {{ request()->routeIs('guru.tugas.*') ? 'active open' : '' }}">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons bx bx-task"></i>
                                 <div>Tugas</div>
                             </a>
                             <ul class="menu-sub">
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                <li class="menu-item {{ request()->routeIs('guru.tugas.index') ? 'active' : '' }}">
+                                    <a href="{{ route('guru.tugas.index') }}" class="menu-link">
                                         <div>Daftar Tugas</div>
                                     </a>
                                 </li>
                                 @can('tambah tugas')
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                    <li class="menu-item {{ request()->routeIs('guru.tugas.create') ? 'active' : '' }}">
+                                        <a href="{{ route('guru.tugas.create') }}" class="menu-link">
                                             <div>Buat Tugas Baru</div>
                                         </a>
                                     </li>
                                 @endcan
                                 @can('nilai tugas')
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                    <li
+                                        class="menu-item {{ request()->routeIs('guru.tugas.*') && !request()->routeIs('guru.tugas.index') && !request()->routeIs('guru.tugas.create') ? 'active' : '' }}">
+                                        <a href="{{ route('guru.tugas.index') }}" class="menu-link">
                                             <div>Penilaian Tugas</div>
                                         </a>
                                     </li>
@@ -161,34 +162,28 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Evaluasi</span></li>
 
                     @can('lihat kuis')
-                        <li class="menu-item">
+                        <li class="menu-item {{ request()->routeIs('guru.kuis.*') ? 'active open' : '' }}">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons bx bx-edit"></i>
                                 <div>Kuis</div>
                             </a>
                             <ul class="menu-sub">
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                <li class="menu-item {{ request()->routeIs('guru.kuis.index') ? 'active' : '' }}">
+                                    <a href="{{ route('guru.kuis.index') }}" class="menu-link">
                                         <div>Daftar Kuis</div>
                                     </a>
                                 </li>
                                 @can('tambah kuis')
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                    <li class="menu-item {{ request()->routeIs('guru.kuis.create') ? 'active' : '' }}">
+                                        <a href="{{ route('guru.kuis.create') }}" class="menu-link">
                                             <div>Buat Kuis Baru</div>
                                         </a>
                                     </li>
                                 @endcan
-                                @can('import kuis')
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
-                                            <div>Import Soal</div>
-                                        </a>
-                                    </li>
-                                @endcan
                                 @can('nilai kuis')
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                    <li
+                                        class="menu-item {{ request()->routeIs('guru.kuis.hasil') || request()->routeIs('guru.kuis.review') ? 'active' : '' }}">
+                                        <a href="{{ route('guru.kuis.index') }}" class="menu-link">
                                             <div>Hasil Kuis</div>
                                         </a>
                                     </li>
@@ -198,19 +193,19 @@
                     @endcan
 
                     @can('lihat ujian')
-                        <li class="menu-item">
+                        <li class="menu-item {{ request()->routeIs('guru.ujian.*') ? 'active open' : '' }}">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons bx bx-notepad"></i>
                                 <div>Ujian</div>
                             </a>
                             <ul class="menu-sub">
-                                <li class="menu-item">
+                                <li class="menu-item {{ request()->routeIs('guru.ujian.index') ? 'active' : '' }}">
                                     <a href="{{ route('guru.ujian.index') }}" class="menu-link">
                                         <div>Daftar Ujian</div>
                                     </a>
                                 </li>
                                 @can('tambah ujian')
-                                    <li class="menu-item">
+                                    <li class="menu-item {{ request()->routeIs('guru.ujian.create') ? 'active' : '' }}">
                                         <a href="{{ route('guru.ujian.create') }}" class="menu-link">
                                             <div>Buat Ujian Baru</div>
                                         </a>
@@ -218,21 +213,14 @@
                                 @endcan
                                 @can('kelola jadwal ujian')
                                     <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                        <a href="{{ route('guru.ujian.index') }}" class="menu-link">
                                             <div>Jadwal Ujian</div>
                                         </a>
                                     </li>
                                 @endcan
-                                @can('import ujian')
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
-                                            <div>Import Soal</div>
-                                        </a>
-                                    </li>
-                                @endcan
                                 @can('nilai ujian')
-                                    <li class="menu-item">
-                                        <a href="#" class="menu-link">
+                                    <li class="menu-item {{ request()->routeIs('guru.ujian.hasil.*') ? 'active' : '' }}">
+                                        <a href="{{ route('guru.ujian.index') }}" class="menu-link">
                                             <div>Hasil Ujian</div>
                                         </a>
                                     </li>
@@ -245,7 +233,8 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Monitoring</span></li>
 
                     @can('lihat absensi')
-                        <li class="menu-item">
+                        <li
+                            class="menu-item {{ request()->routeIs('guru.absensi.*') || request()->routeIs('guru.laporan.absensi') ? 'active open' : '' }}">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons bx bx-check-circle"></i>
                                 <div>Absensi</div>

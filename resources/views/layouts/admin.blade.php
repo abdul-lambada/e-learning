@@ -128,14 +128,14 @@
                         </a>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item {{ request()->routeIs('admin.materi.*') ? 'active' : '' }}">
                         <a href="#" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-file"></i>
                             <div>Materi</div>
                         </a>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item {{ request()->routeIs('admin.tugas.*') ? 'active' : '' }}">
                         <a href="#" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-task"></i>
                             <div>Tugas</div>
@@ -145,28 +145,28 @@
                     <!-- Evaluasi -->
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Evaluasi</span></li>
 
-                    <li class="menu-item">
+                    <li class="menu-item {{ request()->routeIs('admin.kuis.*') ? 'active' : '' }}">
                         <a href="#" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-edit"></i>
                             <div>Kuis</div>
                         </a>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item {{ request()->routeIs('admin.ujian.*') ? 'active' : '' }}">
                         <a href="#" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-notepad"></i>
                             <div>Ujian</div>
                         </a>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item {{ request()->routeIs('admin.absensi.*') ? 'active' : '' }}">
                         <a href="#" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-check-circle"></i>
                             <div>Absensi</div>
                         </a>
                     </li>
 
-                    <li class="menu-item">
+                    <li class="menu-item {{ request()->routeIs('admin.nilai.*') ? 'active' : '' }}">
                         <a href="#" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
                             <div>Nilai</div>
