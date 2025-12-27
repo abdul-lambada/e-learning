@@ -4,57 +4,60 @@
 
 @section('content')
     <div class="row">
+        <!-- Welcome Card -->
         <div class="col-lg-8 mb-4 order-0">
-            <div class="card">
+            <div class="card bg-label-secondary shadow-none border-0">
                 <div class="d-flex align-items-end row">
                     <div class="col-sm-7">
                         <div class="card-body">
-                            <h5 class="card-title text-primary">Selamat Datang, {{ auth()->user()->nama_lengkap }}! 🎉</h5>
+                            <h4 class="card-title text-primary">Selamat Datang, {{ auth()->user()->nama_lengkap }}! 🎉</h4>
                             <p class="mb-4">
-                                Anda login sebagai <span class="fw-bold">Administrator</span>.
-                                Kelola sistem E-Learning dengan mudah dan efisien.
+                                Anda masuk sebagai <span class="fw-bold">Administrator</span>.
+                                Hari ini terdapat <span class="fw-bold">{{ $pertemuan_hari_ini }} pertemuan</span> belajar
+                                sedang/akan berlangsung.
+                                Sistem berjalan dengan normal.
                             </p>
-                            <a href="#" class="btn btn-sm btn-outline-primary">Lihat Statistik</a>
+                            <a href="{{ route('admin.users.index') }}" class="btn btn-primary">Kelola Pengguna</a>
                         </div>
                     </div>
                     <div class="col-sm-5 text-center text-sm-left">
-                        <div class="card-body pb-0 px-0 px-md-4">
+                        <div class="card-body pb-0 px-0 px-md-4 text-end">
                             <img src="/sneat-1.0.0/sneat-1.0.0/assets/img/illustrations/man-with-laptop-light.png"
-                                height="140" alt="View Badge User" />
+                                height="150" alt="Dashboard Illustration" />
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Statistics Cards -->
+        <!-- Summary Stats Header -->
         <div class="col-lg-4 col-md-4 order-1">
             <div class="row">
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0">
-                                    <i class='bx bxs-user-circle' style="font-size: 40px; color: #696cff;"></i>
+                            <div class="card-title d-flex align-items-start justify-content-between mb-2">
+                                <div class="avatar flex-shrink-0 bg-label-primary p-1 rounded">
+                                    <i class='bx bx-user fs-3'></i>
                                 </div>
                             </div>
-                            <span class="fw-semibold d-block mb-1">Total Siswa</span>
-                            <h3 class="card-title mb-2">{{ $total_siswa }}</h3>
-                            <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> Siswa Aktif</small>
+                            <span class="fw-semibold d-block mb-1">Guru</span>
+                            <h3 class="card-title mb-1">{{ $total_guru }}</h3>
+                            <small class="text-muted">Total Pengampu</small>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card">
+                    <div class="card h-100">
                         <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0">
-                                    <i class='bx bxs-user-badge' style="font-size: 40px; color: #03c3ec;"></i>
+                            <div class="card-title d-flex align-items-start justify-content-between mb-2">
+                                <div class="avatar flex-shrink-0 bg-label-info p-1 rounded">
+                                    <i class='bx bxs-group fs-3 text-info'></i>
                                 </div>
                             </div>
-                            <span class="fw-semibold d-block mb-1">Total Guru</span>
-                            <h3 class="card-title mb-2">{{ $total_guru }}</h3>
-                            <small class="text-success fw-semibold"><i class="bx bx-up-arrow-alt"></i> Guru Aktif</small>
+                            <span class="fw-semibold d-block mb-1">Siswa</span>
+                            <h3 class="card-title mb-1">{{ $total_siswa }}</h3>
+                            <small class="text-muted">Total Terdaftar</small>
                         </div>
                     </div>
                 </div>
@@ -62,169 +65,202 @@
         </div>
     </div>
 
-    <!-- Second Row -->
+    <!-- Secondary Stats Row -->
     <div class="row">
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
-                            <i class='bx bxs-buildings' style="font-size: 40px; color: #ffab00;"></i>
+                    <div class="d-flex align-items-start justify-content-between">
+                        <div class="content-left">
+                            <span class="text-muted d-block">Kelas</span>
+                            <div class="d-flex align-items-center mt-1">
+                                <h4 class="mb-0 me-2">{{ $total_kelas }}</h4>
+                                <span class="badge bg-label-success">Aktif</span>
+                            </div>
+                        </div>
+                        <div class="avatar bg-label-warning p-2">
+                            <i class="bx bx-buildings"></i>
                         </div>
                     </div>
-                    <span class="d-block mb-1">Total Kelas</span>
-                    <h3 class="card-title text-nowrap mb-2">{{ $total_kelas }}</h3>
-                    <small class="text-muted">Kelas Aktif</small>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
-                            <i class='bx bxs-book' style="font-size: 40px; color: #28c76f;"></i>
+                    <div class="d-flex align-items-start justify-content-between">
+                        <div class="content-left">
+                            <span class="text-muted d-block">Mata Pelajaran</span>
+                            <div class="d-flex align-items-center mt-1">
+                                <h4 class="mb-0 me-2">{{ $total_mapel }}</h4>
+                                <span class="badge bg-label-info">Mapel</span>
+                            </div>
+                        </div>
+                        <div class="avatar bg-label-info p-2">
+                            <i class="bx bx-book"></i>
                         </div>
                     </div>
-                    <span class="d-block mb-1">Mata Pelajaran</span>
-                    <h3 class="card-title text-nowrap mb-2">{{ $total_mapel }}</h3>
-                    <small class="text-muted">Mapel Aktif</small>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
-                            <i class='bx bxs-calendar-check' style="font-size: 40px; color: #ea5455;"></i>
+                    <div class="d-flex align-items-start justify-content-between">
+                        <div class="content-left">
+                            <span class="text-muted d-block">Absen Hari Ini</span>
+                            <div class="d-flex align-items-center mt-1">
+                                <h4 class="mb-0 me-2">{{ $absensi_hari_ini }}</h4>
+                                <span class="badge bg-label-danger">Siswa</span>
+                            </div>
+                        </div>
+                        <div class="avatar bg-label-danger p-2">
+                            <i class="bx bx-check-double"></i>
                         </div>
                     </div>
-                    <span class="d-block mb-1">Absensi Hari Ini</span>
-                    <h3 class="card-title text-nowrap mb-2">0</h3>
-                    <small class="text-muted">Dari {{ $total_siswa }} siswa</small>
                 </div>
             </div>
         </div>
-
-        <div class="col-lg-3 col-md-6 col-sm-6 mb-4">
+        <div class="col-lg-3 col-md-6 col-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <div class="card-title d-flex align-items-start justify-content-between">
-                        <div class="avatar flex-shrink-0">
-                            <i class='bx bxs-file-doc' style="font-size: 40px; color: #7367f0;"></i>
+                    <div class="d-flex align-items-start justify-content-between">
+                        <div class="content-left">
+                            <span class="text-muted d-block">Tugas Berjalan</span>
+                            <div class="d-flex align-items-center mt-1">
+                                <h4 class="mb-0 me-2">{{ $tugas_aktif }}</h4>
+                                <span class="badge bg-label-primary">Tugas</span>
+                            </div>
+                        </div>
+                        <div class="avatar bg-label-primary p-2">
+                            <i class="bx bx-task"></i>
                         </div>
                     </div>
-                    <span class="d-block mb-1">Tugas Aktif</span>
-                    <h3 class="card-title text-nowrap mb-2">0</h3>
-                    <small class="text-muted">Tugas Berjalan</small>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Recent Activity -->
     <div class="row">
+        <!-- Recent Users -->
         <div class="col-md-6 col-lg-8 mb-4">
             <div class="card h-100">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <h5 class="card-title m-0 me-2">Aktivitas Terbaru</h5>
-                    <div class="dropdown">
-                        <button class="btn p-0" type="button" id="activityDropdown" data-bs-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            <i class="bx bx-dots-vertical-rounded"></i>
-                        </button>
-                        <div class="dropdown-menu dropdown-menu-end" aria-labelledby="activityDropdown">
-                            <a class="dropdown-item" href="javascript:void(0);">Refresh</a>
-                            <a class="dropdown-item" href="javascript:void(0);">Lihat Semua</a>
-                        </div>
+                <div class="card-header d-flex align-items-center justify-content-between pb-3">
+                    <div class="card-title mb-0">
+                        <h5 class="m-0 me-2">Pengguna Terdaftar Baru</h5>
+                        <small class="text-muted">Pantau pendaftaran terbaru</small>
                     </div>
+                    <a href="{{ route('admin.users.index') }}" class="btn btn-sm btn-label-primary">Semua User</a>
                 </div>
-                <div class="card-body">
-                    <ul class="p-0 m-0">
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-user"></i></span>
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <h6 class="mb-0">User baru terdaftar</h6>
-                                    <small class="text-muted">Siswa baru: Andi Wijaya</small>
-                                </div>
-                                <div class="user-progress">
-                                    <small class="fw-semibold">Baru saja</small>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <span class="avatar-initial rounded bg-label-success"><i class="bx bx-book"></i></span>
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <h6 class="mb-0">Mata pelajaran baru</h6>
-                                    <small class="text-muted">Matematika ditambahkan</small>
-                                </div>
-                                <div class="user-progress">
-                                    <small class="fw-semibold">2 jam lalu</small>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="avatar flex-shrink-0 me-3">
-                                <span class="avatar-initial rounded bg-label-info"><i class="bx bx-buildings"></i></span>
-                            </div>
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <h6 class="mb-0">Kelas dibuat</h6>
-                                    <small class="text-muted">X IPA 1 berhasil dibuat</small>
-                                </div>
-                                <div class="user-progress">
-                                    <small class="fw-semibold">5 jam lalu</small>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+                <div class="table-responsive">
+                    <table class="table table-hover border-top">
+                        <thead>
+                            <tr>
+                                <th>Nama</th>
+                                <th>Role</th>
+                                <th>Username</th>
+                                <th>Bergabung</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($users_terbaru as $user)
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div
+                                                class="avatar avatar-sm me-2 bg-label-{{ $user->hasRole('admin') ? 'danger' : ($user->hasRole('guru') ? 'primary' : 'success') }}">
+                                                <span
+                                                    class="avatar-initial rounded-circle">{{ strtoupper(substr($user->nama_lengkap, 0, 1)) }}</span>
+                                            </div>
+                                            <span class="fw-bold">{{ $user->nama_lengkap }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span
+                                            class="badge bg-label-{{ $user->hasRole('admin') ? 'danger' : ($user->hasRole('guru') ? 'primary' : 'success') }}">
+                                            {{ $user->roles->first()->name ?? '-' }}
+                                        </span>
+                                    </td>
+                                    <td>{{ $user->username }}</td>
+                                    <td>{{ $user->created_at->format('d/m/Y') }}</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <!-- Quick Actions -->
+        <!-- Quick Actions Admin -->
         <div class="col-md-6 col-lg-4 mb-4">
             <div class="card h-100">
                 <div class="card-header">
-                    <h5 class="card-title m-0">Aksi Cepat</h5>
+                    <h5 class="card-title m-0">Aksi Cepat Admin</h5>
                 </div>
                 <div class="card-body">
-                    <div class="d-grid gap-2">
-                        @can('tambah pengguna')
-                            <a href="#" class="btn btn-primary">
-                                <i class="bx bx-user-plus me-1"></i> Tambah Pengguna
-                            </a>
-                        @endcan
+                    <div class="d-grid gap-3">
+                        <div class="d-flex align-items-center bg-label-primary p-3 rounded cursor-pointer"
+                            onclick="location.href='{{ route('admin.users.create') }}'">
+                            <div
+                                class="avatar bg-primary text-white p-2 rounded me-3 d-flex align-items-center justify-content-center">
+                                <i class="bx bx-user-plus"></i>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <h6 class="mb-0 fw-bold">Tambah Pengguna</h6>
+                                <small>Guru, Siswa, atau Staf</small>
+                            </div>
+                        </div>
 
-                        @can('tambah kelas')
-                            <a href="#" class="btn btn-outline-primary">
-                                <i class="bx bx-buildings me-1"></i> Tambah Kelas
-                            </a>
-                        @endcan
+                        <div class="d-flex align-items-center bg-label-info p-3 rounded cursor-pointer"
+                            onclick="location.href='{{ route('admin.kelas.index') }}'">
+                            <div
+                                class="avatar bg-info text-white p-2 rounded me-3 d-flex align-items-center justify-content-center">
+                                <i class="bx bx-buildings"></i>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <h6 class="mb-0 fw-bold">Manajemen Kelas</h6>
+                                <small>Atur rombel dan wali kelas</small>
+                            </div>
+                        </div>
 
-                        @can('tambah mata pelajaran')
-                            <a href="#" class="btn btn-outline-primary">
-                                <i class="bx bx-book me-1"></i> Tambah Mata Pelajaran
-                            </a>
-                        @endcan
+                        <div class="d-flex align-items-center bg-label-warning p-3 rounded cursor-pointer"
+                            onclick="location.href='{{ route('admin.jadwal-pelajaran.index') }}'">
+                            <div
+                                class="avatar bg-warning text-white p-2 rounded me-3 d-flex align-items-center justify-content-center">
+                                <i class="bx bx-calendar"></i>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <h6 class="mb-0 fw-bold">Jadwal Pelajaran</h6>
+                                <small>Atur KBM Mingguan</small>
+                            </div>
+                        </div>
 
-                        @can('lihat laporan')
-                            <a href="#" class="btn btn-outline-secondary">
-                                <i class="bx bx-file me-1"></i> Lihat Laporan
-                            </a>
-                        @endcan
+                        <div class="d-flex align-items-center bg-label-dark p-3 rounded cursor-pointer">
+                            <div
+                                class="avatar bg-dark text-white p-2 rounded me-3 d-flex align-items-center justify-content-center">
+                                <i class="bx bx-cog"></i>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <h6 class="mb-0 fw-bold">Pengaturan Sistem</h6>
+                                <small>Konfigurasi website</small>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 @endsection
+
+@push('page-style')
+    <style>
+        .cursor-pointer {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cursor-pointer:hover {
+            transform: scale(1.02);
+        }
+    </style>
+@endpush

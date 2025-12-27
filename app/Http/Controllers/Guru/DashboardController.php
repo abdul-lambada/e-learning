@@ -43,12 +43,40 @@ class DashboardController extends Controller
             $q->where('guru_id', $guruId);
         })->count();
 
+        // 5. Statistik Wali Kelas (Jika guru adalah wali kelas)
+        $kelasWali = \App\Models\Kelas::where('wali_kelas_id', $guruId)->get();
+        $totalSiswaBinaan = $kelasWali->sum(function($k) {
+            return $k->siswa()->count();
+        });
+        $isWaliKelas = $kelasWali->isNotEmpty();
+
+        // 6. Verifikasi Absensi Perlu Tindakan
+        $absensiPerluVerifikasi = \App\Models\Absensi::whereHas('pertemuan.guruMengajar', function($q) use ($guruId) {
+                $q->where('guru_id', $guruId);
+            })
+            ->whereIn('status', ['izin', 'sakit', 'alpha'])
+            ->where('terverifikasi', false)
+            ->count();
+
+        // 7. Pengumpulan Tugas Terbaru (Aktivitas)
+        $pengumpulanTerbaru = \App\Models\PengumpulanTugas::with(['siswa', 'tugas.pertemuan.guruMengajar.mataPelajaran'])
+            ->whereHas('tugas.pertemuan.guruMengajar', function($q) use ($guruId) {
+                $q->where('guru_id', $guruId);
+            })
+            ->latest()
+            ->take(5)
+            ->get();
+
         return view('guru.dashboard', compact(
             'totalKelas',
             'totalMapel',
             'tugasPerluDinilai',
             'jadwalHariIni',
-            'totalPertemuan'
+            'totalPertemuan',
+            'totalSiswaBinaan',
+            'isWaliKelas',
+            'absensiPerluVerifikasi',
+            'pengumpulanTerbaru'
         ));
     }
 }

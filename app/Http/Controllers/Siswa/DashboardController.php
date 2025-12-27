@@ -57,6 +57,80 @@ class DashboardController extends Controller
             ->count();
         }
 
-        return view('siswa.dashboard', compact('kelas', 'jadwalHariIni', 'tugasPending', 'kuisAktif'));
+        // 4. Statistik Absensi (Skala Kehadiran)
+        $absensi = \App\Models\Absensi::where('siswa_id', $siswa->id)
+            ->whereHas('pertemuan.guruMengajar', function($q) use ($kelas) {
+                if ($kelas) $q->where('kelas_id', $kelas->id);
+            })
+            ->selectRaw('status, count(*) as total')
+            ->groupBy('status')
+            ->pluck('total', 'status');
+
+        $totalPertemuan = $absensi->sum();
+        $persenHadir = $totalPertemuan > 0 ? (($absensi['hadir'] ?? 0) / $totalPertemuan) * 100 : 0;
+
+        // 5. Nilai Terbaru (Dari Tugas/Kuis yang sudah dinilai)
+        $nilaiTugas = \App\Models\PengumpulanTugas::with('tugas.pertemuan.guruMengajar.mataPelajaran')
+            ->where('siswa_id', $siswa->id)
+            ->where('status', 'dinilai')
+            ->latest('updated_at')
+            ->take(3)
+            ->get();
+
+        $nilaiKuis = \App\Models\JawabanKuis::with('kuis.pertemuan.guruMengajar.mataPelajaran')
+            ->where('siswa_id', $siswa->id)
+            ->where('status', 'selesai')
+            ->latest('updated_at')
+            ->take(3)
+            ->get();
+
+        $nilaiTerbaru = collect();
+        foreach($nilaiTugas as $nt) {
+            $nilaiTerbaru->push([
+                'mapel' => $nt->tugas->pertemuan->guruMengajar->mataPelajaran->nama_mapel,
+                'jenis' => 'Tugas',
+                'judul' => $nt->tugas->judul,
+                'nilai' => $nt->nilai,
+                'tanggal' => $nt->updated_at
+            ]);
+        }
+        foreach($nilaiKuis as $nk) {
+            $nilaiTerbaru->push([
+                'mapel' => $nk->kuis->pertemuan->guruMengajar->mataPelajaran->nama_mapel,
+                'jenis' => 'Kuis',
+                'judul' => $nk->kuis->nama_kuis,
+                'nilai' => $nk->nilai,
+                'tanggal' => $nk->updated_at
+            ]);
+        }
+        $nilaiTerbaru = $nilaiTerbaru->sortByDesc('tanggal')->take(5);
+
+        // 6. Ujian Terdekat
+        $ujianTerdekat = collect();
+        if ($kelas) {
+            $ujianTerdekat = \App\Models\JadwalUjian::with('ujian.mataPelajaran')
+                ->whereHas('ujian', function($q) use ($kelas) {
+                    $q->where('kelas_id', $kelas->id)->where('aktif', true);
+                })
+                ->whereDate('tanggal_ujian', '>=', now())
+                ->orderBy('tanggal_ujian')
+                ->orderBy('jam_mulai')
+                ->take(3)
+                ->get();
+        }
+
+        // 7. Rata-rata Nilai Akhir (Jika sudah ada)
+        $avgNilai = \App\Models\NilaiAkhir::where('siswa_id', $siswa->id)->avg('nilai_akhir') ?? 0;
+
+        return view('siswa.dashboard', compact(
+            'kelas',
+            'jadwalHariIni',
+            'tugasPending',
+            'kuisAktif',
+            'persenHadir',
+            'nilaiTerbaru',
+            'ujianTerdekat',
+            'avgNilai'
+        ));
     }
 }
