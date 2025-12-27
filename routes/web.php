@@ -26,6 +26,18 @@ Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 // Protected Routes
 Route::middleware(['auth'])->group(function () {
 
+    // Profile Routes
+    Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])->name('profile.index');
+    Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
+    Route::put('/profile/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
+
+    // Forum Routes
+    Route::get('/forum', [\App\Http\Controllers\ForumController::class, 'index'])->name('forum.index');
+    Route::get('/forum/topik/{topik}', [\App\Http\Controllers\ForumController::class, 'show'])->name('forum.show');
+    Route::post('/forum/topik', [\App\Http\Controllers\ForumController::class, 'store'])->name('forum.store');
+    Route::post('/forum/topik/{topik}/balas', [\App\Http\Controllers\ForumController::class, 'reply'])->name('forum.reply');
+    Route::delete('/forum/topik/{topik}', [\App\Http\Controllers\ForumController::class, 'destroy'])->name('forum.destroy');
+
     // Admin Routes
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
@@ -102,6 +114,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('wali-kelas', [\App\Http\Controllers\Guru\WaliKelasController::class, 'index'])->name('wali-kelas.index');
         Route::get('wali-kelas/{id}', [\App\Http\Controllers\Guru\WaliKelasController::class, 'show'])->name('wali-kelas.show');
         Route::get('wali-kelas/{kelasId}/siswa/{siswaId}', [\App\Http\Controllers\Guru\WaliKelasController::class, 'showSiswa'])->name('wali-kelas.siswa.show');
+
+        // Pengaturan Nilai
+        Route::resource('komponen-nilai', \App\Http\Controllers\Guru\KomponenNilaiController::class)->only(['index', 'store']);
     });
 
     // Siswa Routes

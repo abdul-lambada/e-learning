@@ -40,35 +40,76 @@ class LaporanController extends Controller
                 abort(403);
             }
 
+            // Ambil Komponen Nilai untuk Mapel ini
+            $komponen = \App\Models\KomponenNilai::where('mata_pelajaran_id', $selectedJadwal->mata_pelajaran_id)
+                ->where('aktif', true)
+                ->first();
+
+            // Default bobot jika tidak ada komponen yang diatur
+            $bobot = $komponen ? [
+                'tugas' => $komponen->bobot_tugas / 100,
+                'kuis' => $komponen->bobot_kuis / 100,
+                'ujian' => $komponen->bobot_ujian / 100,
+                'absensi' => $komponen->bobot_absensi / 100,
+                'pendahuluan' => $komponen->bobot_pendahuluan / 100,
+            ] : [
+                'tugas' => 0.6,
+                'kuis' => 0.4,
+                'ujian' => 0,
+                'absensi' => 0,
+                'pendahuluan' => 0,
+            ];
+
             // Proses Data Nilai per Siswa
             foreach ($selectedJadwal->kelas->siswa as $siswa) {
+                // 1. Nilai Tugas
                 $nilaiTugas = [];
                 foreach ($selectedJadwal->tugas as $tugas) {
                     $pengumpulan = $tugas->pengumpulanTugas->where('siswa_id', $siswa->id)->first();
                     $nilaiTugas[] = $pengumpulan ? $pengumpulan->nilai : 0;
                 }
+                $avgTugas = count($nilaiTugas) > 0 ? array_sum($nilaiTugas) / count($nilaiTugas) : 0;
 
+                // 2. Nilai Kuis
                 $nilaiKuis = [];
                 foreach ($selectedJadwal->kuis as $kuis) {
-                    // Ambil nilai tertinggi jika ada multiple attempt (atau attempt terakhir yg selesai)
                     $attempt = $kuis->jawabanKuis->where('siswa_id', $siswa->id)->where('status', 'selesai')->sortByDesc('nilai')->first();
                     $nilaiKuis[] = $attempt ? $attempt->nilai : 0;
                 }
-
-                // Hitung Rata-rata
-                $avgTugas = count($nilaiTugas) > 0 ? array_sum($nilaiTugas) / count($nilaiTugas) : 0;
                 $avgKuis = count($nilaiKuis) > 0 ? array_sum($nilaiKuis) / count($nilaiKuis) : 0;
 
-                // Nilai Akhir (Contoh: 60% Tugas, 40% Kuis)
-                $nilaiAkhir = ($avgTugas * 0.6) + ($avgKuis * 0.4);
+                // 3. Nilai Ujian
+                $totalUjian = 0;
+                $ujianCount = 0;
+                $jadwalUjians = \App\Models\JadwalUjian::where('guru_mengajar_id', $selectedJadwal->id)->get();
+                foreach($jadwalUjians as $ju) {
+                    $jujian = \App\Models\JawabanUjian::where('jadwal_ujian_id', $ju->id)->where('siswa_id', $siswa->id)->where('status', 'selesai')->first();
+                    if($jujian) {
+                        $totalUjian += $jujian->nilai;
+                        $ujianCount++;
+                    }
+                }
+                $avgUjian = $ujianCount > 0 ? $totalUjian / $ujianCount : 0;
+
+                // 4. Nilai Absensi
+                $pertemuanIds = \App\Models\Pertemuan::where('guru_mengajar_id', $selectedJadwal->id)->pluck('id');
+                $totalHadir = \App\Models\Absensi::whereIn('pertemuan_id', $pertemuanIds)->where('siswa_id', $siswa->id)->where('status', 'hadir')->count();
+                $persenHadir = $pertemuanIds->count() > 0 ? ($totalHadir / $pertemuanIds->count()) * 100 : 0;
+
+                // Hitung Nilai Akhir Berdasarkan Bobot
+                $nilaiAkhir = ($avgTugas * $bobot['tugas']) +
+                              ($avgKuis * $bobot['kuis']) +
+                              ($avgUjian * $bobot['ujian']) +
+                              ($persenHadir * $bobot['absensi']);
 
                 $dataNilai[] = [
                     'siswa' => $siswa,
-                    'tugas' => $nilaiTugas,
                     'avg_tugas' => $avgTugas,
-                    'kuis' => $nilaiKuis,
                     'avg_kuis' => $avgKuis,
-                    'nilai_akhir' => $nilaiAkhir
+                    'avg_ujian' => $avgUjian,
+                    'persen_hadir' => $persenHadir,
+                    'nilai_akhir' => $nilaiAkhir,
+                    'bobot' => $bobot
                 ];
             }
         }

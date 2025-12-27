@@ -44,34 +44,38 @@
                         {{ auth()->user()->nama_lengkap }}</small>
                 </div>
                 <div class="table-responsive text-nowrap">
-                    <table class="table table-hover table-striped table-bordered">
+                    <table class="table table-hover table-striped table-bordered text-center">
                         <thead class="table-light">
+                            @php $b = $dataNilai[0]['bobot'] ?? null; @endphp
                             <tr>
-                                <th rowspan="2" class="align-middle text-center">No</th>
-                                <th rowspan="2" class="align-middle text-center">Nama Siswa</th>
-                                <th rowspan="2" class="align-middle text-center">NIS</th>
-                                <th colspan="2" class="text-center">Rata-rata</th>
-                                <th rowspan="2" class="align-middle text-center bg-label-primary">Nilai Akhir</th>
+                                <th rowspan="2" class="align-middle">No</th>
+                                <th rowspan="2" class="align-middle">Nama Siswa</th>
+                                <th rowspan="2" class="align-middle">NIS</th>
+                                <th colspan="4" class="text-center">Komponen Nilai (%)</th>
+                                <th rowspan="2" class="align-middle bg-label-primary">Nilai Akhir</th>
                             </tr>
                             <tr>
-                                <th class="text-center">Tugas (60%)</th>
-                                <th class="text-center">Kuis/Ujian (40%)</th>
+                                <th class="text-center">Tugas ({{ ($b['tugas'] ?? 0) * 100 }}%)</th>
+                                <th class="text-center">Kuis ({{ ($b['kuis'] ?? 0) * 100 }}%)</th>
+                                <th class="text-center">Ujian ({{ ($b['ujian'] ?? 0) * 100 }}%)</th>
+                                <th class="text-center">Absensi ({{ ($b['absensi'] ?? 0) * 100 }}%)</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($dataNilai as $data)
                                 <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $data['siswa']->nama_lengkap }}</td>
-                                    <td class="text-center">{{ $data['siswa']->nis }}</td>
-                                    <td class="text-center">{{ number_format($data['avg_tugas'], 2) }}</td>
-                                    <td class="text-center">{{ number_format($data['avg_kuis'], 2) }}</td>
-                                    <td class="text-center fw-bold bg-lighter">{{ number_format($data['nilai_akhir'], 2) }}
-                                    </td>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td class="text-start">{{ $data['siswa']->nama_lengkap }}</td>
+                                    <td>{{ $data['siswa']->nis }}</td>
+                                    <td>{{ number_format($data['avg_tugas'], 1) }}</td>
+                                    <td>{{ number_format($data['avg_kuis'], 1) }}</td>
+                                    <td>{{ number_format($data['avg_ujian'], 1) }}</td>
+                                    <td>{{ number_format($data['persen_hadir'], 1) }}%</td>
+                                    <td class="fw-bold bg-lighter">{{ number_format($data['nilai_akhir'], 2) }}</td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="6" class="text-center py-4">Data siswa tidak ditemukan di kelas ini.
+                                    <td colspan="8" class="text-center py-4">Data siswa tidak ditemukan di kelas ini.
                                     </td>
                                 </tr>
                             @endforelse

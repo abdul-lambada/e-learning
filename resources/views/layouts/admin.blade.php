@@ -173,6 +173,13 @@
                         </a>
                     </li>
 
+                    <li class="menu-item {{ request()->routeIs('forum.*') ? 'active' : '' }}">
+                        <a href="{{ route('forum.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-chat"></i>
+                            <div>Forum Diskusi</div>
+                        </a>
+                    </li>
+
                     <!-- Laporan -->
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Laporan</span></li>
 
@@ -238,13 +245,13 @@
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ route('profile.index') }}">
                                             <i class="bx bx-user me-2"></i>
                                             <span class="align-middle">Profil Saya</span>
                                         </a>
                                     </li>
                                     <li>
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ route('profile.index') }}">
                                             <i class="bx bx-cog me-2"></i>
                                             <span class="align-middle">Pengaturan</span>
                                         </a>
