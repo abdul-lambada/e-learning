@@ -29,11 +29,11 @@
                             @forelse($kuis as $k)
                                 <tr>
                                     <td><strong>{{ $k->judul }}</strong></td>
-                                    <td>{{ $k->guruMengajar->guru->nama_lengkap ?? '-' }}</td>
+                                    <td>{{ $k->pertemuan->guruMengajar->guru->nama_lengkap ?? '-' }}</td>
                                     <td>
                                         <span
-                                            class="badge bg-label-primary">{{ $k->guruMengajar->kelas->nama_kelas ?? '-' }}</span><br>
-                                        <small>{{ $k->guruMengajar->mapel->nama_mapel ?? '-' }}</small>
+                                            class="badge bg-label-primary">{{ $k->pertemuan->guruMengajar->kelas->nama_kelas ?? '-' }}</span><br>
+                                        <small>{{ $k->pertemuan->guruMengajar->mataPelajaran->nama_mapel ?? '-' }}</small>
                                     </td>
                                     <td>{{ $k->durasi }} menit</td>
                                     <td>

@@ -37,7 +37,7 @@
                                     <td>
                                         <span
                                             class="badge bg-label-primary">{{ $materi->pertemuan->guruMengajar->kelas->nama_kelas ?? '-' }}</span><br>
-                                        <small>{{ $materi->pertemuan->guruMengajar->mapel->nama_mapel ?? '-' }}</small>
+                                        <small>{{ $materi->pertemuan->guruMengajar->mataPelajaran->nama_mapel ?? '-' }}</small>
                                     </td>
                                     <td>Pertemuan {{ $materi->pertemuan->pertemuan_ke }}</td>
                                     <td>{{ $materi->created_at->format('d/m/Y H:i') }}</td>

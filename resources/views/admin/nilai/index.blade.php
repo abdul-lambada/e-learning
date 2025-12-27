@@ -42,7 +42,7 @@
                                     <tr>
                                         <td><strong>{{ $s->nama_lengkap }}</strong></td>
                                         <td>{{ $s->nis }}</td>
-                                        <td>{{ $s->nilaiTugas->count() }}</td>
+                                        <td>{{ $s->pengumpulanTugas->count() }}</td>
                                         <td>{{ $s->jawabanKuis->count() }}</td>
                                         <td>{{ $s->jawabanUjian->count() }}</td>
                                     </tr>

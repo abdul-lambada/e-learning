@@ -10,7 +10,7 @@ class TugasController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Tugas::with(['guruMengajar.guru', 'guruMengajar.kelas', 'guruMengajar.mapel']);
+        $query = Tugas::with(['pertemuan.guruMengajar.guru', 'pertemuan.guruMengajar.kelas', 'pertemuan.guruMengajar.mataPelajaran']);
 
         if ($request->has('search')) {
             $query->where('judul', 'like', '%' . $request->search . '%');

@@ -32,11 +32,11 @@
                                     <td>
                                         <strong>{{ $t->judul }}</strong>
                                     </td>
-                                    <td>{{ $t->guruMengajar->guru->nama_lengkap ?? '-' }}</td>
+                                    <td>{{ $t->pertemuan->guruMengajar->guru->nama_lengkap ?? '-' }}</td>
                                     <td>
                                         <span
-                                            class="badge bg-label-primary">{{ $t->guruMengajar->kelas->nama_kelas ?? '-' }}</span><br>
-                                        <small>{{ $t->guruMengajar->mapel->nama_mapel ?? '-' }}</small>
+                                            class="badge bg-label-primary">{{ $t->pertemuan->guruMengajar->kelas->nama_kelas ?? '-' }}</span><br>
+                                        <small>{{ $t->pertemuan->guruMengajar->mataPelajaran->nama_mapel ?? '-' }}</small>
                                     </td>
                                     <td>{{ \Carbon\Carbon::parse($t->tanggal_deadline)->format('d/m/Y H:i') }}</td>
                                     <td>

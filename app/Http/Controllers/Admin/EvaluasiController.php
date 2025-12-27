@@ -11,7 +11,7 @@ class EvaluasiController extends Controller
 {
     public function kuis(Request $request)
     {
-        $query = Kuis::with(['guruMengajar.guru', 'guruMengajar.kelas', 'guruMengajar.mapel']);
+        $query = Kuis::with(['pertemuan.guruMengajar.guru', 'pertemuan.guruMengajar.kelas', 'pertemuan.guruMengajar.mataPelajaran']);
         if ($request->has('search')) {
             $query->where('judul', 'like', '%' . $request->search . '%');
         }
@@ -21,7 +21,7 @@ class EvaluasiController extends Controller
 
     public function ujian(Request $request)
     {
-        $query = Ujian::with(['guruMengajar.guru', 'guruMengajar.kelas', 'guruMengajar.mapel']);
+        $query = Ujian::with(['mataPelajaran', 'kelas', 'importOleh']);
         if ($request->has('search')) {
             $query->where('nama_ujian', 'like', '%' . $request->search . '%');
         }

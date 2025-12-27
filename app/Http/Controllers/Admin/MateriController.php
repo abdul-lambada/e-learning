@@ -10,7 +10,7 @@ class MateriController extends Controller
 {
     public function index(Request $request)
     {
-        $query = MateriPembelajaran::with(['pertemuan.guruMengajar.guru', 'pertemuan.guruMengajar.kelas', 'pertemuan.guruMengajar.mapel']);
+        $query = MateriPembelajaran::with(['pertemuan.guruMengajar.guru', 'pertemuan.guruMengajar.kelas', 'pertemuan.guruMengajar.mataPelajaran']);
 
         if ($request->has('search')) {
             $query->where('judul_materi', 'like', '%' . $request->search . '%');

@@ -16,8 +16,10 @@ class NilaiController extends Controller
 
         if ($request->filled('kelas_id')) {
             $siswas = User::role('siswa')
-                ->where('kelas_id', $request->kelas_id)
-                ->with(['nilaiTugas', 'jawabanKuis', 'jawabanUjian'])
+                ->whereHas('kelas', function($q) use ($request) {
+                    $q->where('kelas.id', $request->kelas_id);
+                })
+                ->with(['pengumpulanTugas', 'jawabanKuis', 'jawabanUjian'])
                 ->paginate(20);
         }
 

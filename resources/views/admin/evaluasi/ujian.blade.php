@@ -29,11 +29,10 @@
                             @forelse($ujian as $u)
                                 <tr>
                                     <td><strong>{{ $u->nama_ujian }}</strong></td>
-                                    <td>{{ $u->guruMengajar->guru->nama_lengkap ?? '-' }}</td>
+                                    <td>{{ $u->importOleh->nama_lengkap ?? '-' }}</td>
                                     <td>
-                                        <span
-                                            class="badge bg-label-primary">{{ $u->guruMengajar->kelas->nama_kelas ?? '-' }}</span><br>
-                                        <small>{{ $u->guruMengajar->mapel->nama_mapel ?? '-' }}</small>
+                                        <span class="badge bg-label-primary">{{ $u->kelas->nama_kelas ?? '-' }}</span><br>
+                                        <small>{{ $u->mataPelajaran->nama_mapel ?? '-' }}</small>
                                     </td>
                                     <td>{{ strtoupper($u->tipe_ujian) }}</td>
                                     <td>
