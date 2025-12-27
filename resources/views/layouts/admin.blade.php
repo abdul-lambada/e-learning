@@ -151,14 +151,14 @@
                     </li>
 
                     <li class="menu-item {{ request()->routeIs('admin.materi.*') ? 'active' : '' }}">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.materi.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-file"></i>
                             <div>Materi</div>
                         </a>
                     </li>
 
                     <li class="menu-item {{ request()->routeIs('admin.tugas.*') ? 'active' : '' }}">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.tugas.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-task"></i>
                             <div>Tugas</div>
                         </a>
@@ -168,28 +168,28 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Evaluasi</span></li>
 
                     <li class="menu-item {{ request()->routeIs('admin.kuis.*') ? 'active' : '' }}">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.kuis.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-edit"></i>
                             <div>Kuis</div>
                         </a>
                     </li>
 
                     <li class="menu-item {{ request()->routeIs('admin.ujian.*') ? 'active' : '' }}">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.ujian.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-notepad"></i>
                             <div>Ujian</div>
                         </a>
                     </li>
 
                     <li class="menu-item {{ request()->routeIs('admin.absensi.*') ? 'active' : '' }}">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.absensi.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-check-circle"></i>
                             <div>Absensi</div>
                         </a>
                     </li>
 
                     <li class="menu-item {{ request()->routeIs('admin.nilai.*') ? 'active' : '' }}">
-                        <a href="#" class="menu-link">
+                        <a href="{{ route('admin.nilai.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
                             <div>Nilai</div>
                         </a>
@@ -207,7 +207,7 @@
 
                     @can('lihat laporan')
                         <li class="menu-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
-                            <a href="#" class="menu-link">
+                            <a href="{{ route('admin.laporan.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-file"></i>
                                 <div>Laporan</div>
                             </a>

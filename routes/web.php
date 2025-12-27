@@ -42,7 +42,9 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/perpustakaan/{materi}', [\App\Http\Controllers\PerpustakaanController::class, 'destroy'])->name('perpustakaan.destroy');
 
     Route::post('/notifications/{id}/read', function ($id) {
-        auth()->user()->notifications()->findOrFail($id)->markAsRead();
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $user->notifications()->findOrFail($id)->markAsRead();
         return back();
     })->name('notifications.read');
 
@@ -74,6 +76,21 @@ Route::middleware(['auth'])->group(function () {
 
         // Audit Log
         Route::get('audit-log', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-log.index');
+
+        // Pembelajaran Monitoring
+        Route::resource('materi', \App\Http\Controllers\Admin\MateriController::class)->only(['index', 'destroy']);
+        Route::resource('tugas', \App\Http\Controllers\Admin\TugasController::class)->only(['index', 'destroy']);
+
+        // Evaluasi Monitoring
+        Route::get('kuis', [\App\Http\Controllers\Admin\EvaluasiController::class, 'kuis'])->name('kuis.index');
+        Route::get('ujian', [\App\Http\Controllers\Admin\EvaluasiController::class, 'ujian'])->name('ujian.index');
+
+        // Monitoring Lainnya
+        Route::get('absensi', [\App\Http\Controllers\Admin\AbsensiController::class, 'index'])->name('absensi.index');
+        Route::get('nilai', [\App\Http\Controllers\Admin\NilaiController::class, 'index'])->name('nilai.index');
+
+        // Laporan
+        Route::get('laporan', [\App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('laporan.index');
     });
 
     // Guru Routes
