@@ -29,6 +29,18 @@
                 </div>
 
                 <div class="card-body pt-4">
+                    <!-- Pendahuluan Link -->
+                    <div class="alert alert-primary d-flex align-items-center mb-4" role="alert">
+                        <span class="badge badge-center rounded-pill bg-primary me-3"><i
+                                class="bx bx-info-circle"></i></span>
+                        <div class="d-flex flex-column">
+                            <h6 class="mb-0 fw-bold">Pengantar & Kontrak Belajar</h6>
+                            <small>Pelajari informasi awal, kriteria penilaian, dan kontrak belajar di sini.</small>
+                        </div>
+                        <a href="{{ route('siswa.pendahuluan.show', $jadwal->id) }}"
+                            class="btn btn-primary btn-sm ms-auto">Buka</a>
+                    </div>
+
                     @if ($jadwal->pertemuan->count() > 0)
                         <div class="timeline-basic mb-2">
                             <ul class="timeline mb-0">

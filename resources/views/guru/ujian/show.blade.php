@@ -116,14 +116,19 @@
                                                 <td>{{ $jadwal->ruangan }}</td>
                                                 <td>{{ $jadwal->pengawasUser->nama_lengkap ?? '-' }}</td>
                                                 <td class="text-center">
-                                                    <form
-                                                        action="{{ route('guru.ujian.jadwal.destroy', [$ujian->id, $jadwal->id]) }}"
-                                                        method="POST" onsubmit="return confirm('Hapus jadwal ini?')">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit"
-                                                            class="btn btn-xs btn-icon btn-outline-danger"><i
-                                                                class="bx bx-trash"></i></button>
-                                                    </form>
+                                                    <div class="d-flex justify-content-center gap-1">
+                                                        <a href="{{ route('guru.ujian.hasil.index', $jadwal->id) }}"
+                                                            class="btn btn-xs btn-icon btn-outline-info"
+                                                            title="Lihat Hasil"><i class="bx bx-spreadsheet"></i></a>
+                                                        <form
+                                                            action="{{ route('guru.ujian.jadwal.destroy', [$ujian->id, $jadwal->id]) }}"
+                                                            method="POST" onsubmit="return confirm('Hapus jadwal ini?')">
+                                                            @csrf @method('DELETE')
+                                                            <button type="submit"
+                                                                class="btn btn-xs btn-icon btn-outline-danger"><i
+                                                                    class="bx bx-trash"></i></button>
+                                                        </form>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         @empty

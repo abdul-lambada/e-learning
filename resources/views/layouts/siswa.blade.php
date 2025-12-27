@@ -83,8 +83,8 @@
                     @endcan
 
                     @can('lihat mata pelajaran')
-                        <li class="menu-item">
-                            <a href="#" class="menu-link">
+                        <li class="menu-item {{ request()->routeIs('siswa.pembelajaran.*') ? 'active' : '' }}">
+                            <a href="{{ route('siswa.pembelajaran.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-book"></i>
                                 <div>Mata Pelajaran</div>
                             </a>
@@ -111,18 +111,18 @@
                                 <div>Tugas</div>
                             </a>
                             <ul class="menu-sub">
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                <li class="menu-item {{ request()->routeIs('siswa.tugas.index') ? 'active' : '' }}">
+                                    <a href="{{ route('siswa.tugas.index') }}" class="menu-link">
                                         <div>Daftar Tugas</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                    <a href="{{ route('siswa.tugas.index', ['status' => 'aktif']) }}" class="menu-link">
                                         <div>Tugas Aktif</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                    <a href="{{ route('siswa.tugas.index', ['status' => 'riwayat']) }}" class="menu-link">
                                         <div>Riwayat Tugas</div>
                                     </a>
                                 </li>
@@ -137,13 +137,13 @@
                                 <div>Kuis</div>
                             </a>
                             <ul class="menu-sub">
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                <li class="menu-item {{ request()->routeIs('siswa.kuis.index') ? 'active' : '' }}">
+                                    <a href="{{ route('siswa.kuis.index') }}" class="menu-link">
                                         <div>Kuis Tersedia</div>
                                     </a>
                                 </li>
                                 <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                    <a href="{{ route('siswa.kuis.index', ['filter' => 'riwayat']) }}" class="menu-link">
                                         <div>Hasil Kuis</div>
                                     </a>
                                 </li>
@@ -203,8 +203,8 @@
                                 <div>Nilai</div>
                             </a>
                             <ul class="menu-sub">
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                <li class="menu-item {{ request()->routeIs('siswa.nilai.index') ? 'active' : '' }}">
+                                    <a href="{{ route('siswa.nilai.index') }}" class="menu-link">
                                         <div>Nilai Saya</div>
                                     </a>
                                 </li>

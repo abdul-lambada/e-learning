@@ -12,6 +12,33 @@ use Illuminate\Support\Facades\Storage;
 
 class TugasController extends Controller
 {
+    /**
+     * Tampilkan daftar tugas untuk siswa.
+     */
+    public function index()
+    {
+        /** @var \App\Models\User $siswa */
+        $siswa = Auth::user();
+        $kelasIds = $siswa->kelas()->pluck('kelas.id');
+
+        $tugasList = Tugas::with(['pertemuan.guruMengajar.mataPelajaran', 'pertemuan.guruMengajar.guru'])
+            ->whereHas('pertemuan.guruMengajar', function($q) use ($kelasIds) {
+                $q->whereIn('kelas_id', $kelasIds);
+            })
+            ->where('aktif', true)
+            ->latest()
+            ->paginate(15);
+
+        // Tambahkan info pengumpulan ke tiap tugas
+        foreach ($tugasList as $t) {
+            $t->pengumpulan = PengumpulanTugas::where('tugas_id', $t->id)
+                ->where('siswa_id', $siswa->id)
+                ->first();
+        }
+
+        return view('siswa.tugas.index', compact('tugasList'));
+    }
+
     public function show(Tugas $tugas)
     {
         /** @var \App\Models\User $siswa */

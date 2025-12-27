@@ -55,6 +55,8 @@ Route::middleware(['auth'])->group(function () {
         // Pertemuan (Resource tanpa index, karena diakses via Jadwal)
         Route::resource('pertemuan', \App\Http\Controllers\Guru\PertemuanController::class)->except(['index']);
         Route::post('pertemuan/{pertemuan}/absensi', [\App\Http\Controllers\Guru\PertemuanController::class, 'simpanAbsensi'])->name('pertemuan.absensi');
+        Route::get('absensi/verifikasi', [\App\Http\Controllers\Guru\AbsensiVerifikasiController::class, 'index'])->name('absensi.verifikasi.index');
+        Route::post('absensi/verifikasi/{id}', [\App\Http\Controllers\Guru\AbsensiVerifikasiController::class, 'verifikasi'])->name('absensi.verifikasi.update');
 
         // Materi (Resource tanpa index & show, karena diakses via Pertemuan)
         Route::resource('materi', \App\Http\Controllers\Guru\MateriController::class)->except(['index', 'show']);
@@ -73,6 +75,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('ujian.soal', \App\Http\Controllers\Guru\SoalUjianController::class)->except(['index', 'show']);
         Route::resource('ujian.jadwal', \App\Http\Controllers\Guru\JadwalUjianController::class)->only(['create', 'store', 'destroy']);
 
+        // Hasil & Koreksi Ujian
+        Route::get('ujian/hasil/{jadwal}', [\App\Http\Controllers\Guru\HasilUjianController::class, 'index'])->name('ujian.hasil.index');
+        Route::get('ujian/koreksi/{jawaban}', [\App\Http\Controllers\Guru\HasilUjianController::class, 'show'])->name('ujian.hasil.show');
+        Route::put('ujian/koreksi/{jawaban}', [\App\Http\Controllers\Guru\HasilUjianController::class, 'update'])->name('ujian.hasil.update');
+
+
         // Tugas
         Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class);
         Route::post('tugas/nilai/{pengumpulan}', [\App\Http\Controllers\Guru\TugasController::class, 'nilai'])->name('tugas.nilai');
@@ -89,6 +97,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('laporan/nilai', [\App\Http\Controllers\Guru\LaporanController::class, 'nilai'])->name('laporan.nilai');
         Route::get('laporan/absensi', [\App\Http\Controllers\Guru\LaporanController::class, 'absensi'])->name('laporan.absensi');
         Route::get('laporan/pembelajaran', [\App\Http\Controllers\Guru\LaporanController::class, 'pembelajaran'])->name('laporan.pembelajaran');
+
+        // Wali Kelas
+        Route::get('wali-kelas', [\App\Http\Controllers\Guru\WaliKelasController::class, 'index'])->name('wali-kelas.index');
+        Route::get('wali-kelas/{id}', [\App\Http\Controllers\Guru\WaliKelasController::class, 'show'])->name('wali-kelas.show');
+        Route::get('wali-kelas/{kelasId}/siswa/{siswaId}', [\App\Http\Controllers\Guru\WaliKelasController::class, 'showSiswa'])->name('wali-kelas.siswa.show');
     });
 
     // Siswa Routes
@@ -100,14 +113,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pembelajaran/{jadwal}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'show'])->name('pembelajaran.show');
         Route::get('/pertemuan/{pertemuan}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'pertemuan'])->name('pembelajaran.pertemuan');
         Route::post('/pertemuan/{pertemuan}/absen', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'absenMandiri'])->name('pembelajaran.absen');
+        Route::get('/pendahuluan/{jadwal}', [\App\Http\Controllers\Siswa\PendahuluanController::class, 'show'])->name('pendahuluan.show');
 
 
         // Tugas Siswa
+        Route::get('/tugas', [\App\Http\Controllers\Siswa\TugasController::class, 'index'])->name('tugas.index');
         Route::get('/tugas/{tugas}', [\App\Http\Controllers\Siswa\TugasController::class, 'show'])->name('tugas.show');
         Route::post('/tugas', [\App\Http\Controllers\Siswa\TugasController::class, 'store'])->name('tugas.store');
 
         // Kuis & Ujian
         // Kuis
+        Route::get('kuis', [\App\Http\Controllers\Siswa\KuisController::class, 'index'])->name('kuis.index');
         Route::get('kuis/{kuis}', [\App\Http\Controllers\Siswa\KuisController::class, 'show'])->name('kuis.show');
         Route::post('kuis/{kuis}/start', [\App\Http\Controllers\Siswa\KuisController::class, 'start'])->name('kuis.start');
         Route::get('kuis/do/{jawabanKuis}', [\App\Http\Controllers\Siswa\KuisController::class, 'kerjakan'])->name('kuis.kerjakan');
@@ -122,5 +138,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('ujian/do/{jawabanUjian}', [\App\Http\Controllers\Siswa\UjianController::class, 'kerjakan'])->name('ujian.kerjakan');
         Route::post('ujian/do/simpan', [\App\Http\Controllers\Siswa\UjianController::class, 'simpanJawaban'])->name('ujian.simpan');
         Route::post('ujian/do/{jawabanUjian}/finish', [\App\Http\Controllers\Siswa\UjianController::class, 'finish'])->name('ujian.finish');
+        Route::get('nilai', [\App\Http\Controllers\Siswa\NilaiController::class, 'index'])->name('nilai.index');
     });
 });
+

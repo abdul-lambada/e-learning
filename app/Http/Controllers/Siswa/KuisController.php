@@ -14,6 +14,39 @@ use Carbon\Carbon;
 
 class KuisController extends Controller
 {
+    /**
+     * Tampilkan daftar kuis untuk siswa.
+     */
+    public function index()
+    {
+        /** @var \App\Models\User $siswa */
+        $siswa = Auth::user();
+        $kelasIds = $siswa->kelas()->pluck('kelas.id');
+
+        $kuisList = Kuis::with(['pertemuan.guruMengajar.mataPelajaran', 'pertemuan.guruMengajar.guru'])
+            ->whereHas('pertemuan.guruMengajar', function($q) use ($kelasIds) {
+                $q->whereIn('kelas_id', $kelasIds);
+            })
+            ->where('aktif', true)
+            ->latest()
+            ->paginate(15);
+
+        // Info pengerjaan
+        foreach ($kuisList as $k) {
+            $k->pernah_mengerjakan = JawabanKuis::where('kuis_id', $k->id)
+                                ->where('siswa_id', $siswa->id)
+                                ->exists();
+
+            $k->skor_terakhir = JawabanKuis::where('kuis_id', $k->id)
+                                ->where('siswa_id', $siswa->id)
+                                ->where('status', 'selesai')
+                                ->orderBy('id', 'desc')
+                                ->first()?->nilai;
+        }
+
+        return view('siswa.kuis.index', compact('kuisList'));
+    }
+
     // Halaman Pre-Exam (Info Kuis)
     public function show($id)
     {
