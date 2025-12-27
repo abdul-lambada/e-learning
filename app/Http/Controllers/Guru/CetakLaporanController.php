@@ -36,7 +36,7 @@ class CetakLaporanController extends Controller
         ];
 
         $data_nilai = [];
-        $siswas = $guruMengajar->kelas->siswa;
+        $siswas = $guruMengajar->kelas->users;
 
         foreach ($siswas as $siswa) {
             $rataTugas = $siswa->pengumpulanTugas()

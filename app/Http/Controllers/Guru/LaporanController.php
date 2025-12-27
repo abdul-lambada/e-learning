@@ -30,7 +30,7 @@ class LaporanController extends Controller
 
         if ($request->has('jadwal_id')) {
             $selectedJadwal = GuruMengajar::with([
-                'kelas.siswa',
+                'kelas.users',
                 'mataPelajaran',
                 'tugas' => function($q) { $q->where('aktif', true); },
                 'kuis' => function($q) { $q->where('aktif', true); }
@@ -61,7 +61,7 @@ class LaporanController extends Controller
             ];
 
             // Proses Data Nilai per Siswa
-            foreach ($selectedJadwal->kelas->siswa as $siswa) {
+            foreach ($selectedJadwal->kelas->users as $siswa) {
                 // 1. Nilai Tugas
                 $nilaiTugas = [];
                 foreach ($selectedJadwal->tugas as $tugas) {
@@ -130,7 +130,7 @@ class LaporanController extends Controller
         $dataAbsensi = [];
 
         if ($request->has('jadwal_id')) {
-            $selectedJadwal = GuruMengajar::with(['kelas.siswa', 'mataPelajaran'])->findOrFail($request->jadwal_id);
+            $selectedJadwal = GuruMengajar::with(['kelas.users', 'mataPelajaran'])->findOrFail($request->jadwal_id);
 
             if ($selectedJadwal->guru_id !== $guru->id) abort(403);
 
@@ -140,7 +140,7 @@ class LaporanController extends Controller
             // Ambil semua record absensi relevant
             $absensis = \App\Models\Absensi::whereIn('pertemuan_id', $pertemuanIds)->get();
 
-            foreach ($selectedJadwal->kelas->siswa as $siswa) {
+            foreach ($selectedJadwal->kelas->users as $siswa) {
                 $siswaAbsen = $absensis->where('siswa_id', $siswa->id);
 
                 $dataAbsensi[] = [

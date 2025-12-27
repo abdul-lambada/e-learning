@@ -68,7 +68,7 @@ class PertemuanController extends Controller
             abort(403);
         }
 
-        $pertemuan->load(['guruMengajar.kelas.siswa', 'guruMengajar.mataPelajaran', 'materiPembelajaran', 'tugas', 'kuis', 'absensi']);
+        $pertemuan->load(['guruMengajar.kelas.users', 'guruMengajar.mataPelajaran', 'materiPembelajaran', 'tugas', 'kuis', 'absensi']);
 
         return view('guru.pertemuan.show', compact('pertemuan'));
     }

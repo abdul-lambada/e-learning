@@ -13,11 +13,28 @@ class TugasController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:lihat tugas')->only(['show']);
+        $this->middleware('permission:lihat tugas')->only(['show', 'index']);
         $this->middleware('permission:tambah tugas')->only(['create', 'store']);
         $this->middleware('permission:ubah tugas')->only(['edit', 'update']);
         $this->middleware('permission:hapus tugas')->only(['destroy']);
         $this->middleware('permission:nilai tugas')->only(['nilai']);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $user = Auth::user();
+
+        $tugas = Tugas::whereHas('pertemuan.guruMengajar', function ($query) use ($user) {
+            $query->where('guru_id', $user->id);
+        })
+        ->with(['pertemuan.guruMengajar.kelas', 'pertemuan.guruMengajar.mataPelajaran'])
+        ->latest()
+        ->paginate(10);
+
+        return view('guru.tugas.index', compact('tugas'));
     }
 
     /**
@@ -79,15 +96,19 @@ class TugasController extends Controller
      */
     public function show(Tugas $tugas)
     {
+        // Ensure relationships exist (prevent crash if parent meeting deleted)
+        if (!$tugas->pertemuan || !$tugas->pertemuan->guruMengajar) {
+            abort(404, 'Pertemuan atau data pengajar tidak ditemukan.');
+        }
+
         // Authorization check
         if ($tugas->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }
 
-        $tugas->load(['pengumpulanTugas.siswa', 'pertemuan.guruMengajar.kelas.siswa']);
-
+        $tugas->load(['pengumpulanTugas.siswa', 'pertemuan.guruMengajar.kelas.users']);
         // List semua siswa di kelas ini untuk melihat siapa yang belum mengumpulkan
-        $allSiswa = $tugas->pertemuan->guruMengajar->kelas->siswa;
+        $allSiswa = $tugas->pertemuan->guruMengajar->kelas->users;
 
         return view('guru.tugas.show', compact('tugas', 'allSiswa'));
     }
@@ -97,6 +118,10 @@ class TugasController extends Controller
      */
     public function edit(Tugas $tugas)
     {
+        if (!$tugas->pertemuan || !$tugas->pertemuan->guruMengajar) {
+           abort(404);
+        }
+
         if ($tugas->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }
@@ -108,6 +133,10 @@ class TugasController extends Controller
      */
     public function update(Request $request, Tugas $tugas)
     {
+        if (!$tugas->pertemuan || !$tugas->pertemuan->guruMengajar) {
+            abort(404);
+        }
+
         if ($tugas->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }
@@ -141,6 +170,12 @@ class TugasController extends Controller
      */
     public function destroy(Tugas $tugas)
     {
+        if (!$tugas->pertemuan || !$tugas->pertemuan->guruMengajar) {
+             // If relationship broken, allow delete if admin or owner, but safely.
+             // Here assuming strict check, just abort.
+             abort(404);
+        }
+
         if ($tugas->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }
@@ -160,6 +195,11 @@ class TugasController extends Controller
         $pengumpulan = PengumpulanTugas::findOrFail($pengumpulanId);
 
         // Authorization
+        // Authorization safety check
+        if (!$pengumpulan->tugas || !$pengumpulan->tugas->pertemuan || !$pengumpulan->tugas->pertemuan->guruMengajar) {
+            abort(404);
+        }
+
         if ($pengumpulan->tugas->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }

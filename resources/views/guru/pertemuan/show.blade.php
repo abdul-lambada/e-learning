@@ -136,26 +136,6 @@
                                                         data-bs-target="#modalMateri{{ $materi->id }}">
                                                         <i class="bx bx-book-open me-1"></i> Baca Konten
                                                     </button>
-
-                                                    <!-- Modal Text Content -->
-                                                    <div class="modal fade" id="modalMateri{{ $materi->id }}"
-                                                        tabindex="-1" aria-hidden="true">
-                                                        <div
-                                                            class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
-                                                            <div class="modal-content">
-                                                                <div class="modal-header">
-                                                                    <h5 class="modal-title">{{ $materi->judul_materi }}
-                                                                    </h5>
-                                                                    <button type="button" class="btn-close"
-                                                                        data-bs-dismiss="modal"
-                                                                        aria-label="Close"></button>
-                                                                </div>
-                                                                <div class="modal-body">
-                                                                    {!! nl2br(e($materi->konten)) !!}
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 @endif
                                             </div>
                                         </div>
@@ -358,7 +338,7 @@
                                 <span class="badge bg-label-danger">A : Alpha</span>
                             </div>
                         </div>
-                        <form action="{{ route('pertemuan.absensi', $pertemuan->id) }}" method="POST">
+                        <form action="{{ route('guru.pertemuan.absensi', $pertemuan->id) }}" method="POST">
                             @csrf
                             <div class="table-responsive text-nowrap border rounded mb-3">
                                 <table class="table table-hover table-striped">
@@ -372,7 +352,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($pertemuan->guruMengajar->kelas->siswa as $siswa)
+                                        @foreach ($pertemuan->guruMengajar->kelas->users as $siswa)
                                             @php
                                                 $abs = $pertemuan->absensi->where('siswa_id', $siswa->id)->first();
                                                 $st = $abs ? $abs->status : 'hadir';
@@ -412,4 +392,23 @@
             </div>
         </div>
     </div>
+    <!-- Modals untuk Materi Teks -->
+    @foreach ($pertemuan->materiPembelajaran as $materi)
+        @if ($materi->tipe_materi == 'teks')
+            <div class="modal fade" id="modalMateri{{ $materi->id }}" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">{{ $materi->judul_materi }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            {!! nl2br(e($materi->konten)) !!}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+    @endforeach
 @endsection

@@ -46,7 +46,7 @@ class DashboardController extends Controller
         // 5. Statistik Wali Kelas (Jika guru adalah wali kelas)
         $kelasWali = \App\Models\Kelas::where('wali_kelas_id', $guruId)->get();
         $totalSiswaBinaan = $kelasWali->sum(function($k) {
-            return $k->siswa()->count();
+            return $k->users()->count();
         });
         $isWaliKelas = $kelasWali->isNotEmpty();
 

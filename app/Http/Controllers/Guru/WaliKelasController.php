@@ -18,7 +18,7 @@ class WaliKelasController extends Controller
     public function index()
     {
         $user = Auth::user();
-        $kelasWali = Kelas::withCount('siswa')
+        $kelasWali = Kelas::withCount('users')
             ->where('wali_kelas_id', $user->id)
             ->get();
 
@@ -30,7 +30,7 @@ class WaliKelasController extends Controller
 
         // Default ke kelas pertama
         $kelas = $kelasWali->first();
-        $students = $kelas->siswa()
+        $students = $kelas->users()
             ->orderBy('nama_lengkap', 'asc')
             ->paginate(25);
 
@@ -43,14 +43,14 @@ class WaliKelasController extends Controller
     public function show($id)
     {
         $user = Auth::user();
-        $kelas = Kelas::withCount('siswa')
+        $kelas = Kelas::withCount('users')
             ->where('id', $id)
             ->where('wali_kelas_id', $user->id)
             ->firstOrFail();
 
         $kelasWali = Kelas::where('wali_kelas_id', $user->id)->get();
 
-        $students = $kelas->siswa()
+        $students = $kelas->users()
             ->orderBy('nama_lengkap', 'asc')
             ->paginate(25);
 

@@ -91,97 +91,119 @@
                 <div class="col-xl-8 col-lg-7 col-md-7 order-0 order-md-1">
                     <!-- Tabs Navigation -->
                     <div class="nav-gestures-wrapper mb-4">
-                        <ul class="nav nav-pills flex-column flex-md-row mb-3">
+                        <ul class="nav nav-pills flex-column flex-md-row mb-3" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" href="javascript:void(0);"><i
-                                        class="bx bx-bar-chart-alt-2 me-1"></i> Akademik</a>
+                                <button type="button" class="nav-link active" role="tab" data-bs-toggle="pill"
+                                    data-bs-target="#navs-akademik" aria-controls="navs-akademik" aria-selected="true">
+                                    <i class="bx bx-bar-chart-alt-2 me-1"></i> Akademik
+                                </button>
+                            </li>
+                            <li class="nav-item">
+                                <button type="button" class="nav-link" role="tab" data-bs-toggle="pill"
+                                    data-bs-target="#navs-kehadiran" aria-controls="navs-kehadiran" aria-selected="false">
+                                    <i class="bx bx-user-check me-1"></i> Kehadiran
+                                </button>
                             </li>
                         </ul>
                     </div>
 
-                    <!-- Academic/Nilai Summary -->
-                    <div class="card mb-4">
-                        <h5 class="card-header">Ringkasan Nilai Semester Ini</h5>
-                        <div class="table-responsive mb-3">
-                            <table class="table table-hover border-top">
-                                <thead>
-                                    <tr>
-                                        <th>Mata Pelajaran</th>
-                                        <th>Nilai Akhir</th>
-                                        <th>Predikat</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($nilaiSummary as $nilai)
-                                        <tr>
-                                            <td>{{ $nilai->mataPelajaran->nama_mapel }}</td>
-                                            <td><span class="fw-bold">{{ number_format($nilai->nilai_akhir, 2) }}</span>
-                                            </td>
-                                            <td><span class="badge bg-label-primary">{{ $nilai->getPredikat() }}</span>
-                                            </td>
-                                            <td>
-                                                <span
-                                                    class="badge {{ $nilai->lulus ? 'bg-label-success' : 'bg-label-danger' }}">
-                                                    {{ $nilai->lulus ? 'Lulus' : 'Tidak Lulus' }}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="4" class="text-center">Data nilai belum tersedia atau belum
-                                                dihitung.</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
+                    <div class="tab-content p-0 bg-transparent shadow-none">
+                        <!-- Academic/Nilai Summary -->
+                        <div class="tab-pane fade show active" id="navs-akademik" role="tabpanel">
+                            <div class="card mb-4">
+                                <h5 class="card-header">Ringkasan Nilai Semester Ini</h5>
+                                <div class="table-responsive mb-3">
+                                    <table class="table table-hover border-top">
+                                        <thead>
+                                            <tr>
+                                                <th>Mata Pelajaran</th>
+                                                <th>Nilai Akhir</th>
+                                                <th>Predikat</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($nilaiSummary as $nilai)
+                                                <tr>
+                                                    <td>{{ $nilai->mataPelajaran->nama_mapel }}</td>
+                                                    <td><span
+                                                            class="fw-bold">{{ number_format($nilai->nilai_akhir, 2) }}</span>
+                                                    </td>
+                                                    <td><span
+                                                            class="badge bg-label-primary">{{ $nilai->getPredikat() }}</span>
+                                                    </td>
+                                                    <td>
+                                                        <span
+                                                            class="badge {{ $nilai->lulus ? 'bg-label-success' : 'bg-label-danger' }}">
+                                                            {{ $nilai->lulus ? 'Lulus' : 'Tidak Lulus' }}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4" class="text-center">Data nilai belum tersedia atau
+                                                        belum
+                                                        dihitung.</td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <!-- Attendance Stats for current class -->
-                    <div class="card mb-4">
-                        <h5 class="card-header">Statistik Kehadiran</h5>
-                        <div class="card-body">
-                            <div class="row">
-                                @php
-                                    $stats = [
-                                        [
-                                            'label' => 'Hadir',
-                                            'key' => 'hadir',
-                                            'class' => 'primary',
-                                            'icon' => 'check-circle',
-                                        ],
-                                        [
-                                            'label' => 'Sakit',
-                                            'key' => 'sakit',
-                                            'class' => 'warning',
-                                            'icon' => 'plus-medical',
-                                        ],
-                                        ['label' => 'Izin', 'key' => 'izin', 'class' => 'info', 'icon' => 'envelope'],
-                                        [
-                                            'label' => 'Alpa',
-                                            'key' => 'alpha',
-                                            'class' => 'danger',
-                                            'icon' => 'x-circle',
-                                        ],
-                                    ];
-                                @endphp
+                        <!-- Attendance Stats for current class -->
+                        <div class="tab-pane fade" id="navs-kehadiran" role="tabpanel">
+                            <div class="card mb-4">
+                                <h5 class="card-header">Statistik Kehadiran</h5>
+                                <div class="card-body">
+                                    <div class="row">
+                                        @php
+                                            $stats = [
+                                                [
+                                                    'label' => 'Hadir',
+                                                    'key' => 'hadir',
+                                                    'class' => 'primary',
+                                                    'icon' => 'check-circle',
+                                                ],
+                                                [
+                                                    'label' => 'Sakit',
+                                                    'key' => 'sakit',
+                                                    'class' => 'warning',
+                                                    'icon' => 'plus-medical',
+                                                ],
+                                                [
+                                                    'label' => 'Izin',
+                                                    'key' => 'izin',
+                                                    'class' => 'info',
+                                                    'icon' => 'envelope',
+                                                ],
+                                                [
+                                                    'label' => 'Alpa',
+                                                    'key' => 'alpha',
+                                                    'class' => 'danger',
+                                                    'icon' => 'x-circle',
+                                                ],
+                                            ];
+                                        @endphp
 
-                                @foreach ($stats as $s)
-                                    <div class="col-sm-6 col-md-3 mb-3">
-                                        <div class="d-flex align-items-center gap-3">
-                                            <div class="avatar">
-                                                <span class="avatar-initial rounded bg-label-{{ $s['class'] }}">
-                                                    <i class="bx bx-{{ $s['icon'] }} fs-4"></i>
-                                                </span>
+                                        @foreach ($stats as $s)
+                                            <div class="col-sm-6 col-md-3 mb-3">
+                                                <div class="d-flex align-items-center gap-3">
+                                                    <div class="avatar">
+                                                        <span class="avatar-initial rounded bg-label-{{ $s['class'] }}">
+                                                            <i class="bx bx-{{ $s['icon'] }} fs-4"></i>
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <h5 class="mb-0">{{ $absensiStats[$s['key']] ?? 0 }}</h5>
+                                                        <small>{{ $s['label'] }}</small>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <h5 class="mb-0">{{ $absensiStats[$s['key']] ?? 0 }}</h5>
-                                                <small>{{ $s['label'] }}</small>
-                                            </div>
-                                        </div>
+                                        @endforeach
                                     </div>
-                                @endforeach
+                                </div>
                             </div>
                         </div>
                     </div>
