@@ -56,7 +56,7 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('users', UserController::class);
 
         // Kelas Management
-        Route::resource('kelas', \App\Http\Controllers\Admin\KelasController::class);
+        Route::resource('kelas', \App\Http\Controllers\Admin\KelasController::class)->parameters(['kelas' => 'kelas']);
 
         // Mata Pelajaran Management
         Route::resource('mata-pelajaran', \App\Http\Controllers\Admin\MataPelajaranController::class);
