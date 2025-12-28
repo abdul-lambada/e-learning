@@ -32,8 +32,8 @@ class LaporanController extends Controller
             $selectedJadwal = GuruMengajar::with([
                 'kelas.users',
                 'mataPelajaran',
-                'tugas' => function($q) { $q->where('aktif', true); },
-                'kuis' => function($q) { $q->where('aktif', true); }
+                'pertemuan.tugas' => function($q) { $q->where('aktif', true); },
+                'pertemuan.kuis' => function($q) { $q->where('aktif', true); }
             ])->findOrFail($request->jadwal_id);
 
             if ($selectedJadwal->guru_id !== $guru->id) {
@@ -64,24 +64,34 @@ class LaporanController extends Controller
             foreach ($selectedJadwal->kelas->users as $siswa) {
                 // 1. Nilai Tugas
                 $nilaiTugas = [];
-                foreach ($selectedJadwal->tugas as $tugas) {
-                    $pengumpulan = $tugas->pengumpulanTugas->where('siswa_id', $siswa->id)->first();
-                    $nilaiTugas[] = $pengumpulan ? $pengumpulan->nilai : 0;
+                foreach ($selectedJadwal->pertemuan as $pertemuan) {
+                    foreach ($pertemuan->tugas as $tugas) {
+                        $pengumpulan = $tugas->pengumpulanTugas->where('siswa_id', $siswa->id)->first();
+                        $nilaiTugas[] = $pengumpulan ? $pengumpulan->nilai : 0;
+                    }
                 }
                 $avgTugas = count($nilaiTugas) > 0 ? array_sum($nilaiTugas) / count($nilaiTugas) : 0;
 
                 // 2. Nilai Kuis
                 $nilaiKuis = [];
-                foreach ($selectedJadwal->kuis as $kuis) {
-                    $attempt = $kuis->jawabanKuis->where('siswa_id', $siswa->id)->where('status', 'selesai')->sortByDesc('nilai')->first();
-                    $nilaiKuis[] = $attempt ? $attempt->nilai : 0;
+                foreach ($selectedJadwal->pertemuan as $pertemuan) {
+                    foreach ($pertemuan->kuis as $kuis) {
+                        $attempt = $kuis->jawabanKuis->where('siswa_id', $siswa->id)->where('status', 'selesai')->sortByDesc('nilai')->first();
+                        $nilaiKuis[] = $attempt ? $attempt->nilai : 0;
+                    }
                 }
                 $avgKuis = count($nilaiKuis) > 0 ? array_sum($nilaiKuis) / count($nilaiKuis) : 0;
 
                 // 3. Nilai Ujian
                 $totalUjian = 0;
                 $ujianCount = 0;
-                $jadwalUjians = \App\Models\JadwalUjian::where('guru_mengajar_id', $selectedJadwal->id)->get();
+                // Ambil ujian yang terkait dengan Mapel dan Kelas ini
+                $ujianIds = \App\Models\Ujian::where('mata_pelajaran_id', $selectedJadwal->mata_pelajaran_id)
+                                ->where('kelas_id', $selectedJadwal->kelas_id)
+                                ->pluck('id');
+
+                $jadwalUjians = \App\Models\JadwalUjian::whereIn('ujian_id', $ujianIds)->get();
+
                 foreach($jadwalUjians as $ju) {
                     $jujian = \App\Models\JawabanUjian::where('jadwal_ujian_id', $ju->id)->where('siswa_id', $siswa->id)->where('status', 'selesai')->first();
                     if($jujian) {

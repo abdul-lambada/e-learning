@@ -12,11 +12,30 @@ class KuisController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:lihat kuis')->only(['show', 'hasil', 'review']);
+        $this->middleware('permission:lihat kuis')->only(['show', 'hasil', 'review', 'index']);
         $this->middleware('permission:tambah kuis')->only(['create', 'store']);
         $this->middleware('permission:ubah kuis')->only(['edit', 'update']);
         $this->middleware('permission:hapus kuis')->only(['destroy']);
         $this->middleware('permission:nilai kuis')->only(['simpanKoreksi']);
+    }
+
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        // Menampilkan daftar kuis milik guru yang sedang login
+        $user = Auth::user();
+
+        $kuis = Kuis::has('pertemuan.guruMengajar')
+            ->whereHas('pertemuan.guruMengajar', function ($query) use ($user) {
+                $query->where('guru_id', $user->id);
+            })
+            ->with(['pertemuan.guruMengajar.kelas', 'pertemuan.guruMengajar.mataPelajaran'])
+            ->latest()
+            ->paginate(10);
+
+        return view('guru.kuis.index', compact('kuis'));
     }
 
     /**

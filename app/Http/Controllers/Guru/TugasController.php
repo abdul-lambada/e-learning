@@ -27,7 +27,8 @@ class TugasController extends Controller
     {
         $user = Auth::user();
 
-        $tugas = Tugas::whereHas('pertemuan.guruMengajar', function ($query) use ($user) {
+        $tugas = Tugas::has('pertemuan.guruMengajar') // Only tasks with valid parents
+        ->whereHas('pertemuan.guruMengajar', function ($query) use ($user) {
             $query->where('guru_id', $user->id);
         })
         ->with(['pertemuan.guruMengajar.kelas', 'pertemuan.guruMengajar.mataPelajaran'])

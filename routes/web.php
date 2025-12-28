@@ -14,8 +14,16 @@ use App\Http\Controllers\Siswa\DashboardController as SiswaDashboard;
 */
 
 // Redirect root to login
+// Redirect root to login or dashboard based on role
 Route::get('/', function () {
-    return redirect('/login');
+    if (auth()->check()) {
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        if ($user->isAdmin()) return redirect()->route('admin.dashboard');
+        if ($user->isGuru()) return redirect()->route('guru.dashboard');
+        if ($user->isSiswa()) return redirect()->route('siswa.dashboard');
+    }
+    return redirect()->route('login');
 });
 
 // Authentication Routes
