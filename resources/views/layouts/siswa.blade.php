@@ -75,8 +75,8 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Kelas Saya</span></li>
 
                     @can('lihat kelas')
-                        <li class="menu-item">
-                            <a href="#" class="menu-link">
+                        <li class="menu-item {{ request()->routeIs('siswa.kelas.index') ? 'active' : '' }}">
+                            <a href="{{ route('siswa.kelas.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-buildings"></i>
                                 <div>Informasi Kelas</div>
                             </a>
