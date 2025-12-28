@@ -53,14 +53,12 @@
                                             class="btn btn-sm btn-icon btn-outline-primary me-1">
                                             <i class="bx bx-edit"></i>
                                         </a>
-                                        <form action="{{ route('guru.komponen-nilai.destroy', $k->id) }}" method="POST"
-                                            onsubmit="return confirm('Hapus pengaturan ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-icon btn-outline-danger">
-                                                <i class="bx bx-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete"
+                                            data-url="{{ route('guru.komponen-nilai.destroy', $k->id) }}"
+                                            data-name="{{ $k->mataPelajaran->nama_mapel }}"
+                                            data-title="Hapus Pengaturan Komponen Nilai">
+                                            <i class="bx bx-trash"></i>
+                                        </button>
                                     </div>
                                 </td>
                             </tr>

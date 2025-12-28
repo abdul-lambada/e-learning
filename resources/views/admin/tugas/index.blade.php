@@ -47,13 +47,11 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <form action="{{ route('admin.tugas.destroy', $t->id) }}" method="POST"
-                                            onsubmit="return confirm('Hapus tugas ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-icon btn-outline-danger"><i
-                                                    class="bx bx-trash"></i></button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete"
+                                            data-url="{{ route('admin.tugas.destroy', $t->id) }}"
+                                            data-name="{{ $t->judul }}" data-title="Hapus Tugas">
+                                            <i class="bx bx-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @empty

@@ -44,15 +44,12 @@
                                                 <i class="bx bx-check me-1"></i> Aktifkan
                                             </button>
                                         </form>
-                                        <form action="{{ route('admin.pengaturan-akademik.destroy', $akademik) }}"
-                                            method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-icon btn-outline-danger"
-                                                onclick="return confirm('Hapus data ini?')">
-                                                <i class="bx bx-trash"></i>
-                                            </button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete"
+                                            data-url="{{ route('admin.pengaturan-akademik.destroy', $akademik->id) }}"
+                                            data-name="{{ $akademik->tahun_ajaran }} - {{ ucfirst($akademik->semester) }}"
+                                            data-title="Hapus Tahun Akademik">
+                                            <i class="bx bx-trash"></i>
+                                        </button>
                                     @else
                                         <button class="btn btn-sm btn-success disabled">
                                             <i class="bx bx-check-double me-1"></i> Aktif

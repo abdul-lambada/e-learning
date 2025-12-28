@@ -42,13 +42,11 @@
                                     <td>Pertemuan {{ $materi->pertemuan->pertemuan_ke }}</td>
                                     <td>{{ $materi->created_at->format('d/m/Y H:i') }}</td>
                                     <td>
-                                        <form action="{{ route('admin.materi.destroy', $materi->id) }}" method="POST"
-                                            onsubmit="return confirm('Hapus materi ini?')">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-icon btn-outline-danger"><i
-                                                    class="bx bx-trash"></i></button>
-                                        </form>
+                                        <button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete"
+                                            data-url="{{ route('admin.materi.destroy', $materi->id) }}"
+                                            data-name="{{ $materi->judul_materi }}" data-title="Hapus Materi">
+                                            <i class="bx bx-trash"></i>
+                                        </button>
                                     </td>
                                 </tr>
                             @empty

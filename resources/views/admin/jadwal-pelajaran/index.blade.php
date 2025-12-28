@@ -3,6 +3,14 @@
 @section('title', 'Manajemen Jadwal Pelajaran')
 
 @section('content')
+    <!-- Breadcrumbs -->
+    @include('partials.breadcrumbs', [
+        'breadcrumbs' => [
+            ['name' => 'Dashboard', 'url' => route('admin.dashboard')],
+            ['name' => 'Jadwal Pelajaran'],
+        ],
+    ])
+
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Jadwal Pelajaran</h5>
@@ -108,8 +116,10 @@
                                                     href="{{ route('admin.jadwal-pelajaran.edit', $data->id) }}">
                                                     <i class="bx bx-edit-alt me-1"></i> Edit
                                                 </a>
-                                                <button type="button" class="dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal{{ $data->id }}">
+                                                <button type="button" class="dropdown-item btn-delete"
+                                                    data-url="{{ route('admin.jadwal-pelajaran.destroy', $data->id) }}"
+                                                    data-name="{{ $data->mataPelajaran->nama_mapel }} - {{ $data->kelas->nama_kelas }}"
+                                                    data-title="Hapus Jadwal">
                                                     <i class="bx bx-trash me-1"></i> Hapus
                                                 </button>
                                             @endcan
@@ -117,41 +127,6 @@
                                     </div>
                                 </td>
                             </tr>
-
-                            <!-- Delete Modal -->
-                            <div class="modal fade" id="deleteModal{{ $data->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Konfirmasi Hapus</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="text-center mb-3">
-                                                <i class="bx bx-error-circle" style="font-size: 64px; color: #ea5455;"></i>
-                                            </div>
-                                            <p class="text-center">Apakah Anda yakin ingin menghapus jadwal ini?</p>
-                                            <div class="text-center text-muted">
-                                                <strong>{{ $data->mataPelajaran->nama_mapel }}</strong> di
-                                                <strong>{{ $data->kelas->nama_kelas }}</strong><br>
-                                                {{ $data->hari }},
-                                                {{ \Carbon\Carbon::parse($data->jam_mulai)->format('H:i') }}
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-secondary"
-                                                data-bs-dismiss="modal">Batal</button>
-                                            <form action="{{ route('admin.jadwal-pelajaran.destroy', $data->id) }}"
-                                                method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Ya, Hapus!</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         @empty
                             <tr>
                                 <td colspan="7" class="text-center">
