@@ -277,9 +277,65 @@
             </div>
         </div>
     </div>
+
+    <!-- Charts Row -->
+    <div class="row mt-4">
+        <!-- Weekly Activity Chart -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">Aktivitas Belajar Mingguan</h5>
+                        <small class="text-muted">Progress belajar 7 hari terakhir</small>
+                    </div>
+                    <span class="badge bg-success">
+                        <i class="bx bx-trending-up me-1"></i> Semangat!
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div id="siswaWeeklyActivityChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Distribution Chart -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Rekap Kehadiran</h5>
+                    <small class="text-muted">Distribusi status absensi</small>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <div id="attendanceChart" style="min-height: 220px;"></div>
+                </div>
+                <div class="card-footer border-top pt-3">
+                    <div class="d-flex justify-content-around text-center">
+                        <div>
+                            <span class="badge bg-label-success rounded-circle p-1"><i class="bx bx-check"></i></span>
+                            <small class="d-block mt-1">{{ $absensiChart['data'][0] ?? 0 }} Hadir</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-label-info rounded-circle p-1"><i class="bx bx-envelope"></i></span>
+                            <small class="d-block mt-1">{{ $absensiChart['data'][1] ?? 0 }} Izin</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-label-warning rounded-circle p-1"><i
+                                    class="bx bx-plus-medical"></i></span>
+                            <small class="d-block mt-1">{{ $absensiChart['data'][2] ?? 0 }} Sakit</small>
+                        </div>
+                        <div>
+                            <span class="badge bg-label-danger rounded-circle p-1"><i class="bx bx-x"></i></span>
+                            <small class="d-block mt-1">{{ $absensiChart['data'][3] ?? 0 }} Alpha</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
-@push('page-style')
+@push('styles')
+    <link rel="stylesheet" href="/sneat-1.0.0/sneat-1.0.0/assets/vendor/libs/apex-charts/apex-charts.css" />
     <style>
         .timeline-event {
             border: 1px solid #f2f2f2;
@@ -292,4 +348,134 @@
             border-left-color: transparent !important;
         }
     </style>
+@endpush
+
+@push('scripts')
+    <script src="/sneat-1.0.0/sneat-1.0.0/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Chart Data
+            var chartData = {
+                tugas: {!! json_encode($weeklyData['tugas'] ?? [0, 0, 0, 0, 0, 0, 0]) !!},
+                kuis: {!! json_encode($weeklyData['kuis'] ?? [0, 0, 0, 0, 0, 0, 0]) !!},
+                absensi: {!! json_encode($weeklyData['absensi'] ?? [0, 0, 0, 0, 0, 0, 0]) !!},
+                labels: {!! json_encode($weekLabels ?? ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']) !!},
+                attendanceData: {!! json_encode($absensiChart['data'] ?? [0, 0, 0, 0]) !!},
+                attendanceLabels: {!! json_encode($absensiChart['labels'] ?? ['Hadir', 'Izin', 'Sakit', 'Alpha']) !!}
+            };
+
+            // Weekly Activity Chart
+            const weeklyOptions = {
+                series: [{
+                    name: 'Tugas Dikumpulkan',
+                    data: chartData.tugas
+                }, {
+                    name: 'Kuis Dikerjakan',
+                    data: chartData.kuis
+                }, {
+                    name: 'Kehadiran',
+                    data: chartData.absensi
+                }],
+                chart: {
+                    type: 'line',
+                    height: 300,
+                    toolbar: {
+                        show: false
+                    }
+                },
+                colors: ['#696cff', '#03c3ec', '#71dd37'],
+                stroke: {
+                    curve: 'smooth',
+                    width: 3
+                },
+                markers: {
+                    size: 5,
+                    hover: {
+                        size: 7
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    categories: chartData.labels,
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(val) {
+                            return Math.floor(val);
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'left'
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return val + " aktivitas";
+                        }
+                    }
+                },
+                grid: {
+                    borderColor: '#f1f1f1',
+                    strokeDashArray: 3
+                }
+            };
+
+            new ApexCharts(document.querySelector("#siswaWeeklyActivityChart"), weeklyOptions).render();
+
+            // Attendance Donut Chart
+            const attendanceOptions = {
+                series: chartData.attendanceData,
+                chart: {
+                    type: 'donut',
+                    height: 220
+                },
+                labels: chartData.attendanceLabels,
+                colors: ['#71dd37', '#03c3ec', '#ffab00', '#ff3e1d'],
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '65%',
+                            labels: {
+                                show: true,
+                                name: {
+                                    show: true,
+                                    fontSize: '12px'
+                                },
+                                value: {
+                                    show: true,
+                                    fontSize: '18px',
+                                    fontWeight: 700
+                                },
+                                total: {
+                                    show: true,
+                                    label: 'Total',
+                                    formatter: function(w) {
+                                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                dataLabels: {
+                    enabled: false
+                }
+            };
+
+            new ApexCharts(document.querySelector("#attendanceChart"), attendanceOptions).render();
+        });
+    </script>
 @endpush

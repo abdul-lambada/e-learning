@@ -184,6 +184,9 @@
                         </div>
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
+                            <!-- Theme Toggle / Dark Mode -->
+                            @include('partials.theme-toggle')
+
                             <!-- Notifications -->
                             @include('partials.notifications')
                             <!--/ Notifications -->
@@ -298,6 +301,9 @@
     <script src="/sneat-1.0.0/sneat-1.0.0/assets/js/main.js"></script>
 
     @stack('scripts')
+
+    <!-- Dynamic Delete Modal -->
+    @include('partials.delete-modal-dynamic')
 </body>
 
 </html>

@@ -266,9 +266,60 @@
             </div>
         </div>
     </div>
+
+    <!-- Charts Row -->
+    <div class="row mt-4">
+        <!-- Weekly Activity Chart -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">Aktivitas Mingguan</h5>
+                        <small class="text-muted">Statistik mengajar 7 hari terakhir</small>
+                    </div>
+                    <span class="badge bg-primary">
+                        <i class="bx bx-trending-up me-1"></i> Minggu Ini
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div id="guruWeeklyActivityChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Status Distribution Chart -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">Status Pengumpulan Tugas</h5>
+                    <small class="text-muted">Distribusi status tugas siswa</small>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <div id="taskStatusChart" style="min-height: 220px;"></div>
+                </div>
+                <div class="card-footer border-top pt-3">
+                    <div class="d-flex justify-content-around text-center">
+                        <div>
+                            <span class="badge bg-label-success rounded-pill px-2">Dinilai</span>
+                            <h5 class="mb-0 mt-1">{{ $statusTugas['data'][0] ?? 0 }}</h5>
+                        </div>
+                        <div>
+                            <span class="badge bg-label-warning rounded-pill px-2">Belum</span>
+                            <h5 class="mb-0 mt-1">{{ $statusTugas['data'][1] ?? 0 }}</h5>
+                        </div>
+                        <div>
+                            <span class="badge bg-label-danger rounded-pill px-2">Telat</span>
+                            <h5 class="mb-0 mt-1">{{ $statusTugas['data'][2] ?? 0 }}</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
-@push('page-style')
+@push('styles')
+    <link rel="stylesheet" href="/sneat-1.0.0/sneat-1.0.0/assets/vendor/libs/apex-charts/apex-charts.css" />
     <style>
         .list-group-item:last-child {
             border-bottom: 0 !important;
@@ -283,3 +334,100 @@
         }
     </style>
 @endpush
+
+@push('scripts')
+    <script src="/sneat-1.0.0/sneat-1.0.0/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Chart Data
+            var chartData = {
+                pertemuan: {!! json_encode($weeklyData['pertemuan'] ?? [0,0,0,0,0,0,0]) !!},
+                tugas: {!! json_encode($weeklyData['tugas'] ?? [0,0,0,0,0,0,0]) !!},
+                kuis: {!! json_encode($weeklyData['kuis'] ?? [0,0,0,0,0,0,0]) !!},
+                labels: {!! json_encode($weekLabels ?? ['Sen','Sel','Rab','Kam','Jum','Sab','Min']) !!},
+                statusData: {!! json_encode($statusTugas['data'] ?? [0,0,0]) !!},
+                statusLabels: {!! json_encode($statusTugas['labels'] ?? ['Dinilai','Belum Dinilai','Terlambat']) !!}
+            };
+
+            // Weekly Activity Chart
+            const weeklyOptions = {
+                series: [{
+                    name: 'Pertemuan',
+                    data: chartData.pertemuan
+                }, {
+                    name: 'Tugas Masuk',
+                    data: chartData.tugas
+                }, {
+                    name: 'Kuis Dikerjakan',
+                    data: chartData.kuis
+                }],
+                chart: {
+                    type: 'bar',
+                    height: 300,
+                    toolbar: { show: false },
+                    stacked: false
+                },
+                colors: ['#696cff', '#03c3ec', '#71dd37'],
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '50%',
+                        borderRadius: 4
+                    }
+                },
+                dataLabels: { enabled: false },
+                stroke: { show: true, width: 2, colors: ['transparent'] },
+                xaxis: {
+                    categories: chartData.labels,
+                    axisBorder: { show: false },
+                    axisTicks: { show: false }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(val) { return Math.floor(val); }
+                    }
+                },
+                fill: { opacity: 1 },
+                legend: { position: 'top', horizontalAlign: 'left' },
+                tooltip: {
+                    y: { formatter: function(val) { return val + " aktivitas"; } }
+                },
+                grid: { borderColor: '#f1f1f1', strokeDashArray: 3 }
+            };
+
+            new ApexCharts(document.querySelector("#guruWeeklyActivityChart"), weeklyOptions).render();
+
+            // Task Status Donut Chart
+            const statusOptions = {
+                series: chartData.statusData,
+                chart: { type: 'donut', height: 220 },
+                labels: chartData.statusLabels,
+                colors: ['#71dd37', '#ffab00', '#ff3e1d'],
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '65%',
+                            labels: {
+                                show: true,
+                                name: { show: true, fontSize: '12px' },
+                                value: { show: true, fontSize: '18px', fontWeight: 700 },
+                                total: {
+                                    show: true,
+                                    label: 'Total',
+                                    formatter: function(w) {
+                                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                legend: { show: false },
+                dataLabels: { enabled: false }
+            };
+
+            new ApexCharts(document.querySelector("#taskStatusChart"), statusOptions).render();
+        });
+    </script>
+@endpush
+

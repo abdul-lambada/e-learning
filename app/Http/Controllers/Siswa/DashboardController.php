@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Siswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -14,13 +15,13 @@ class DashboardController extends Controller
         $kelas = $siswa->kelas()->first();
 
         // 1. Jadwal Hari Ini
-        $jadwalHariIni = collect(); // Default empty
+        $jadwalHariIni = collect();
         if ($kelas) {
             $hariIndo = [
                 'Sunday' => 'Minggu', 'Monday' => 'Senin', 'Tuesday' => 'Selasa',
                 'Wednesday' => 'Rabu', 'Thursday' => 'Kamis', 'Friday' => 'Jumat', 'Saturday' => 'Sabtu'
             ];
-            $hariIni = $hariIndo[\Carbon\Carbon::now()->format('l')];
+            $hariIni = $hariIndo[Carbon::now()->format('l')];
 
             $jadwalHariIni = \App\Models\GuruMengajar::with(['mataPelajaran', 'guru'])
                                 ->where('kelas_id', $kelas->id)
@@ -29,17 +30,17 @@ class DashboardController extends Controller
                                 ->get();
         }
 
-        // 2. Tugas Deadline Terdekat (Belum dikerjakan)
+        // 2. Tugas Deadline Terdekat
         $tugasPending = collect();
         if ($kelas) {
             $tugasPending = \App\Models\Tugas::whereHas('pertemuan.guruMengajar', function($q) use ($kelas) {
                 $q->where('kelas_id', $kelas->id);
             })
             ->whereDoesntHave('pengumpulanTugas', function($q) use ($siswa) {
-                $q->where('siswa_id', $siswa->id); // Filter yang belum dikumpulkan
+                $q->where('siswa_id', $siswa->id);
             })
             ->where('aktif', true)
-            ->where('tanggal_deadline', '>=', now()) // Deadline belum lewat
+            ->where('tanggal_deadline', '>=', now())
             ->orderBy('tanggal_deadline', 'asc')
             ->take(5)
             ->get();
@@ -57,7 +58,7 @@ class DashboardController extends Controller
             ->count();
         }
 
-        // 4. Statistik Absensi (Skala Kehadiran)
+        // 4. Statistik Absensi
         $absensi = \App\Models\Absensi::where('siswa_id', $siswa->id)
             ->whereHas('pertemuan.guruMengajar', function($q) use ($kelas) {
                 if ($kelas) $q->where('kelas_id', $kelas->id);
@@ -69,7 +70,7 @@ class DashboardController extends Controller
         $totalPertemuan = $absensi->sum();
         $persenHadir = $totalPertemuan > 0 ? (($absensi['hadir'] ?? 0) / $totalPertemuan) * 100 : 0;
 
-        // 5. Nilai Terbaru (Dari Tugas/Kuis yang sudah dinilai)
+        // 5. Nilai Terbaru
         $nilaiTugas = \App\Models\PengumpulanTugas::with('tugas.pertemuan.guruMengajar.mataPelajaran')
             ->where('siswa_id', $siswa->id)
             ->where('status', 'dinilai')
@@ -119,8 +120,40 @@ class DashboardController extends Controller
                 ->get();
         }
 
-        // 7. Rata-rata Nilai Akhir (Jika sudah ada)
+        // 7. Rata-rata Nilai Akhir
         $avgNilai = \App\Models\NilaiAkhir::where('siswa_id', $siswa->id)->avg('nilai_akhir') ?? 0;
+
+        // 8. Chart Data - Aktivitas Belajar Mingguan
+        $weeklyData = [];
+        $weekLabels = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = Carbon::now()->subDays($i);
+            $weekLabels[] = $date->format('D');
+
+            // Tugas dikumpulkan
+            $weeklyData['tugas'][] = \App\Models\PengumpulanTugas::where('siswa_id', $siswa->id)
+                ->whereDate('created_at', $date)->count();
+
+            // Kuis dikerjakan
+            $weeklyData['kuis'][] = \App\Models\JawabanKuis::where('siswa_id', $siswa->id)
+                ->whereDate('created_at', $date)->count();
+
+            // Absensi hadir
+            $weeklyData['absensi'][] = \App\Models\Absensi::where('siswa_id', $siswa->id)
+                ->where('status', 'hadir')
+                ->whereDate('created_at', $date)->count();
+        }
+
+        // 9. Chart Data - Distribusi Absensi
+        $absensiChart = [
+            'labels' => ['Hadir', 'Izin', 'Sakit', 'Alpha'],
+            'data' => [
+                $absensi['hadir'] ?? 0,
+                $absensi['izin'] ?? 0,
+                $absensi['sakit'] ?? 0,
+                $absensi['alpha'] ?? 0,
+            ]
+        ];
 
         return view('siswa.dashboard', compact(
             'kelas',
@@ -130,7 +163,11 @@ class DashboardController extends Controller
             'persenHadir',
             'nilaiTerbaru',
             'ujianTerdekat',
-            'avgNilai'
+            'avgNilai',
+            'weeklyData',
+            'weekLabels',
+            'absensiChart'
         ));
     }
 }
+

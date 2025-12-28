@@ -3,9 +3,11 @@
 @section('title', 'Manajemen Pengguna')
 
 @section('content')
-    <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">Manajemen Pengguna /</span> Daftar Pengguna
-    </h4>
+    <!-- Breadcrumbs -->
+    @include('partials.breadcrumbs', [
+        'breadcrumbs' => [['name' => 'Dashboard', 'url' => route('admin.dashboard')], ['name' => 'Pengguna']],
+    ])
+
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Pengguna</h5>
@@ -121,8 +123,9 @@
                                                 </a>
 
                                                 @if ($user->id !== auth()->id())
-                                                    <button type="button" class="dropdown-item" data-bs-toggle="modal"
-                                                        data-bs-target="#deleteModal{{ $user->id }}">
+                                                    <button type="button" class="dropdown-item btn-delete"
+                                                        data-url="{{ route('admin.users.destroy', $user->id) }}"
+                                                        data-name="{{ $user->nama_lengkap }}" data-title="Hapus Pengguna">
                                                         <i class="bx bx-trash me-1"></i> Hapus
                                                     </button>
                                                 @endif
@@ -131,39 +134,6 @@
                                     </div>
                                 </td>
                             </tr>
-
-                            <!-- Delete Modal -->
-                            <div class="modal fade" id="deleteModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Konfirmasi Hapus</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="text-center mb-3">
-                                                <i class="bx bx-error-circle" style="font-size: 64px; color: #ea5455;"></i>
-                                            </div>
-                                            <p class="text-center">Apakah Anda yakin ingin menghapus pengguna
-                                                <strong>{{ $user->nama_lengkap }}</strong>?
-                                            </p>
-                                            <p class="text-center text-muted"><small>Tindakan ini tidak dapat
-                                                    dibatalkan!</small></p>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-secondary"
-                                                data-bs-dismiss="modal">Batal</button>
-                                            <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Ya, Hapus!</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         @empty
                             <tr>
                                 <td colspan="7" class="text-center">

@@ -3,9 +3,11 @@
 @section('title', 'Manajemen Kelas')
 
 @section('content')
-    <h4 class="fw-bold py-3 mb-4">
-        <span class="text-muted fw-light">Manajemen Kelas /</span> Daftar Kelas
-    </h4>
+    <!-- Breadcrumbs -->
+    @include('partials.breadcrumbs', [
+        'breadcrumbs' => [['name' => 'Dashboard', 'url' => route('admin.dashboard')], ['name' => 'Kelas']],
+    ])
+
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Kelas</h5>
@@ -101,8 +103,9 @@
                                                 <a class="dropdown-item" href="{{ route('admin.kelas.edit', $data->id) }}">
                                                     <i class="bx bx-edit-alt me-1"></i> Edit
                                                 </a>
-                                                <button type="button" class="dropdown-item" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal{{ $data->id }}">
+                                                <button type="button" class="dropdown-item btn-delete"
+                                                    data-url="{{ route('admin.kelas.destroy', $data->id) }}"
+                                                    data-name="{{ $data->nama_kelas }}" data-title="Hapus Kelas">
                                                     <i class="bx bx-trash me-1"></i> Hapus
                                                 </button>
                                             @endcan
@@ -110,41 +113,6 @@
                                     </div>
                                 </td>
                             </tr>
-
-                            <!-- Delete Modal -->
-                            <div class="modal fade" id="deleteModal{{ $data->id }}" tabindex="-1" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered" role="document">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Konfirmasi Hapus</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <div class="text-center mb-3">
-                                                <i class="bx bx-error-circle" style="font-size: 64px; color: #ea5455;"></i>
-                                            </div>
-                                            <p class="text-center">Apakah Anda yakin ingin menghapus kelas
-                                                <strong>{{ $data->nama_kelas }}</strong>?
-                                            </p>
-                                            <div class="alert alert-warning">
-                                                <small><i class="bx bx-info-circle"></i> Kelas tidak dapat dihapus jika
-                                                    masih memiliki siswa.</small>
-                                            </div>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-outline-secondary"
-                                                data-bs-dismiss="modal">Batal</button>
-                                            <form action="{{ route('admin.kelas.destroy', $data) }}" method="POST"
-                                                class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-danger">Ya, Hapus!</button>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         @empty
                             <tr>
                                 <td colspan="9" class="text-center">
