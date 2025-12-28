@@ -91,8 +91,11 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="{{ route('admin.kelas.show', $data->id) }}">
+                                                <i class="bx bx-show-alt me-1"></i> Lihat Detail
+                                            </a>
                                             @can('kelola kelas')
-                                                <a class="dropdown-item" href="{{ route('admin.kelas.edit', $data) }}">
+                                                <a class="dropdown-item" href="{{ route('admin.kelas.edit', $data->id) }}">
                                                     <i class="bx bx-edit-alt me-1"></i> Edit
                                                 </a>
                                                 <button type="button" class="dropdown-item" data-bs-toggle="modal"
@@ -133,7 +136,7 @@
                                                 class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="btn btn-danger">Ya, Hapus!</button>
+                                                <button type="submit" class="btn btn-danger">Ya, Hapus!</button>
                                             </form>
                                         </div>
                                     </div>

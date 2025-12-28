@@ -141,4 +141,12 @@ class JadwalPelajaranController extends Controller
         return redirect()->route('admin.jadwal-pelajaran.index')
             ->with('success', 'Jadwal Pelajaran berhasil dihapus!');
     }
+
+    public function show(GuruMengajar $jadwalPelajaran)
+    {
+        // Load data terkait: Guru, Kelas, Mapel, dan Riwayat Pertemuan
+        $jadwalPelajaran->load(['guru', 'kelas', 'mataPelajaran', 'pertemuan.materi', 'pertemuan.tugas']);
+
+        return view('admin.jadwal-pelajaran.show', compact('jadwalPelajaran'));
+    }
 }

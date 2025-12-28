@@ -109,8 +109,11 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="{{ route('admin.users.show', $user->id) }}">
+                                                <i class="bx bx-show-alt me-1"></i> Lihat Detail
+                                            </a>
                                             @can('kelola pengguna')
-                                                <a class="dropdown-item" href="{{ route('admin.users.edit', $user) }}">
+                                                <a class="dropdown-item" href="{{ route('admin.users.edit', $user->id) }}">
                                                     <i class="bx bx-edit-alt me-1"></i> Edit
                                                 </a>
 

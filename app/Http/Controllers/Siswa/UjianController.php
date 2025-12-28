@@ -21,9 +21,28 @@ class UjianController extends Controller
      */
     public function index()
     {
-        // TODO: Implementasi Jadwal Ujian
-        // Untuk sekarang return view empty atau redirect
-        return view('siswa.ujian.index');
+        /** @var \App\Models\User $siswa */
+        $siswa = Auth::user();
+
+        // Ambil kelas dimana siswa terdaftar (pivot kelas_siswa)
+        // Asumsi siswa hanya punya kelas aktif di tahun ajaran ini
+        $kelasIds = $siswa->kelas()->pluck('kelas.id');
+
+        // Ambil jadwal ujian yang:
+        // 1. Ujiannya buat kelas siswa tersebut
+        // 2. Ujiannya aktif
+        // 3. Diurutkan tanggal terdekat
+        $jadwals = JadwalUjian::with(['ujian.mataPelajaran'])
+            ->whereHas('ujian', function($q) use ($kelasIds) {
+                $q->whereIn('kelas_id', $kelasIds)
+                  ->where('aktif', true);
+            })
+            ->whereDate('tanggal_ujian', '>=', now()->subDays(1)) // Tampilkan yg hari ini atau ke depan, plus toleransi 1 hari ke belakang buat cek status selesai
+            ->orderBy('tanggal_ujian', 'asc')
+            ->orderBy('jam_mulai', 'asc')
+            ->paginate(9);
+
+        return view('siswa.ujian.index', compact('jadwals'));
     }
 
     /**

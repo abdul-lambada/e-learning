@@ -43,13 +43,16 @@ class CetakLaporanController extends Controller
                 ->whereHas('tugas', fn($q) => $q->where('guru_mengajar_id', $guruMengajar->id))
                 ->avg('nilai') ?? 0;
 
+            // Kuis related to this GuruMengajar (via Pertemuan)
             $rataKuis = \App\Models\JawabanKuis::where('siswa_id', $siswa->id)
-                ->whereHas('kuis', fn($q) => $q->where('guru_mengajar_id', $guruMengajar->id))
-                ->avg('skor_akhir') ?? 0;
+                ->whereHas('kuis.pertemuan', fn($q) => $q->where('guru_mengajar_id', $guruMengajar->id))
+                ->avg('nilai') ?? 0;
 
+            // Ujian related to this GuruMengajar (via Mapel & Kelas di Ujian)
             $rataUjian = \App\Models\JawabanUjian::where('siswa_id', $siswa->id)
-                ->whereHas('jadwalUjian', fn($q) => $q->where('guru_mengajar_id', $guruMengajar->id))
-                ->avg('skor_akhir') ?? 0;
+                ->whereHas('jadwalUjian.ujian', fn($q) => $q->where('mata_pelajaran_id', $guruMengajar->mata_pelajaran_id)
+                                                             ->where('kelas_id', $guruMengajar->kelas_id))
+                ->avg('nilai') ?? 0;
 
             $kehadiran = \App\Models\Absensi::where('siswa_id', $siswa->id)
                 ->where('guru_mengajar_id', $guruMengajar->id)
