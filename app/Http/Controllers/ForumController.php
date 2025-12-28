@@ -35,7 +35,7 @@ class ForumController extends Controller
                 ->get();
         } else if ($user->peran == 'siswa') {
             $daftarKelas = GuruMengajar::with(['kelas', 'mataPelajaran'])
-                ->whereHas('kelas.siswa', function($q) use ($user) {
+                ->whereHas('kelas.users', function($q) use ($user) {
                     $q->where('siswa_id', $user->id);
                 })
                 ->get();

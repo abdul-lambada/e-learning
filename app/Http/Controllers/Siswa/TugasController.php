@@ -104,10 +104,10 @@ class TugasController extends Controller
 
                 FilePengumpulanTugas::create([
                     'pengumpulan_tugas_id' => $pengumpulan->id,
-                    'file_path' => $path,
-                    'file_name' => $file->getClientOriginalName(),
-                    'file_type' => $file->getClientOriginalExtension(),
-                    'file_size' => $file->getSize(),
+                    'path_file' => $path,
+                    'nama_file' => $file->getClientOriginalName(),
+                    'tipe_file' => $file->getClientOriginalExtension(),
+                    'ukuran_file' => $file->getSize(),
                 ]);
             }
         }

@@ -15,9 +15,9 @@ class PendahuluanController extends Controller
      */
     public function show($guruMengajarId)
     {
-        $jadwal = GuruMengajar::with(['mataPelajaran', 'guru', 'pendahuluan' => function($q) {
+        $jadwal = GuruMengajar::with(['mataPelajaran.pendahuluan' => function($q) {
             $q->where('aktif', true);
-        }])->findOrFail($guruMengajarId);
+        }, 'guru'])->findOrFail($guruMengajarId);
 
         /** @var \App\Models\User $user */
         $user = Auth::user();
@@ -25,7 +25,7 @@ class PendahuluanController extends Controller
             abort(403);
         }
 
-        $pendahuluan = $jadwal->pendahuluan;
+        $pendahuluan = $jadwal->mataPelajaran->pendahuluan->first();
 
         return view('siswa.pendahuluan.show', compact('jadwal', 'pendahuluan'));
     }

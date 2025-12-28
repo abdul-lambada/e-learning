@@ -101,17 +101,19 @@
 
                     <!-- List File/Link yang sudah dikumpulkan -->
                     @if ($pengumpulan)
-                        <h6 class="text-muted small">File Anda:</h6>
-                        @foreach ($pengumpulan->filePengumpulanTugas as $file)
-                            <div class="d-flex align-items-center mb-2 p-2 border rounded bg-light">
-                                <i class="bx bxs-file-pdf me-2 text-warning"></i>
-                                <div class="flex-grow-1 text-truncate">
-                                    <small>{{ $file->file_name }}</small>
+                        @if ($pengumpulan->filePengumpulan->isNotEmpty())
+                            <h6 class="text-muted small">File Anda:</h6>
+                            @foreach ($pengumpulan->filePengumpulan as $file)
+                                <div class="d-flex align-items-center mb-2 p-2 border rounded bg-light">
+                                    <i class="bx bxs-file-pdf me-2 text-warning"></i>
+                                    <div class="flex-grow-1 text-truncate">
+                                        <small>{{ $file->nama_file }}</small>
+                                    </div>
+                                    <a href="{{ Storage::url($file->path_file) }}" target="_blank"
+                                        class="ms-2 text-primary"><i class="bx bx-download"></i></a>
                                 </div>
-                                <a href="{{ Storage::url($file->file_path) }}" target="_blank" class="ms-2 text-primary"><i
-                                        class="bx bx-download"></i></a>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        @endif
 
                         @if ($pengumpulan->link_url)
                             <div class="d-flex align-items-center mb-2 p-2 border rounded bg-light">
@@ -157,7 +159,8 @@
                             @endif
 
                             <button type="submit" class="btn btn-primary w-100 mt-2">
-                                <i class="bx bx-send me-1"></i> {{ $pengumpulan ? 'Update Kerjaan' : 'Kumpulkan Tugas' }}
+                                <i class="bx bx-send me-1"></i>
+                                {{ $pengumpulan ? 'Update Kerjaan' : 'Kumpulkan Tugas' }}
                             </button>
                         </form>
                     @endif
