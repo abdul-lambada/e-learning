@@ -16,221 +16,82 @@ class RolePermissionSeeder extends Seeder
         // Reset cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create Permissions (Bahasa Indonesia)
+        // Daftar Permission Fokus E-Learning
         $permissions = [
-            // Manajemen Pengguna
-            'lihat pengguna',
-            'tambah pengguna',
-            'ubah pengguna',
-            'hapus pengguna',
+            // 1. Manajemen User (Admin)
+            'kelola pengguna',      // CRUD User (Guru/Siswa)
 
-            // Manajemen Kelas
-            'lihat kelas',
-            'tambah kelas',
-            'ubah kelas',
-            'hapus kelas',
-            'kelola siswa kelas',
+            // 2. Data Akademik Dasar (Admin)
+            'kelola kelas',         // Setup Kelas
+            'kelola mapel',         // Setup Mata Pelajaran
+            'kelola tahun ajaran',  // Setup Tahun Ajaran
 
-            // Mata Pelajaran
-            'lihat mata pelajaran',
-            'tambah mata pelajaran',
-            'ubah mata pelajaran',
-            'hapus mata pelajaran',
-
-            // Pertemuan
-            'lihat pertemuan',
-            'tambah pertemuan',
-            'ubah pertemuan',
-            'hapus pertemuan',
-
-            // Materi
+            // 3. Konten Pembelajaran (Guru)
             'lihat materi',
-            'tambah materi',
-            'ubah materi',
-            'hapus materi',
-            'unduh materi',
+            'kelola materi',        // Upload/Edit Materi
+            'unduh materi',         // Siswa download
 
-            // Tugas
+            // 4. Aktivitas Belajar (Guru & Siswa)
             'lihat tugas',
-            'tambah tugas',
-            'ubah tugas',
-            'hapus tugas',
-            'kumpulkan tugas',
-            'nilai tugas',
+            'kelola tugas',         // Guru buat tugas
+            'kumpulkan tugas',      // Siswa upload tugas
+            'nilai tugas',          // Guru nilai tugas
 
-            // Kuis
+            // 5. Evaluasi (Kuis & Ujian)
             'lihat kuis',
-            'tambah kuis',
-            'ubah kuis',
-            'hapus kuis',
-            'kerjakan kuis',
-            'nilai kuis',
-            'import kuis',
-
-            // Ujian
+            'kelola kuis',          // Guru buat bank soal & kuis
+            'kerjakan kuis',        // Siswa
             'lihat ujian',
-            'tambah ujian',
-            'ubah ujian',
-            'hapus ujian',
-            'kerjakan ujian',
-            'nilai ujian',
-            'import ujian',
-            'kelola jadwal ujian',
+            'kelola ujian',         // Guru set ujian
+            'kerjakan ujian',       // Siswa
 
-            // Absensi
-            'lihat absensi',
-            'tambah absensi',
-            'ubah absensi',
-            'hapus absensi',
-            'verifikasi absensi',
-
-            // Nilai
-            'lihat nilai',
-            'tambah nilai',
-            'ubah nilai',
-            'hapus nilai',
-            'verifikasi nilai',
-            'lihat nilai sendiri',
-
-            // Pendahuluan
-            'lihat pendahuluan',
-            'tambah pendahuluan',
-            'ubah pendahuluan',
-            'hapus pendahuluan',
-            'selesaikan pendahuluan',
-
-            // Laporan
-            'lihat laporan',
-            'export laporan',
+            // 6. Monitoring (Guru & Admin)
+            'kelola absensi',       // Guru buka/tutup absen
+            'isi absensi',          // Siswa absen
+            'lihat rekap absensi',  // Report
+            'lihat rekap nilai',    // Report
         ];
 
+        // Buat Permission
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission]);
         }
 
-        // Create Roles and Assign Permissions
+        // ==========================================
+        // CREATE ROLES & ASSIGN PERMISSIONS
+        // ==========================================
 
-        // ROLE ADMIN
-        $adminRole = Role::create(['name' => 'admin']);
-        $adminRole->givePermissionTo(Permission::all()); // Admin memiliki semua permission
+        // 1. ADMIN
+        // Fokus: Setup Sistem, User, Data Master
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $adminRole->givePermissionTo(Permission::all());
 
-        // ROLE GURU
-        $guruRole = Role::create(['name' => 'guru']);
+        // 2. GURU
+        // Fokus: Mengajar (Upload Materi, Tugas, Kuis, Nilai)
+        $guruRole = Role::firstOrCreate(['name' => 'guru']);
         $guruRole->givePermissionTo([
-            // Kelas
-            'lihat kelas',
-            'kelola siswa kelas',
-
-            // Mata Pelajaran
-            'lihat mata pelajaran',
-
-            // Pertemuan
-            'lihat pertemuan',
-            'tambah pertemuan',
-            'ubah pertemuan',
-            'hapus pertemuan',
-
-            // Materi
-            'lihat materi',
-            'tambah materi',
-            'ubah materi',
-            'hapus materi',
-
-            // Tugas
-            'lihat tugas',
-            'tambah tugas',
-            'ubah tugas',
-            'hapus tugas',
-            'nilai tugas',
-
-            // Kuis
-            'lihat kuis',
-            'tambah kuis',
-            'ubah kuis',
-            'hapus kuis',
-            'nilai kuis',
-            'import kuis',
-
-            // Ujian
-            'lihat ujian',
-            'tambah ujian',
-            'ubah ujian',
-            'hapus ujian',
-            'nilai ujian',
-            'import ujian',
-            'kelola jadwal ujian',
-
-            // Absensi
-            'lihat absensi',
-            'tambah absensi',
-            'ubah absensi',
-            'verifikasi absensi',
-
-            // Nilai
-            'lihat nilai',
-            'tambah nilai',
-            'ubah nilai',
-            'verifikasi nilai',
-
-            // Pendahuluan
-            'lihat pendahuluan',
-            'tambah pendahuluan',
-            'ubah pendahuluan',
-            'hapus pendahuluan',
-
-            // Laporan
-            'lihat laporan',
-            'export laporan',
+            'lihat materi', 'kelola materi',
+            'lihat tugas', 'kelola tugas', 'nilai tugas',
+            'lihat kuis', 'kelola kuis',
+            'lihat ujian', 'kelola ujian',
+            'kelola absensi', 'lihat rekap absensi',
+            'lihat rekap nilai'
         ]);
 
-        // ROLE SISWA
-        $siswaRole = Role::create(['name' => 'siswa']);
+        // 3. SISWA
+        // Fokus: Belajar (Akses Materi, Kerjakan Tugas/Kuis, Absen)
+        $siswaRole = Role::firstOrCreate(['name' => 'siswa']);
         $siswaRole->givePermissionTo([
-            // Kelas
-            'lihat kelas',
-
-            // Mata Pelajaran
-            'lihat mata pelajaran',
-
-            // Pertemuan
-            'lihat pertemuan',
-
-            // Materi
-            'lihat materi',
-            'unduh materi',
-
-            // Tugas
-            'lihat tugas',
-            'kumpulkan tugas',
-
-            // Kuis
-            'lihat kuis',
-            'kerjakan kuis',
-
-            // Ujian
-            'lihat ujian',
-            'kerjakan ujian',
-
-            // Absensi
-            'lihat absensi',
-            'tambah absensi',
-
-            // Nilai
-            'lihat nilai sendiri',
-
-            // Pendahuluan
-            'lihat pendahuluan',
-            'selesaikan pendahuluan',
+            'lihat materi', 'unduh materi',
+            'lihat tugas', 'kumpulkan tugas',
+            'lihat kuis', 'kerjakan kuis',
+            'lihat ujian', 'kerjakan ujian',
+            'isi absensi',
+            'lihat rekap absensi', // hanya miliknya
+            'lihat rekap nilai'    // hanya miliknya
         ]);
 
-        $this->command->info('✓ Roles dan Permissions berhasil dibuat!');
-        $this->command->info('');
-        $this->command->info('=================================');
-        $this->command->info('ROLES & PERMISSIONS');
-        $this->command->info('=================================');
-        $this->command->info('Admin: Semua permission (' . Permission::count() . ' permissions)');
-        $this->command->info('Guru: Permission mengajar dan menilai (' . $guruRole->permissions->count() . ' permissions)');
-        $this->command->info('Siswa: Permission belajar dan mengumpulkan (' . $siswaRole->permissions->count() . ' permissions)');
-        $this->command->info('');
+        $this->command->info('✓ Setup Role & Permission E-Learning Selesai.');
+        $this->command->info('  Fokus: Materi, Tugas, Kuis, Ujian, Absensi.');
     }
 }
