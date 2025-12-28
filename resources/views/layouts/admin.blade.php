@@ -314,7 +314,7 @@
                             <div class="alert alert-success alert-dismissible" role="alert">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
-                                {{ session('success') }}
+                                <strong>Berhasil!</strong> {{ session('success') }}
                             </div>
                         @endif
 
@@ -322,7 +322,7 @@
                             <div class="alert alert-danger alert-dismissible" role="alert">
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
-                                {{ session('error') }}
+                                <strong>Error!</strong> {{ session('error') }}
                             </div>
                         @endif
 
