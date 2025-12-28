@@ -25,8 +25,10 @@ class RolePermissionSeeder extends Seeder
             'kelola kelas',         // Setup Kelas
             'kelola mapel',         // Setup Mata Pelajaran
             'kelola tahun ajaran',  // Setup Tahun Ajaran
+            'kelola jadwal',        // Setup Jadwal Pelajaran
 
             // 3. Konten Pembelajaran (Guru)
+            'lihat jadwal',         // Guru/Siswa lihat jadwal
             'lihat materi',
             'kelola materi',        // Upload/Edit Materi
             'unduh materi',         // Siswa download
@@ -70,6 +72,7 @@ class RolePermissionSeeder extends Seeder
         // Fokus: Mengajar (Upload Materi, Tugas, Kuis, Nilai)
         $guruRole = Role::firstOrCreate(['name' => 'guru']);
         $guruRole->givePermissionTo([
+            'lihat jadwal',
             'lihat materi', 'kelola materi',
             'lihat tugas', 'kelola tugas', 'nilai tugas',
             'lihat kuis', 'kelola kuis',
@@ -82,6 +85,7 @@ class RolePermissionSeeder extends Seeder
         // Fokus: Belajar (Akses Materi, Kerjakan Tugas/Kuis, Absen)
         $siswaRole = Role::firstOrCreate(['name' => 'siswa']);
         $siswaRole->givePermissionTo([
+            'lihat jadwal',
             'lihat materi', 'unduh materi',
             'lihat tugas', 'kumpulkan tugas',
             'lihat kuis', 'kerjakan kuis',

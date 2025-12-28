@@ -75,11 +75,11 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Manajemen User</span>
                     </li>
 
-                    @can('lihat pengguna')
+                    @can('kelola pengguna')
                         <li class="menu-item {{ request()->routeIs('admin.users.*') ? 'active open' : '' }}">
                             <a href="javascript:void(0);" class="menu-link menu-toggle">
                                 <i class="menu-icon tf-icons bx bx-user"></i>
-                                <div>Pengguna</div>
+                                <div>Kelola Pengguna</div>
                             </a>
                             <ul class="menu-sub">
                                 <li
@@ -103,23 +103,19 @@
                     @endcan
 
                     <!-- Akademik -->
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Akademik</span></li>
-
-                    <li class="menu-item {{ request()->routeIs('admin.pengaturan-sekolah.index') ? 'active' : '' }}">
-                        <a href="{{ route('admin.pengaturan-sekolah.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-info-circle"></i>
-                            <div>Identitas Sekolah</div>
-                        </a>
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Data Akademik</span>
                     </li>
 
-                    <li class="menu-item {{ request()->routeIs('admin.pengaturan-akademik.index') ? 'active' : '' }}">
-                        <a href="{{ route('admin.pengaturan-akademik.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-cog"></i>
-                            <div>Tahun Akademik</div>
-                        </a>
-                    </li>
+                    @can('kelola tahun ajaran')
+                        <li class="menu-item {{ request()->routeIs('admin.pengaturan-akademik.index') ? 'active' : '' }}">
+                            <a href="{{ route('admin.pengaturan-akademik.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-cog"></i>
+                                <div>Tahun Akademik</div>
+                            </a>
+                        </li>
+                    @endcan
 
-                    @can('lihat kelas')
+                    @can('kelola kelas')
                         <li class="menu-item {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.kelas.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-buildings"></i>
@@ -128,7 +124,7 @@
                         </li>
                     @endcan
 
-                    @can('lihat mata pelajaran')
+                    @can('kelola mapel')
                         <li class="menu-item {{ request()->routeIs('admin.mata-pelajaran.*') ? 'active' : '' }}">
                             <a href="{{ route('admin.mata-pelajaran.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-book"></i>
@@ -137,93 +133,83 @@
                         </li>
                     @endcan
 
-                    <li class="menu-item {{ request()->routeIs('admin.jadwal-pelajaran.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.jadwal-pelajaran.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-calendar"></i>
-                            <div>Jadwal Pelajaran</div>
-                        </a>
-                    </li>
+                    @can('kelola jadwal')
+                        <li class="menu-item {{ request()->routeIs('admin.jadwal-pelajaran.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.jadwal-pelajaran.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-calendar"></i>
+                                <div>Jadwal Pelajaran</div>
+                            </a>
+                        </li>
+                    @endcan
 
                     <!-- Pembelajaran & Evaluasi -->
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Pembelajaran &
                             Evaluasi</span></li>
 
-                    <li class="menu-item {{ request()->routeIs('admin.materi.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.materi.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-file"></i>
-                            <div>Data Materi</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item {{ request()->routeIs('admin.tugas.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.tugas.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-task"></i>
-                            <div>Data Tugas</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item {{ request()->routeIs('admin.kuis.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.kuis.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-edit"></i>
-                            <div>Data Kuis</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item {{ request()->routeIs('admin.ujian.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.ujian.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-notepad"></i>
-                            <div>Data Ujian</div>
-                        </a>
-                    </li>
-
-                    <!-- Monitoring -->
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Monitoring</span></li>
-
-                    <li class="menu-item {{ request()->routeIs('admin.absensi.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.absensi.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-check-circle"></i>
-                            <div>Absensi</div>
-                        </a>
-                    </li>
-
-                    <li class="menu-item {{ request()->routeIs('admin.nilai.*') ? 'active' : '' }}">
-                        <a href="{{ route('admin.nilai.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
-                            <div>Nilai</div>
-                        </a>
-                    </li>
-
-                    <!-- Laporan & Lainnya -->
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Laporan &
-                            Lainnya</span></li>
-
-                    @can('lihat laporan')
-                        <li class="menu-item {{ request()->routeIs('admin.laporan.*') ? 'active' : '' }}">
-                            <a href="{{ route('admin.laporan.index') }}" class="menu-link">
+                    @can('kelola materi')
+                        <li class="menu-item {{ request()->routeIs('admin.materi.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.materi.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-file"></i>
-                                <div>Pusat Laporan</div>
+                                <div>Data Materi</div>
                             </a>
                         </li>
                     @endcan
 
-                    <li class="menu-item {{ request()->routeIs('admin.audit-log.index') ? 'active' : '' }}">
-                        <a href="{{ route('admin.audit-log.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-history"></i>
-                            <div>Log Aktivitas</div>
-                        </a>
-                    </li>
+                    @can('kelola tugas')
+                        <li class="menu-item {{ request()->routeIs('admin.tugas.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.tugas.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-task"></i>
+                                <div>Data Tugas</div>
+                            </a>
+                        </li>
+                    @endcan
 
-                    <li class="menu-item {{ request()->routeIs('perpustakaan.*') ? 'active' : '' }}">
-                        <a href="{{ route('perpustakaan.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-library"></i>
-                            <div>Perpustakaan</div>
-                        </a>
-                    </li>
+                    @can('kelola kuis')
+                        <li class="menu-item {{ request()->routeIs('admin.kuis.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.kuis.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-edit"></i>
+                                <div>Data Kuis</div>
+                            </a>
+                        </li>
+                    @endcan
 
-                    <li class="menu-item {{ request()->routeIs('forum.*') ? 'active' : '' }}">
-                        <a href="{{ route('forum.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-chat"></i>
-                            <div>Forum Diskusi</div>
+                    @can('kelola ujian')
+                        <li class="menu-item {{ request()->routeIs('admin.ujian.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.ujian.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-notepad"></i>
+                                <div>Data Ujian</div>
+                            </a>
+                        </li>
+                    @endcan
+
+                    <!-- Monitoring -->
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Laporan</span></li>
+
+                    @can('kelola absensi')
+                        <li class="menu-item {{ request()->routeIs('admin.absensi.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.absensi.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-check-circle"></i>
+                                <div>Rekap Absensi</div>
+                            </a>
+                        </li>
+                    @endcan
+
+                    @can('lihat rekap nilai')
+                        <li class="menu-item {{ request()->routeIs('admin.nilai.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.nilai.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
+                                <div>Rekap Nilai</div>
+                            </a>
+                        </li>
+                    @endcan
+
+                    <!-- Lainnya -->
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Lainnya</span></li>
+
+                    <li class="menu-item {{ request()->routeIs('admin.pengaturan-sekolah.index') ? 'active' : '' }}">
+                        <a href="{{ route('admin.pengaturan-sekolah.index') }}" class="menu-link">
+                            <i class="menu-icon tf-icons bx bx-info-circle"></i>
+                            <div>Identitas Sekolah</div>
                         </a>
                     </li>
                 </ul>
