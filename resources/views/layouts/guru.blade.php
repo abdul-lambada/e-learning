@@ -95,23 +95,11 @@
                     @endcan
 
                     @can('kelola tugas')
-                        <li class="menu-item {{ request()->routeIs('guru.tugas.*') ? 'active open' : '' }}">
-                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <li class="menu-item {{ request()->routeIs('guru.tugas.*') ? 'active' : '' }}">
+                            <a href="{{ route('guru.tugas.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-task"></i>
                                 <div>Tugas</div>
                             </a>
-                            <ul class="menu-sub">
-                                <li class="menu-item {{ request()->routeIs('guru.tugas.index') ? 'active' : '' }}">
-                                    <a href="{{ route('guru.tugas.index') }}" class="menu-link">
-                                        <div>Daftar Tugas</div>
-                                    </a>
-                                </li>
-                                <li class="menu-item {{ request()->routeIs('guru.tugas.create') ? 'active' : '' }}">
-                                    <a href="{{ route('guru.tugas.create') }}" class="menu-link">
-                                        <div>Buat Tugas Baru</div>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                     @endcan
 
@@ -119,23 +107,11 @@
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Evaluasi</span></li>
 
                     @can('kelola kuis')
-                        <li class="menu-item {{ request()->routeIs('guru.kuis.*') ? 'active open' : '' }}">
-                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <li class="menu-item {{ request()->routeIs('guru.kuis.*') ? 'active' : '' }}">
+                            <a href="{{ route('guru.kuis.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-edit"></i>
                                 <div>Kuis</div>
                             </a>
-                            <ul class="menu-sub">
-                                <li class="menu-item {{ request()->routeIs('guru.kuis.index') ? 'active' : '' }}">
-                                    <a href="{{ route('guru.kuis.index') }}" class="menu-link">
-                                        <div>Daftar Kuis</div>
-                                    </a>
-                                </li>
-                                <li class="menu-item {{ request()->routeIs('guru.kuis.create') ? 'active' : '' }}">
-                                    <a href="{{ route('guru.kuis.create') }}" class="menu-link">
-                                        <div>Buat Kuis Baru</div>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                     @endcan
 

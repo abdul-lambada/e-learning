@@ -12,7 +12,8 @@ class LaporanController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:lihat laporan');
+        $this->middleware('permission:lihat rekap nilai')->only(['nilai', 'pembelajaran']);
+        $this->middleware('permission:lihat rekap absensi')->only(['absensi']);
     }
 
     public function nilai(Request $request)
