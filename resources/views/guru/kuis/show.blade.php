@@ -26,7 +26,9 @@
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h5 class="mb-0">Informasi Kuis</h5>
-                        <a href="{{ route('guru.kuis.edit', $kuis->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        @can('kelola kuis')
+                            <a href="{{ route('guru.kuis.edit', $kuis->id) }}" class="btn btn-sm btn-outline-primary">Edit</a>
+                        @endcan
                     </div>
                     <div class="card-body">
                         <ul class="list-unstyled mb-0">
@@ -51,9 +53,11 @@
                             <a href="{{ route('guru.kuis.hasil', $kuis->id) }}" class="btn btn-outline-primary mb-2">
                                 <i class="bx bx-bar-chart-alt-2 me-1"></i> Hasil & Evaluasi
                             </a>
-                            <a href="{{ route('guru.kuis.soal.create', $kuis->id) }}" class="btn btn-primary">
-                                <i class="bx bx-plus me-1"></i> Tambah Soal
-                            </a>
+                            @can('kelola kuis')
+                                <a href="{{ route('guru.kuis.soal.create', $kuis->id) }}" class="btn btn-primary">
+                                    <i class="bx bx-plus me-1"></i> Tambah Soal
+                                </a>
+                            @endcan
                         </div>
                     </div>
                 </div>
@@ -85,14 +89,16 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end">
-                                            <a class="dropdown-item"
-                                                href="{{ route('guru.soal.edit', $soal->id) }}">Edit</a>
-                                            <form action="{{ route('guru.soal.destroy', $soal->id) }}" method="POST"
-                                                onsubmit="return confirm('Hapus soal ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger">Hapus</button>
-                                            </form>
+                                            @can('kelola kuis')
+                                                <a class="dropdown-item"
+                                                    href="{{ route('guru.soal.edit', $soal->id) }}">Edit</a>
+                                                <form action="{{ route('guru.soal.destroy', $soal->id) }}" method="POST"
+                                                    onsubmit="return confirm('Hapus soal ini?')">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger">Hapus</button>
+                                                </form>
+                                            @endcan
                                         </div>
                                     </div>
                                 </div>
@@ -140,8 +146,10 @@
                             <div class="text-center py-5">
                                 <i class="bx bx-list-plus text-muted" style="font-size: 3rem;"></i>
                                 <p class="mt-2">Belum ada soal. Silakan tambah soal baru.</p>
-                                <a href="{{ route('guru.kuis.soal.create', $kuis->id) }}"
-                                    class="btn btn-primary mt-2">Tambah Soal Pertama</a>
+                                @can('kelola kuis')
+                                    <a href="{{ route('guru.kuis.soal.create', $kuis->id) }}"
+                                        class="btn btn-primary mt-2">Tambah Soal Pertama</a>
+                                @endcan
                             </div>
                         @endforelse
                     </div>

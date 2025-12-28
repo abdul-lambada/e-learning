@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\Auth;
 
 class PembelajaranController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:lihat jadwal')->only(['index', 'show']); // Jadwal & list pertemuan
+        $this->middleware('permission:lihat materi')->only(['pertemuan']); // Detail materi
+        $this->middleware('permission:isi absensi')->only(['absenMandiri']);
+    }
+
     /**
      * Menampilkan daftar mata pelajaran yang diikuti siswa.
      * Berdasarkan Kelas yang sedang aktif diikuti siswa.

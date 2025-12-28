@@ -30,8 +30,10 @@
                             @endif
                         </div>
 
-                        <a href="{{ route('guru.ujian.edit', $ujian->id) }}" class="btn btn-warning w-100">Edit
-                            Konfigurasi</a>
+                        @can('kelola ujian')
+                            <a href="{{ route('guru.ujian.edit', $ujian->id) }}" class="btn btn-warning w-100">Edit
+                                Konfigurasi</a>
+                        @endcan
                     </div>
                 </div>
             </div>
@@ -52,8 +54,10 @@
                             <div class="d-flex justify-content-between mb-3 align-items-center">
                                 <h6 class="m-0">Daftar Soal ({{ $ujian->soalUjian->count() }} /
                                     {{ $ujian->jumlah_soal }})</h6>
-                                <a href="{{ route('guru.ujian.soal.create', $ujian->id) }}"
-                                    class="btn btn-primary btn-sm">+ Kelola Soal</a>
+                                @can('kelola ujian')
+                                    <a href="{{ route('guru.ujian.soal.create', $ujian->id) }}"
+                                        class="btn btn-primary btn-sm">+ Kelola Soal</a>
+                                @endcan
                             </div>
 
                             @if ($ujian->soalUjian->count() > 0)
@@ -69,15 +73,17 @@
                                                     class="text-muted small">{{ Str::limit(strip_tags($soal->pertanyaan), 150) }}</span>
                                             </div>
                                             <div class="btn-group">
-                                                <a href="{{ route('guru.ujian.soal.edit', [$ujian->id, $soal->id]) }}"
-                                                    class="btn btn-sm btn-outline-secondary"><i class="bx bx-edit"></i></a>
-                                                <form
-                                                    action="{{ route('guru.ujian.soal.destroy', [$ujian->id, $soal->id]) }}"
-                                                    method="POST" onsubmit="return confirm('Hapus soal ini?')">
-                                                    @csrf @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i
-                                                            class="bx bx-trash"></i></button>
-                                                </form>
+                                                @can('kelola ujian')
+                                                    <a href="{{ route('guru.ujian.soal.edit', [$ujian->id, $soal->id]) }}"
+                                                        class="btn btn-sm btn-outline-secondary"><i class="bx bx-edit"></i></a>
+                                                    <form
+                                                        action="{{ route('guru.ujian.soal.destroy', [$ujian->id, $soal->id]) }}"
+                                                        method="POST" onsubmit="return confirm('Hapus soal ini?')">
+                                                        @csrf @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i
+                                                                class="bx bx-trash"></i></button>
+                                                    </form>
+                                                @endcan
                                             </div>
                                         </div>
                                     @endforeach
@@ -92,8 +98,10 @@
                         <div class="tab-pane fade" id="jadwal" role="tabpanel">
                             <div class="d-flex justify-content-between mb-3 align-items-center">
                                 <h6 class="m-0">Jadwal Pelaksanaan</h6>
-                                <a href="{{ route('guru.ujian.jadwal.create', $ujian->id) }}"
-                                    class="btn btn-primary btn-sm">+ Jadwalkan</a>
+                                @can('kelola ujian')
+                                    <a href="{{ route('guru.ujian.jadwal.create', $ujian->id) }}"
+                                        class="btn btn-primary btn-sm">+ Jadwalkan</a>
+                                @endcan
                             </div>
 
                             <div class="table-responsive">
@@ -120,14 +128,16 @@
                                                         <a href="{{ route('guru.ujian.hasil.index', $jadwal->id) }}"
                                                             class="btn btn-xs btn-icon btn-outline-info"
                                                             title="Lihat Hasil"><i class="bx bx-spreadsheet"></i></a>
-                                                        <form
-                                                            action="{{ route('guru.ujian.jadwal.destroy', [$ujian->id, $jadwal->id]) }}"
-                                                            method="POST" onsubmit="return confirm('Hapus jadwal ini?')">
-                                                            @csrf @method('DELETE')
-                                                            <button type="submit"
-                                                                class="btn btn-xs btn-icon btn-outline-danger"><i
-                                                                    class="bx bx-trash"></i></button>
-                                                        </form>
+                                                        @can('kelola ujian')
+                                                            <form
+                                                                action="{{ route('guru.ujian.jadwal.destroy', [$ujian->id, $jadwal->id]) }}"
+                                                                method="POST" onsubmit="return confirm('Hapus jadwal ini?')">
+                                                                @csrf @method('DELETE')
+                                                                <button type="submit"
+                                                                    class="btn btn-xs btn-icon btn-outline-danger"><i
+                                                                        class="bx bx-trash"></i></button>
+                                                            </form>
+                                                        @endcan
                                                     </div>
                                                 </td>
                                             </tr>

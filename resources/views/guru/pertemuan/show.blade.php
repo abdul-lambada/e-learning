@@ -84,10 +84,12 @@
                     <div class="tab-pane fade show active" id="navs-materi" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h5 class="mb-0">Daftar Materi</h5>
-                            <a href="{{ route('guru.materi.create', ['pertemuan_id' => $pertemuan->id]) }}"
-                                class="btn btn-primary btn-sm">
-                                <i class="bx bx-plus me-1"></i> Tambah Materi
-                            </a>
+                            @can('kelola materi')
+                                <a href="{{ route('guru.materi.create', ['pertemuan_id' => $pertemuan->id]) }}"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="bx bx-plus me-1"></i> Tambah Materi
+                                </a>
+                            @endcan
                         </div>
 
                         @forelse($pertemuan->materiPembelajaran as $materi)
@@ -139,24 +141,26 @@
                                                 @endif
                                             </div>
                                         </div>
-                                        <div class="dropdown">
-                                            <button class="btn p-0" type="button" id="materiOpt{{ $materi->id }}"
-                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                <i class="bx bx-dots-vertical-rounded"></i>
-                                            </button>
-                                            <div class="dropdown-menu dropdown-menu-end"
-                                                aria-labelledby="materiOpt{{ $materi->id }}">
-                                                <a class="dropdown-item"
-                                                    href="{{ route('guru.materi.edit', $materi->id) }}">Edit</a>
-                                                <form action="{{ route('guru.materi.destroy', $materi->id) }}"
-                                                    method="POST" onsubmit="return confirm('Hapus materi ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="dropdown-item text-danger">Hapus</button>
-                                                </form>
+                                        @can('kelola materi')
+                                            <div class="dropdown">
+                                                <button class="btn p-0" type="button" id="materiOpt{{ $materi->id }}"
+                                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <i class="bx bx-dots-vertical-rounded"></i>
+                                                </button>
+                                                <div class="dropdown-menu dropdown-menu-end"
+                                                    aria-labelledby="materiOpt{{ $materi->id }}">
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('guru.materi.edit', $materi->id) }}">Edit</a>
+                                                    <form action="{{ route('guru.materi.destroy', $materi->id) }}"
+                                                        method="POST" onsubmit="return confirm('Hapus materi ini?')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="dropdown-item text-danger">Hapus</button>
+                                                    </form>
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endcan
                                     </div>
                                 </div>
                             </div>
@@ -172,10 +176,12 @@
                     <div class="tab-pane fade" id="navs-tugas" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h5 class="mb-0">Daftar Tugas</h5>
-                            <a href="{{ route('guru.tugas.create', ['pertemuan_id' => $pertemuan->id]) }}"
-                                class="btn btn-primary btn-sm">
-                                <i class="bx bx-plus me-1"></i> Buat Tugas Baru
-                            </a>
+                            @can('kelola tugas')
+                                <a href="{{ route('guru.tugas.create', ['pertemuan_id' => $pertemuan->id]) }}"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="bx bx-plus me-1"></i> Buat Tugas Baru
+                                </a>
+                            @endcan
                         </div>
 
                         @if (session('success'))
@@ -228,16 +234,18 @@
                                                     href="{{ route('guru.tugas.show', $tugas->id) }}">
                                                     <i class="bx bx-show me-1"></i> Lihat & Nilai
                                                 </a>
-                                                <a class="dropdown-item"
-                                                    href="{{ route('guru.tugas.edit', $tugas->id) }}">Edit</a>
-                                                <form action="{{ route('guru.tugas.destroy', $tugas->id) }}"
-                                                    method="POST"
-                                                    onsubmit="return confirm('Hapus tugas ini? Semua pengumpulan siswa akan terhapus.')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="dropdown-item text-danger">Hapus</button>
-                                                </form>
+                                                @can('kelola tugas')
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('guru.tugas.edit', $tugas->id) }}">Edit</a>
+                                                    <form action="{{ route('guru.tugas.destroy', $tugas->id) }}"
+                                                        method="POST"
+                                                        onsubmit="return confirm('Hapus tugas ini? Semua pengumpulan siswa akan terhapus.')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="dropdown-item text-danger">Hapus</button>
+                                                    </form>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>
@@ -262,10 +270,12 @@
                     <div class="tab-pane fade" id="navs-kuis" role="tabpanel">
                         <div class="d-flex justify-content-between align-items-center mb-4">
                             <h5 class="mb-0">Daftar Kuis & Ujian</h5>
-                            <a href="{{ route('guru.kuis.create', ['pertemuan_id' => $pertemuan->id]) }}"
-                                class="btn btn-primary btn-sm">
-                                <i class="bx bx-plus me-1"></i> Buat Kuis Baru
-                            </a>
+                            @can('kelola kuis')
+                                <a href="{{ route('guru.kuis.create', ['pertemuan_id' => $pertemuan->id]) }}"
+                                    class="btn btn-primary btn-sm">
+                                    <i class="bx bx-plus me-1"></i> Buat Kuis Baru
+                                </a>
+                            @endcan
                         </div>
 
                         @forelse($pertemuan->kuis as $kuis)
@@ -299,15 +309,17 @@
                                                 aria-labelledby="kuisOpt{{ $kuis->id }}">
                                                 <a class="dropdown-item"
                                                     href="{{ route('guru.kuis.show', $kuis->id) }}">Kelola Soal</a>
-                                                <a class="dropdown-item"
-                                                    href="{{ route('guru.kuis.edit', $kuis->id) }}">Edit Pengaturan</a>
-                                                <form action="{{ route('guru.kuis.destroy', $kuis->id) }}" method="POST"
-                                                    onsubmit="return confirm('Hapus kuis ini? Semua soal dan nilai siswa akan hilang.')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit"
-                                                        class="dropdown-item text-danger">Hapus</button>
-                                                </form>
+                                                @can('kelola kuis')
+                                                    <a class="dropdown-item"
+                                                        href="{{ route('guru.kuis.edit', $kuis->id) }}">Edit Pengaturan</a>
+                                                    <form action="{{ route('guru.kuis.destroy', $kuis->id) }}" method="POST"
+                                                        onsubmit="return confirm('Hapus kuis ini? Semua soal dan nilai siswa akan hilang.')">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="dropdown-item text-danger">Hapus</button>
+                                                    </form>
+                                                @endcan
                                             </div>
                                         </div>
                                     </div>
@@ -382,9 +394,11 @@
                                 </table>
                             </div>
                             <div class="text-end">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="bx bx-save me-1"></i> Simpan Absensi
-                                </button>
+                                @can('kelola absensi')
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bx bx-save me-1"></i> Simpan Absensi
+                                    </button>
+                                @endcan
                             </div>
                         </form>
                     </div>

@@ -12,6 +12,12 @@ use Illuminate\Support\Facades\Storage;
 
 class TugasController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:lihat tugas')->only(['index', 'show']);
+        $this->middleware('permission:kumpulkan tugas')->only(['store']);
+    }
+
     /**
      * Tampilkan daftar tugas untuk siswa.
      */

@@ -10,6 +10,11 @@ use Illuminate\Support\Facades\Auth;
 
 class UjianController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:lihat ujian')->only(['index', 'hasil']);
+    }
+
     /**
      * Tampilkan jadwal ujian siswa.
      * (Fitur ini mungkin sudah ada atau digabung dgn index, tapi kita fokus ke Hasil Ujian skrg)

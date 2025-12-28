@@ -14,6 +14,12 @@ use Carbon\Carbon;
 
 class KuisController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:lihat kuis')->only(['index', 'show']);
+        $this->middleware('permission:kerjakan kuis')->only(['start', 'kerjakan', 'simpanJawaban', 'finish']);
+    }
+
     /**
      * Tampilkan daftar kuis untuk siswa.
      */
