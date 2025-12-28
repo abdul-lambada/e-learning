@@ -71,8 +71,8 @@
                         </a>
                     </li>
 
-                    <!-- Kelas Saya -->
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Kelas Saya</span></li>
+                    <!-- Akademik -->
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Akademik</span></li>
 
                     @can('lihat kelas')
                         <li class="menu-item {{ request()->routeIs('siswa.kelas.index') ? 'active' : '' }}">
@@ -91,15 +91,6 @@
                             </a>
                         </li>
                     @endcan
-
-                    <li class="menu-item {{ request()->routeIs('siswa.pembelajaran.*') ? 'active' : '' }}">
-                        <a href="{{ route('siswa.pembelajaran.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-collection"></i>
-                            <div>Jadwal Pelajaran</div>
-                        </a>
-                    </li>
-
-
 
                     <!-- Tugas & Evaluasi -->
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Tugas & Evaluasi</span>
@@ -166,8 +157,8 @@
                                         <div>Jadwal Ujian</div>
                                     </a>
                                 </li>
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                <li class="menu-item {{ request()->routeIs('siswa.ujian.hasil') ? 'active' : '' }}">
+                                    <a href="{{ route('siswa.ujian.hasil') }}" class="menu-link">
                                         <div>Hasil Ujian</div>
                                     </a>
                                 </li>
@@ -185,13 +176,13 @@
                                 <div>Absensi</div>
                             </a>
                             <ul class="menu-sub">
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                <li class="menu-item {{ request()->routeIs('siswa.absensi.index') ? 'active' : '' }}">
+                                    <a href="{{ route('siswa.absensi.index') }}" class="menu-link">
                                         <div>Absensi Hari Ini</div>
                                     </a>
                                 </li>
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
+                                <li class="menu-item {{ request()->routeIs('siswa.absensi.riwayat') ? 'active' : '' }}">
+                                    <a href="{{ route('siswa.absensi.riwayat') }}" class="menu-link">
                                         <div>Riwayat Absensi</div>
                                     </a>
                                 </li>
@@ -200,34 +191,16 @@
                     @endcan
 
                     @can('lihat nilai sendiri')
-                        <li class="menu-item">
-                            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                        <li class="menu-item {{ request()->routeIs('siswa.nilai.index') ? 'active' : '' }}">
+                            <a href="{{ route('siswa.nilai.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
-                                <div>Nilai</div>
+                                <div>Nilai Saya</div>
                             </a>
-                            <ul class="menu-sub">
-                                <li class="menu-item {{ request()->routeIs('siswa.nilai.index') ? 'active' : '' }}">
-                                    <a href="{{ route('siswa.nilai.index') }}" class="menu-link">
-                                        <div>Nilai Saya</div>
-                                    </a>
-                                </li>
-                                <li class="menu-item">
-                                    <a href="#" class="menu-link">
-                                        <div>Rapor</div>
-                                    </a>
-                                </li>
-                            </ul>
                         </li>
                     @endcan
+
                     <!-- Lainnya -->
                     <li class="menu-header small text-uppercase"><span class="menu-header-text">Lainnya</span></li>
-
-                    <li class="menu-item {{ request()->routeIs('siswa.nilai.index') ? 'active' : '' }}">
-                        <a href="{{ route('siswa.nilai.index') }}" class="menu-link">
-                            <i class="menu-icon tf-icons bx bx-bar-chart-alt-2"></i>
-                            <div>Nilai Saya</div>
-                        </a>
-                    </li>
 
                     <li class="menu-item {{ request()->routeIs('forum.*') ? 'active' : '' }}">
                         <a href="{{ route('forum.index') }}" class="menu-link">
@@ -243,8 +216,8 @@
                         </a>
                     </li>
 
-                    <li class="menu-item">
-                        <a href="#" class="menu-link">
+                    <li class="menu-item {{ request()->routeIs('siswa.bantuan.index') ? 'active' : '' }}">
+                        <a href="{{ route('siswa.bantuan.index') }}" class="menu-link">
                             <i class="menu-icon tf-icons bx bx-help-circle"></i>
                             <div>Bantuan</div>
                         </a>

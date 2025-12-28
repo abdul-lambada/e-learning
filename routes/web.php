@@ -173,6 +173,17 @@ Route::middleware(['auth'])->group(function () {
         // Informasi Kelas
         Route::get('/kelas', [\App\Http\Controllers\Siswa\KelasController::class, 'index'])->name('kelas.index');
 
+        // Ujian
+        Route::get('/ujian/hasil', [\App\Http\Controllers\Siswa\UjianController::class, 'hasil'])->name('ujian.hasil');
+
+        // Bantuan
+        Route::get('/bantuan', [\App\Http\Controllers\Siswa\BantuanController::class, 'index'])->name('bantuan.index');
+
+        // Absensi
+        Route::get('/absensi/hari-ini', [\App\Http\Controllers\Siswa\AbsensiController::class, 'index'])->name('absensi.index');
+        Route::post('/absensi/store', [\App\Http\Controllers\Siswa\AbsensiController::class, 'store'])->name('absensi.store');
+        Route::get('/absensi/riwayat', [\App\Http\Controllers\Siswa\AbsensiController::class, 'riwayat'])->name('absensi.riwayat');
+
         // Pembelajaran
         Route::get('/pembelajaran', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'index'])->name('pembelajaran.index');
         Route::get('/pembelajaran/{jadwal}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'show'])->name('pembelajaran.show');
