@@ -39,15 +39,7 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/password', [\App\Http\Controllers\ProfileController::class, 'updatePassword'])->name('profile.password');
 
-    // Forum Routes
-    Route::get('/forum', [\App\Http\Controllers\ForumController::class, 'index'])->name('forum.index');
-    Route::get('/forum/topik/{topik}', [\App\Http\Controllers\ForumController::class, 'show'])->name('forum.show');
-    Route::post('/forum/topik', [\App\Http\Controllers\ForumController::class, 'store'])->name('forum.store');
-    Route::post('/forum/topik/{topik}/balas', [\App\Http\Controllers\ForumController::class, 'reply'])->name('forum.reply');
-    // Perpustakaan Routes
-    Route::get('/perpustakaan', [\App\Http\Controllers\PerpustakaanController::class, 'index'])->name('perpustakaan.index');
-    Route::post('/perpustakaan', [\App\Http\Controllers\PerpustakaanController::class, 'store'])->name('perpustakaan.store');
-    Route::delete('/perpustakaan/{materi}', [\App\Http\Controllers\PerpustakaanController::class, 'destroy'])->name('perpustakaan.destroy');
+
 
     Route::post('/notifications/{id}/read', function ($id) {
         /** @var \App\Models\User $user */
