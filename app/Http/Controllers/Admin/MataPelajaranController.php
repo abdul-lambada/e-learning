@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Storage;
 
 class MataPelajaranController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:kelola mapel');
+    }
+
     public function index(Request $request)
     {
         $query = MataPelajaran::query();

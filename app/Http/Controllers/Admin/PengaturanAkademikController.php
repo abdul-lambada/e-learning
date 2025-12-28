@@ -8,6 +8,11 @@ use Illuminate\Http\Request;
 
 class PengaturanAkademikController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:kelola tahun ajaran');
+    }
+
     public function index()
     {
         $akademiks = PengaturanAkademik::orderBy('tahun_ajaran', 'desc')->get();

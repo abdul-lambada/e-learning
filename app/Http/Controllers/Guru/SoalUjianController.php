@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Storage;
 class SoalUjianController extends Controller
 {
     public function __construct() {
-        $this->middleware('permission:ubah ujian');
+        $this->middleware('permission:kelola ujian');
     }
 
     private function checkAccess(Ujian $ujian) {

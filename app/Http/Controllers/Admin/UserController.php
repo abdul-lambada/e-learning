@@ -10,6 +10,11 @@ use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:kelola pengguna');
+    }
+
     public function index(Request $request)
     {
         $query = User::with('roles');

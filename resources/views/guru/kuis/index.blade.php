@@ -59,19 +59,21 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item" href="{{ route('guru.kuis.show', $k->id) }}"><i
-                                                    class="bx bx-cog me-1"></i> Kelola & Soal</a>
                                             <a class="dropdown-item" href="{{ route('guru.kuis.hasil', $k->id) }}"><i
                                                     class="bx bx-bar-chart-alt-2 me-1"></i> Hasil Siswa</a>
-                                            <a class="dropdown-item" href="{{ route('guru.kuis.edit', $k->id) }}"><i
-                                                    class="bx bx-edit-alt me-1"></i> Edit Info</a>
-                                            <form action="{{ route('guru.kuis.destroy', $k->id) }}" method="POST"
-                                                onsubmit="return confirm('Hapus kuis ini? Semua soal dan nilai siswa akan hilang.');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger"><i
-                                                        class="bx bx-trash me-1"></i> Hapus</button>
-                                            </form>
+                                            @can('kelola kuis')
+                                                <a class="dropdown-item" href="{{ route('guru.kuis.show', $k->id) }}"><i
+                                                        class="bx bx-cog me-1"></i> Kelola & Soal</a>
+                                                <a class="dropdown-item" href="{{ route('guru.kuis.edit', $k->id) }}"><i
+                                                        class="bx bx-edit-alt me-1"></i> Edit Info</a>
+                                                <form action="{{ route('guru.kuis.destroy', $k->id) }}" method="POST"
+                                                    onsubmit="return confirm('Hapus kuis ini? Semua soal dan nilai siswa akan hilang.');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger"><i
+                                                            class="bx bx-trash me-1"></i> Hapus</button>
+                                                </form>
+                                            @endcan
                                         </div>
                                     </div>
                                 </td>

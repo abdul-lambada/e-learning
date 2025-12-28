@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Jadwal Pelajaran</h5>
-            @can('tambah pertemuan')
+            @can('kelola jadwal')
                 <a href="{{ route('admin.jadwal-pelajaran.create') }}" class="btn btn-primary">
                     <i class="bx bx-plus me-1"></i> Tambah Jadwal
                 </a>
@@ -99,14 +99,16 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            <a class="dropdown-item"
-                                                href="{{ route('admin.jadwal-pelajaran.edit', $data->id) }}">
-                                                <i class="bx bx-edit-alt me-1"></i> Edit
-                                            </a>
-                                            <button type="button" class="dropdown-item" data-bs-toggle="modal"
-                                                data-bs-target="#deleteModal{{ $data->id }}">
-                                                <i class="bx bx-trash me-1"></i> Hapus
-                                            </button>
+                                            @can('kelola jadwal')
+                                                <a class="dropdown-item"
+                                                    href="{{ route('admin.jadwal-pelajaran.edit', $data->id) }}">
+                                                    <i class="bx bx-edit-alt me-1"></i> Edit
+                                                </a>
+                                                <button type="button" class="dropdown-item" data-bs-toggle="modal"
+                                                    data-bs-target="#deleteModal{{ $data->id }}">
+                                                    <i class="bx bx-trash me-1"></i> Hapus
+                                                </button>
+                                            @endcan
                                         </div>
                                     </div>
                                 </td>

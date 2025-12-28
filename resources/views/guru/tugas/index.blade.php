@@ -49,15 +49,17 @@
                                         <div class="dropdown-menu">
                                             <a class="dropdown-item" href="{{ route('guru.tugas.show', $t->id) }}"><i
                                                     class="bx bx-show-alt me-1"></i> Detail & Nilai</a>
-                                            <a class="dropdown-item" href="{{ route('guru.tugas.edit', $t->id) }}"><i
-                                                    class="bx bx-edit-alt me-1"></i> Edit</a>
-                                            <form action="{{ route('guru.tugas.destroy', $t->id) }}" method="POST"
-                                                onsubmit="return confirm('Apakah Anda yakin ingin menghapus tugas ini?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger"><i
-                                                        class="bx bx-trash me-1"></i> Hapus</button>
-                                            </form>
+                                            @can('kelola tugas')
+                                                <a class="dropdown-item" href="{{ route('guru.tugas.edit', $t->id) }}"><i
+                                                        class="bx bx-edit-alt me-1"></i> Edit</a>
+                                                <form action="{{ route('guru.tugas.destroy', $t->id) }}" method="POST"
+                                                    onsubmit="return confirm('Apakah Anda yakin ingin menghapus tugas ini?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="dropdown-item text-danger"><i
+                                                            class="bx bx-trash me-1"></i> Hapus</button>
+                                                </form>
+                                            @endcan
                                         </div>
                                     </div>
                                 </td>

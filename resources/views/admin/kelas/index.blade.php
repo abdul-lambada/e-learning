@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Kelas</h5>
-            @can('tambah kelas')
+            @can('kelola kelas')
                 <a href="{{ route('admin.kelas.create') }}" class="btn btn-primary">
                     <i class="bx bx-plus me-1"></i> Tambah Kelas
                 </a>
@@ -91,12 +91,10 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            @can('ubah kelas')
+                                            @can('kelola kelas')
                                                 <a class="dropdown-item" href="{{ route('admin.kelas.edit', $data) }}">
                                                     <i class="bx bx-edit-alt me-1"></i> Edit
                                                 </a>
-                                            @endcan
-                                            @can('hapus kelas')
                                                 <button type="button" class="dropdown-item" data-bs-toggle="modal"
                                                     data-bs-target="#deleteModal{{ $data->id }}">
                                                     <i class="bx bx-trash me-1"></i> Hapus
@@ -121,7 +119,8 @@
                                                 <i class="bx bx-error-circle" style="font-size: 64px; color: #ea5455;"></i>
                                             </div>
                                             <p class="text-center">Apakah Anda yakin ingin menghapus kelas
-                                                <strong>{{ $data->nama_kelas }}</strong>?</p>
+                                                <strong>{{ $data->nama_kelas }}</strong>?
+                                            </p>
                                             <div class="alert alert-warning">
                                                 <small><i class="bx bx-info-circle"></i> Kelas tidak dapat dihapus jika
                                                     masih memiliki siswa.</small>

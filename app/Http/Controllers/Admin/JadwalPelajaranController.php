@@ -11,6 +11,11 @@ use Illuminate\Http\Request;
 
 class JadwalPelajaranController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:kelola jadwal');
+    }
+
     public function index(Request $request)
     {
         $query = GuruMengajar::with(['guru', 'kelas', 'mataPelajaran']);

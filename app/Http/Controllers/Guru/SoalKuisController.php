@@ -11,6 +11,11 @@ use Illuminate\Support\Facades\Storage;
 
 class SoalKuisController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:kelola kuis');
+    }
+
     public function create(Kuis $kuis)
     {
         if ($kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {

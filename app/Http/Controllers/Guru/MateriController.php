@@ -11,6 +11,12 @@ use Illuminate\Support\Facades\Storage;
 
 class MateriController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:kelola materi')->except(['show', 'download', 'index']);
+        // Jika ada method show/index yg public, bisa ditambahkan permission:lihat materi
+    }
+
     public function create(Request $request)
     {
         $pertemuanId = $request->query('pertemuan_id');

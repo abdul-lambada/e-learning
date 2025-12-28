@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Pengguna</h5>
-            @can('tambah pengguna')
+            @can('kelola pengguna')
                 <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
                     <i class="bx bx-plus me-1"></i> Tambah Pengguna
                 </a>
@@ -109,12 +109,11 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            @can('ubah pengguna')
+                                            @can('kelola pengguna')
                                                 <a class="dropdown-item" href="{{ route('admin.users.edit', $user) }}">
                                                     <i class="bx bx-edit-alt me-1"></i> Edit
                                                 </a>
-                                            @endcan
-                                            @can('hapus pengguna')
+
                                                 @if ($user->id !== auth()->id())
                                                     <button type="button" class="dropdown-item" data-bs-toggle="modal"
                                                         data-bs-target="#deleteModal{{ $user->id }}">
@@ -141,7 +140,8 @@
                                                 <i class="bx bx-error-circle" style="font-size: 64px; color: #ea5455;"></i>
                                             </div>
                                             <p class="text-center">Apakah Anda yakin ingin menghapus pengguna
-                                                <strong>{{ $user->nama_lengkap }}</strong>?</p>
+                                                <strong>{{ $user->nama_lengkap }}</strong>?
+                                            </p>
                                             <p class="text-center text-muted"><small>Tindakan ini tidak dapat
                                                     dibatalkan!</small></p>
                                         </div>

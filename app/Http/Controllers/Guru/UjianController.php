@@ -15,9 +15,7 @@ class UjianController extends Controller
     public function __construct()
     {
         $this->middleware('permission:lihat ujian')->only(['index', 'show']);
-        $this->middleware('permission:tambah ujian')->only(['create', 'store']);
-        $this->middleware('permission:ubah ujian')->only(['edit', 'update']);
-        $this->middleware('permission:hapus ujian')->only(['destroy']);
+        $this->middleware('permission:kelola ujian')->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
 
     /**

@@ -6,7 +6,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Mata Pelajaran</h5>
-            @can('tambah mata pelajaran')
+            @can('kelola mapel')
                 <a href="{{ route('admin.mata-pelajaran.create') }}" class="btn btn-primary">
                     <i class="bx bx-plus me-1"></i> Tambah Mapel
                 </a>
@@ -91,13 +91,11 @@
                                             <i class="bx bx-dots-vertical-rounded"></i>
                                         </button>
                                         <div class="dropdown-menu">
-                                            @can('ubah mata pelajaran')
+                                            @can('kelola mapel')
                                                 <a class="dropdown-item"
                                                     href="{{ route('admin.mata-pelajaran.edit', $data) }}">
                                                     <i class="bx bx-edit-alt me-1"></i> Edit
                                                 </a>
-                                            @endcan
-                                            @can('hapus mata pelajaran')
                                                 <button type="button" class="dropdown-item" data-bs-toggle="modal"
                                                     data-bs-target="#deleteModal{{ $data->id }}">
                                                     <i class="bx bx-trash me-1"></i> Hapus
@@ -122,7 +120,8 @@
                                                 <i class="bx bx-error-circle" style="font-size: 64px; color: #ea5455;"></i>
                                             </div>
                                             <p class="text-center">Apakah Anda yakin ingin menghapus mata pelajaran
-                                                <strong>{{ $data->nama_mapel }}</strong>?</p>
+                                                <strong>{{ $data->nama_mapel }}</strong>?
+                                            </p>
                                             <div class="alert alert-warning">
                                                 <small><i class="bx bx-info-circle"></i> Mapel tidak dapat dihapus jika
                                                     sedang diajarkan oleh guru.</small>

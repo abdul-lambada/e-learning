@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:kelola kelas');
+    }
+
     public function index(Request $request)
     {
         $query = Kelas::with(['waliKelas', 'users']);
