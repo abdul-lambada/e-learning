@@ -280,41 +280,12 @@
                 <div class="content-wrapper">
                     <!-- Content -->
                     <div class="container-xxl flex-grow-1 container-p-y">
-                        @if (session('success'))
-                            <div class="alert alert-success alert-dismissible" role="alert">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                                <strong>Berhasil!</strong> {{ session('success') }}
-                            </div>
-                        @endif
-
-                        @if (session('error'))
-                            <div class="alert alert-danger alert-dismissible" role="alert">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                                <strong>Error!</strong> {{ session('error') }}
-                            </div>
-                        @endif
-
-                        @if (session('warning'))
-                            <div class="alert alert-warning alert-dismissible" role="alert">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                                <strong>Perhatian!</strong> {{ session('warning') }}
-                            </div>
-                        @endif
-
-                        @if (session('info'))
-                            <div class="alert alert-info alert-dismissible" role="alert">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert"
-                                    aria-label="Close"></button>
-                                <strong>Info!</strong> {{ session('info') }}
-                            </div>
-                        @endif
-
                         @yield('content')
                     </div>
                     <!-- / Content -->
+
+                    <!-- Toast Notifications -->
+                    @include('partials.toast')
 
                     <!-- Footer -->
                     <footer class="content-footer footer bg-footer-theme">
@@ -332,7 +303,7 @@
 
                     <div class="content-backdrop fade"></div>
                 </div>
-                <!-- Content wrapper -->
+                <!-- / Content wrapper -->
             </div>
             <!-- / Layout page -->
         </div>

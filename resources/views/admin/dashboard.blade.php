@@ -228,9 +228,61 @@
             </div>
         </div>
     </div>
+
+    <!-- Charts Row -->
+    <div class="row">
+        <!-- Weekly Activity Chart -->
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">Aktivitas Mingguan</h5>
+                        <small class="text-muted">Statistik aktivitas 7 hari terakhir</small>
+                    </div>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button"
+                            data-bs-toggle="dropdown">
+                            <i class="bx bx-calendar me-1"></i> Minggu Ini
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="weeklyActivityChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Distribution Chart -->
+        <div class="col-lg-4 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <div>
+                        <h5 class="card-title mb-0">Distribusi Pengguna</h5>
+                        <small class="text-muted">Total {{ $total_guru + $total_siswa }} pengguna</small>
+                    </div>
+                </div>
+                <div class="card-body d-flex justify-content-center align-items-center">
+                    <div id="userDistributionChart" style="min-height: 250px;"></div>
+                </div>
+                <div class="card-footer border-top pt-3">
+                    <div class="d-flex justify-content-around">
+                        <div class="text-center">
+                            <span class="badge bg-label-primary rounded-pill px-3">Guru</span>
+                            <h4 class="mb-0 mt-2">{{ $total_guru }}</h4>
+                        </div>
+                        <div class="text-center">
+                            <span class="badge bg-label-info rounded-pill px-3">Siswa</span>
+                            <h4 class="mb-0 mt-2">{{ $total_siswa }}</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
-@push('page-style')
+@push('styles')
+    <link rel="stylesheet" href="/sneat-1.0.0/sneat-1.0.0/assets/vendor/libs/apex-charts/apex-charts.css" />
     <style>
         .cursor-pointer {
             cursor: pointer;
@@ -241,4 +293,158 @@
             transform: scale(1.02);
         }
     </style>
+@endpush
+
+@push('scripts')
+    <script src="/sneat-1.0.0/sneat-1.0.0/assets/vendor/libs/apex-charts/apexcharts.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Chart Data (prepared from PHP)
+            var chartData = {
+                absensi: {!! json_encode($weeklyData['absensi'] ?? [0, 0, 0, 0, 0, 0, 0]) !!},
+                tugas: {!! json_encode($weeklyData['tugas'] ?? [0, 0, 0, 0, 0, 0, 0]) !!},
+                kuis: {!! json_encode($weeklyData['kuis'] ?? [0, 0, 0, 0, 0, 0, 0]) !!},
+                labels: {!! json_encode($weekLabels ?? ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']) !!},
+                userDist: {!! json_encode($userDistribution['data'] ?? [0, 0]) !!},
+                userLabels: {!! json_encode($userDistribution['labels'] ?? ['Guru', 'Siswa']) !!}
+            };
+
+            // Weekly Activity Chart
+            const weeklyActivityOptions = {
+                series: [{
+                    name: 'Absensi',
+                    data: chartData.absensi
+                }, {
+                    name: 'Tugas Dikumpulkan',
+                    data: chartData.tugas
+                }, {
+                    name: 'Kuis Dikerjakan',
+                    data: chartData.kuis
+                }],
+                chart: {
+                    type: 'area',
+                    height: 300,
+                    toolbar: {
+                        show: false
+                    },
+                    sparkline: {
+                        enabled: false
+                    }
+                },
+                colors: ['#696cff', '#03c3ec', '#71dd37'],
+                fill: {
+                    type: 'gradient',
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.5,
+                        opacityTo: 0.1,
+                        stops: [0, 90, 100]
+                    }
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 2
+                },
+                xaxis: {
+                    categories: chartData.labels,
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(val) {
+                            return Math.floor(val);
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'left'
+                },
+                tooltip: {
+                    shared: true,
+                    intersect: false
+                },
+                grid: {
+                    borderColor: '#f1f1f1',
+                    strokeDashArray: 3
+                }
+            };
+
+            const weeklyActivityChart = new ApexCharts(
+                document.querySelector("#weeklyActivityChart"),
+                weeklyActivityOptions
+            );
+            weeklyActivityChart.render();
+
+            // User Distribution Chart
+            const userDistributionOptions = {
+                series: chartData.userDist,
+                chart: {
+                    type: 'donut',
+                    height: 250
+                },
+                labels: chartData.userLabels,
+                colors: ['#696cff', '#03c3ec'],
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '70%',
+                            labels: {
+                                show: true,
+                                name: {
+                                    show: true,
+                                    fontSize: '14px',
+                                    fontWeight: 600
+                                },
+                                value: {
+                                    show: true,
+                                    fontSize: '22px',
+                                    fontWeight: 700,
+                                    formatter: function(val) {
+                                        return val;
+                                    }
+                                },
+                                total: {
+                                    show: true,
+                                    label: 'Total',
+                                    fontSize: '14px',
+                                    formatter: function(w) {
+                                        return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                legend: {
+                    show: false
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        chart: {
+                            width: 200
+                        }
+                    }
+                }]
+            };
+
+            const userDistributionChart = new ApexCharts(
+                document.querySelector("#userDistributionChart"),
+                userDistributionOptions
+            );
+            userDistributionChart.render();
+        });
+    </script>
 @endpush
