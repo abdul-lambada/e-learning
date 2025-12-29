@@ -109,6 +109,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/jadwal', [\App\Http\Controllers\Guru\JadwalSayaController::class, 'index'])->name('jadwal.index');
         Route::get('/jadwal/{jadwal}', [\App\Http\Controllers\Guru\JadwalSayaController::class, 'show'])->name('jadwal.show');
+        Route::get('/jadwal/{jadwal}/analytics', [\App\Http\Controllers\Guru\JadwalSayaController::class, 'analytics'])->name('jadwal.analytics');
 
         // Pertemuan (Resource tanpa index, karena diakses via Jadwal)
         Route::resource('pertemuan', \App\Http\Controllers\Guru\PertemuanController::class)

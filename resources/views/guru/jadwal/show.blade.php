@@ -41,6 +41,9 @@
                     <button class="btn btn-label-success" type="button">
                         <i class="bx bx-bar-chart-alt-2 me-1"></i> Rekap Nilai
                     </button>
+                    <a href="{{ route('guru.jadwal.analytics', $jadwal->id) }}" class="btn btn-label-warning">
+                        <i class="bx bx-pie-chart-alt-2 me-1"></i> Analitik Kelas
+                    </a>
                     <button class="btn btn-label-info" type="button">
                         <i class="bx bx-check-circle me-1"></i> Presensi
                     </button>

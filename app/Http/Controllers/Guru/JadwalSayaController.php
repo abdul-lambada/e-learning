@@ -41,4 +41,77 @@ class JadwalSayaController extends Controller
 
         return view('guru.jadwal.show', compact('jadwal'));
     }
+    /**
+     * Menampilkan dashboard analitik pembelajaran.
+     */
+    public function analytics(GuruMengajar $jadwal)
+    {
+        // Pastikan guru yang login adalah pemilik jadwal
+        if ($jadwal->guru_id !== Auth::id()) {
+            abort(403, 'Unauthorized');
+        }
+
+        // 1. Data Siswa & KKM
+        $siswaKelas = $jadwal->kelas->users;
+        $komponenNilai = \App\Models\KomponenNilai::where('mata_pelajaran_id', $jadwal->mata_pelajaran_id)->first();
+        $kkm = $komponenNilai ? $komponenNilai->kkm : 75;
+
+        // 2. Statistik Tugas
+        // Ambil semua tugas di mapel ini
+        $tugasList = \App\Models\Tugas::whereHas('pertemuan', function($q) use ($jadwal) {
+            $q->where('guru_mengajar_id', $jadwal->id);
+        })->get();
+
+        $tugasStats = [];
+        $rataRataTugas = [];
+        $labelsTugas = [];
+
+        foreach ($tugasList as $tugas) {
+            $nilaiTugas = \App\Models\PengumpulanTugas::where('tugas_id', $tugas->id)->pluck('nilai')->filter();
+            if ($nilaiTugas->count() > 0) {
+                $avg = $nilaiTugas->avg();
+                $rataRataTugas[] = round($avg, 2);
+                $labelsTugas[] = "Tugas " . substr($tugas->judul_tugas, 0, 10) . '...';
+            }
+        }
+
+        // 3. Early Warning System
+        // Siswa dengan rata-rata nilai di bawah KKM
+        $siswaBerisiko = [];
+        foreach ($siswaKelas as $siswa) {
+            $totalNilai = 0;
+            $countNilai = 0;
+
+            // Hitung nilai tugas
+            foreach ($tugasList as $tugas) {
+                $pengumpulan = \App\Models\PengumpulanTugas::where('tugas_id', $tugas->id)
+                    ->where('siswa_id', $siswa->id)
+                    ->first();
+
+                if ($pengumpulan && $pengumpulan->nilai) {
+                    $totalNilai += $pengumpulan->nilai;
+                    $countNilai++;
+                }
+            }
+
+            $currentAvg = $countNilai > 0 ? ($totalNilai / $countNilai) : 0;
+
+            if ($currentAvg > 0 && $currentAvg < $kkm) {
+                $siswaBerisiko[] = [
+                    'nama' => $siswa->nama_lengkap,
+                    'rata_rata' => round($currentAvg, 2),
+                    'tugas_pending' => $tugasList->count() - $countNilai
+                ];
+            }
+        }
+
+        return view('guru.jadwal.analytics', compact(
+            'jadwal',
+            'kkm',
+            'rataRataTugas',
+            'labelsTugas',
+            'siswaBerisiko',
+            'siswaKelas'
+        ));
+    }
 }
