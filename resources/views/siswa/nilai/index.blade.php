@@ -10,7 +10,14 @@
             </h4>
 
             <div class="card">
-                <h5 class="card-header">Rekap Nilai Perkuliahan/Pelajaran</h5>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Rekap Nilai Perkuliahan/Pelajaran</h5>
+                    @if ($nilai->isNotEmpty())
+                        <a href="{{ route('siswa.nilai.cetak') }}" class="btn btn-primary" target="_blank">
+                            <i class="bx bx-printer me-1"></i> Cetak Laporan PDF
+                        </a>
+                    @endif
+                </div>
                 <div class="table-responsive text-nowrap">
                     <table class="table table-hover">
                         <thead>
@@ -59,7 +66,8 @@
                                                                 <span>Absensi</span>
                                                                 <span
                                                                     class="fw-bold">{{ number_format($n->nilai_absensi, 2) }}
-                                                                    ({{ number_format($n->bobot_absensi, 0) }}%)</span>
+                                                                    ({{ number_format($n->bobot_absensi, 0) }}%)
+                                                                </span>
                                                             </li>
                                                             <li
                                                                 class="list-group-item d-flex justify-content-between align-items-center">

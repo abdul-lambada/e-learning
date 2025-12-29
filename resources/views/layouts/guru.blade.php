@@ -324,6 +324,7 @@
 
     <!-- Dynamic Delete Modal -->
     @include('partials.delete-modal-dynamic')
+    @stack('modals')
 </body>
 
 </html>

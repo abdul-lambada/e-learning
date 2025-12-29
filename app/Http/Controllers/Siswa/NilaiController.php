@@ -22,4 +22,21 @@ class NilaiController extends Controller
 
         return view('siswa.nilai.index', compact('nilai'));
     }
+
+    public function cetak()
+    {
+        $user = Auth::user();
+        $nilai = NilaiAkhir::with(['mataPelajaran', 'kelas'])
+            ->where('siswa_id', $user->id)
+            ->orderBy('id', 'desc')
+            ->get();
+
+        $pdf = \Barryvdh\DomPDF\Facade\Pdf::loadView('siswa.nilai.pdf', [
+            'nilai' => $nilai,
+            'user' => $user,
+            'tanggal' => now()->translatedFormat('d F Y'),
+        ]);
+
+        return $pdf->download('Laporan-Nilai-' . $user->username . '.pdf');
+    }
 }

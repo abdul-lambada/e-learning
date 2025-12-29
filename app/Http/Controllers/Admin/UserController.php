@@ -7,6 +7,10 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\SiswaExport;
+use App\Exports\SiswaTemplateExport;
+use App\Imports\SiswaImport;
 
 class UserController extends Controller
 {
@@ -132,5 +136,29 @@ class UserController extends Controller
 
         return redirect()->route('admin.users.index')
             ->with('success', 'User berhasil dihapus!');
+    }
+
+    public function export()
+    {
+        return Excel::download(new SiswaExport, 'Data-Siswa-' . date('Y-m-d') . '.xlsx');
+    }
+
+    public function downloadTemplate()
+    {
+        return Excel::download(new SiswaTemplateExport, 'Template-Import-Siswa.xlsx');
+    }
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        try {
+            Excel::import(new SiswaImport, $request->file('file'));
+            return redirect()->back()->with('success', 'Data siswa berhasil diimport!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Gagal import data: ' . $e->getMessage());
+        }
     }
 }

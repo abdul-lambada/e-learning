@@ -53,6 +53,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
 
         // User Management
+        Route::get('users/export', [UserController::class, 'export'])->name('users.export');
+        Route::get('users/template', [UserController::class, 'downloadTemplate'])->name('users.template');
+        Route::post('users/import', [UserController::class, 'import'])->name('users.import');
         Route::resource('users', UserController::class)->parameters(['users' => 'user']);
 
         // Kelas Management
@@ -211,6 +214,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('ujian/do/simpan', [\App\Http\Controllers\Siswa\UjianController::class, 'simpanJawaban'])->name('ujian.simpan');
         Route::post('ujian/do/{jawabanUjian}/finish', [\App\Http\Controllers\Siswa\UjianController::class, 'finish'])->name('ujian.finish');
         Route::get('nilai', [\App\Http\Controllers\Siswa\NilaiController::class, 'index'])->name('nilai.index');
+        Route::get('nilai/cetak', [\App\Http\Controllers\Siswa\NilaiController::class, 'cetak'])->name('nilai.cetak');
     });
 });
 

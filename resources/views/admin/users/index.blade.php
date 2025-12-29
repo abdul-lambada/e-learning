@@ -11,11 +11,19 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">Daftar Pengguna</h5>
-            @can('kelola pengguna')
-                <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
-                    <i class="bx bx-plus me-1"></i> Tambah Pengguna
-                </a>
-            @endcan
+            <div class="d-flex gap-2">
+                @can('kelola pengguna')
+                    <button type="button" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#importModal">
+                        <i class="bx bx-upload me-1"></i> Import
+                    </button>
+                    <a href="{{ route('admin.users.export') }}" class="btn btn-outline-primary">
+                        <i class="bx bx-download me-1"></i> Export
+                    </a>
+                    <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
+                        <i class="bx bx-plus me-1"></i> Tambah Pengguna
+                    </a>
+                @endcan
+            </div>
         </div>
 
         <div class="card-body">
@@ -155,3 +163,36 @@
         </div>
     </div>
 @endsection
+
+@push('modals')
+    <!-- Import Modal -->
+    <div class="modal fade" id="importModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="{{ route('admin.users.import') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-header">
+                        <h5 class="modal-title">Import Data Siswa</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Pilih File Excel (.xlsx, .xls)</label>
+                            <input class="form-control" type="file" id="file" name="file" required>
+                            <div class="form-text mt-2">
+                                <i class="bx bx-info-circle me-1"></i>
+                                Belum punya template?
+                                <a href="{{ route('admin.users.template') }}" class="fw-bold text-primary">Unduh Template
+                                    Excel di Sini</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="submit" class="btn btn-primary">Mulai Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+@endpush
