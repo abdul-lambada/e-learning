@@ -20,6 +20,10 @@ class DiskusiController extends Controller
             'parent_id' => 'nullable|exists:diskusi,id',
         ]);
 
+        if (!$this->checkAccess($pertemuanId)) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
         $diskusi = Diskusi::create([
             'pertemuan_id' => $pertemuanId,
             'user_id' => Auth::id(),
@@ -43,6 +47,10 @@ class DiskusiController extends Controller
      */
     public function index($pertemuanId)
     {
+        if (!$this->checkAccess($pertemuanId)) {
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
+        }
+
         $diskusi = Diskusi::with(['user', 'replies.user'])
             ->where('pertemuan_id', $pertemuanId)
             ->whereNull('parent_id')
@@ -60,6 +68,11 @@ class DiskusiController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
+        // Check if user has access to the meeting first!
+        if (!$this->checkAccess($diskusi->pertemuan_id)) {
+             return response()->json(['success' => false, 'message' => 'Unauthorized Access'], 403);
+        }
+
         // Only owner or guru can delete
         if ($user->id !== $diskusi->user_id && !$user->isGuru() && !$user->isAdmin()) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
@@ -68,5 +81,29 @@ class DiskusiController extends Controller
         $diskusi->delete();
 
         return response()->json(['success' => true, 'message' => 'Pesan dihapus']);
+    }
+
+    private function checkAccess($pertemuanId)
+    {
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if (!$user) return false;
+
+        if ($user->isAdmin()) return true;
+
+        $pertemuan = Pertemuan::with('guruMengajar')->find($pertemuanId);
+        if (!$pertemuan) return false;
+
+        if ($user->isGuru()) {
+            // Check if guru owns this schedule
+            return $pertemuan->guruMengajar->guru_id === $user->id;
+        }
+
+        if ($user->isSiswa()) {
+            // Check if siswa is in the class
+            return $user->kelas()->where('kelas.id', $pertemuan->guruMengajar->kelas_id)->exists();
+        }
+
+        return false;
     }
 }

@@ -37,9 +37,12 @@ class PembelajaranController extends Controller
         if ($kelasSiswa) {
             $kelas = $kelasSiswa;
             // Ambil semua jadwal pelajaran untuk kelas ini
+            $ta = \App\Models\PengaturanAkademik::active();
+            $tahunAjaran = $ta ? $ta->tahun_ajaran : date('Y') . '/' . (date('Y') + 1);
+
             $jadwalPelajaran = GuruMengajar::with(['mataPelajaran', 'guru'])
                 ->where('kelas_id', $kelas->id)
-                ->where('tahun_ajaran', '2024/2025') // Sebaiknya dinamis
+                ->where('tahun_ajaran', $tahunAjaran)
                 ->orderBy('hari')
                 ->get();
         }

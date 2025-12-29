@@ -15,10 +15,12 @@ class JadwalSayaController extends Controller
     public function index()
     {
         $guruId = Auth::id();
+        $ta = \App\Models\PengaturanAkademik::active();
+        $tahunAjaran = $ta ? $ta->tahun_ajaran : date('Y') . '/' . (date('Y') + 1);
 
         $jadwal = GuruMengajar::with(['kelas', 'mataPelajaran'])
             ->where('guru_id', $guruId)
-            ->where('tahun_ajaran', '2024/2025') // Sebaiknya dinamis get current active year
+            ->where('tahun_ajaran', $tahunAjaran)
             ->orderBy('hari')
             ->get();
 
@@ -53,7 +55,12 @@ class JadwalSayaController extends Controller
 
         // 1. Data Siswa & KKM
         $siswaKelas = $jadwal->kelas->users;
-        $komponenNilai = \App\Models\KomponenNilai::where('mata_pelajaran_id', $jadwal->mata_pelajaran_id)->first();
+        
+        // Ambil komponen nilai sesuai tahun ajaran jadwal
+        $komponenNilai = \App\Models\KomponenNilai::where('mata_pelajaran_id', $jadwal->mata_pelajaran_id)
+            ->where('tahun_ajaran', $jadwal->tahun_ajaran)
+            ->first();
+            
         $kkm = $komponenNilai ? $komponenNilai->kkm : 75;
 
         // 2. Statistik Tugas
