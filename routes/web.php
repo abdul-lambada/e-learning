@@ -53,13 +53,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
 
         // User Management
-        Route::resource('users', UserController::class);
+        Route::resource('users', UserController::class)->parameters(['users' => 'user']);
 
         // Kelas Management
         Route::resource('kelas', \App\Http\Controllers\Admin\KelasController::class)->parameters(['kelas' => 'kelas']);
 
         // Mata Pelajaran Management
-        Route::resource('mata-pelajaran', \App\Http\Controllers\Admin\MataPelajaranController::class);
+        Route::resource('mata-pelajaran', \App\Http\Controllers\Admin\MataPelajaranController::class)->parameters(['mata-pelajaran' => 'mataPelajaran']);
 
         // Jadwal Pelajaran (Guru Mengajar)
         Route::resource('jadwal-pelajaran', \App\Http\Controllers\Admin\JadwalPelajaranController::class)->parameters(['jadwal-pelajaran' => 'jadwalPelajaran']);
@@ -78,8 +78,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('audit-log', [\App\Http\Controllers\Admin\AuditLogController::class, 'index'])->name('audit-log.index');
 
         // Pembelajaran Monitoring
-        Route::resource('materi', \App\Http\Controllers\Admin\MateriController::class)->only(['index', 'destroy']);
-        Route::resource('tugas', \App\Http\Controllers\Admin\TugasController::class)->only(['index', 'destroy']);
+        Route::resource('materi', \App\Http\Controllers\Admin\MateriController::class)->only(['index', 'destroy'])->parameters(['materi' => 'materi']);
+        Route::resource('tugas', \App\Http\Controllers\Admin\TugasController::class)->only(['index', 'destroy'])->parameters(['tugas' => 'tugas']);
 
         // Evaluasi Monitoring
         Route::get('kuis', [\App\Http\Controllers\Admin\EvaluasiController::class, 'kuis'])->name('kuis.index');
@@ -103,13 +103,17 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/jadwal/{jadwal}', [\App\Http\Controllers\Guru\JadwalSayaController::class, 'show'])->name('jadwal.show');
 
         // Pertemuan (Resource tanpa index, karena diakses via Jadwal)
-        Route::resource('pertemuan', \App\Http\Controllers\Guru\PertemuanController::class)->except(['index']);
+        Route::resource('pertemuan', \App\Http\Controllers\Guru\PertemuanController::class)
+            ->except(['index'])
+            ->parameters(['pertemuan' => 'pertemuan']);
         Route::post('pertemuan/{pertemuan}/absensi', [\App\Http\Controllers\Guru\PertemuanController::class, 'simpanAbsensi'])->name('pertemuan.absensi');
         Route::get('absensi/verifikasi', [\App\Http\Controllers\Guru\AbsensiVerifikasiController::class, 'index'])->name('absensi.verifikasi.index');
         Route::post('absensi/verifikasi/{id}', [\App\Http\Controllers\Guru\AbsensiVerifikasiController::class, 'verifikasi'])->name('absensi.verifikasi.update');
 
         // Materi (Resource tanpa index & show, karena diakses via Pertemuan)
-        Route::resource('materi', \App\Http\Controllers\Guru\MateriController::class)->except(['index', 'show']);
+        Route::resource('materi', \App\Http\Controllers\Guru\MateriController::class)
+            ->except(['index', 'show'])
+            ->parameters(['materi' => 'materi']);
 
         // Pendahuluan
         Route::get('pendahuluan', [\App\Http\Controllers\Guru\PendahuluanController::class, 'index'])->name('pendahuluan.index');
@@ -121,7 +125,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('pendahuluan/{pendahuluan}', [\App\Http\Controllers\Guru\PendahuluanController::class, 'destroy'])->name('pendahuluan.destroy');
 
         // Ujian
-        Route::resource('ujian', \App\Http\Controllers\Guru\UjianController::class);
+        Route::resource('ujian', \App\Http\Controllers\Guru\UjianController::class)->parameters(['ujian' => 'ujian']);
         Route::resource('ujian.soal', \App\Http\Controllers\Guru\SoalUjianController::class)->except(['index', 'show']);
         Route::resource('ujian.jadwal', \App\Http\Controllers\Guru\JadwalUjianController::class)->only(['create', 'store', 'destroy']);
 
@@ -132,10 +136,10 @@ Route::middleware(['auth'])->group(function () {
 
 
         // Tugas
-        Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class);
+        Route::resource('tugas', \App\Http\Controllers\Guru\TugasController::class)->parameters(['tugas' => 'tugas']);
         Route::post('tugas/nilai/{pengumpulan}', [\App\Http\Controllers\Guru\TugasController::class, 'nilai'])->name('tugas.nilai');
 
-        Route::resource('kuis', \App\Http\Controllers\Guru\KuisController::class);
+        Route::resource('kuis', \App\Http\Controllers\Guru\KuisController::class)->parameters(['kuis' => 'kuis']);
         Route::resource('kuis.soal', \App\Http\Controllers\Guru\SoalKuisController::class)->shallow();
 
         // Kuis Hasil & Review
@@ -155,7 +159,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('wali-kelas/{kelasId}/siswa/{siswaId}', [\App\Http\Controllers\Guru\WaliKelasController::class, 'showSiswa'])->name('wali-kelas.siswa.show');
 
         // Pengaturan Nilai
-        Route::resource('komponen-nilai', \App\Http\Controllers\Guru\KomponenNilaiController::class);
+        Route::resource('komponen-nilai', \App\Http\Controllers\Guru\KomponenNilaiController::class)->parameters(['komponen-nilai' => 'komponenNilai']);
     });
 
     // Siswa Routes

@@ -40,16 +40,10 @@
 {{-- Toast Script --}}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const flashToast = document.getElementById('flashToast');
-        if (flashToast && flashToast.dataset.show === 'true') {
-            flashToast.classList.remove('hide');
-            flashToast.classList.add('show');
-
-            // Auto hide after delay
-            setTimeout(function() {
-                flashToast.classList.remove('show');
-                flashToast.classList.add('hide');
-            }, 4000);
+        const flashToastEl = document.getElementById('flashToast');
+        if (flashToastEl && flashToastEl.dataset.show === 'true') {
+            const toast = new bootstrap.Toast(flashToastEl);
+            toast.show();
         }
     });
 </script>

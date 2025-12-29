@@ -85,14 +85,15 @@ Usage: Add data attributes to delete buttons:
         const deleteTitle = document.getElementById('deleteModalTitle');
         const deleteItemName = document.getElementById('deleteModalItemName');
 
-        // Add click handlers to all delete buttons with .btn-delete class
-        document.querySelectorAll('.btn-delete').forEach(function(btn) {
-            btn.addEventListener('click', function(e) {
+        // Use event delegation for dynamic content
+        document.body.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-delete');
+            if (btn) {
                 e.preventDefault();
 
-                const url = this.getAttribute('data-url');
-                const name = this.getAttribute('data-name') || 'item ini';
-                const title = this.getAttribute('data-title') || 'Konfirmasi Hapus';
+                const url = btn.getAttribute('data-url');
+                const name = btn.getAttribute('data-name') || 'item ini';
+                const title = btn.getAttribute('data-title') || 'Konfirmasi Hapus';
 
                 deleteForm.setAttribute('action', url);
                 deleteTitle.textContent = title;
@@ -100,7 +101,7 @@ Usage: Add data attributes to delete buttons:
 
                 const modal = new bootstrap.Modal(deleteModal);
                 modal.show();
-            });
+            }
         });
     });
 </script>
