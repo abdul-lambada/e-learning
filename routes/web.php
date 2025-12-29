@@ -220,4 +220,3 @@ Route::middleware(['auth'])->group(function () {
         Route::get('nilai/cetak', [\App\Http\Controllers\Siswa\NilaiController::class, 'cetak'])->name('nilai.cetak');
     });
 });
-

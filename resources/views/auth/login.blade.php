@@ -1,25 +1,41 @@
 <!DOCTYPE html>
-<html lang="id" class="light-style customizer-hide" dir="ltr" data-theme="theme-default" data-assets-path="/sneat-1.0.0/sneat-1.0.0/assets/" data-template="vertical-menu-template-free">
+<html lang="id" class="light-style customizer-hide" dir="ltr" data-theme="theme-default"
+    data-assets-path="/sneat-1.0.0/sneat-1.0.0/assets/" data-template="vertical-menu-template-free">
+
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
     <title>Login - E-Learning System</title>
     <meta name="description" content="Sistem E-Learning untuk SMA/SMK/MA" />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/sneat-1.0.0/sneat-1.0.0/assets/img/favicon/favicon.ico" />
+    <!-- Favicon -->
+    @php
+        $settings = \App\Models\PengaturanAplikasi::getSettings();
+        $favicon = $settings->favicon
+            ? Storage::url($settings->favicon)
+            : asset('sneat-1.0.0/sneat-1.0.0/assets/img/favicon/favicon.ico');
+        $favicon .= '?v=' . time();
+        $logo = $settings->logo_sekolah ? Storage::url($settings->logo_sekolah) : null;
+    @endphp
+    <link rel="icon" type="image/x-icon" href="{{ $favicon }}" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+        rel="stylesheet" />
 
     <!-- Icons -->
     <link rel="stylesheet" href="/sneat-1.0.0/sneat-1.0.0/assets/vendor/fonts/boxicons.css" />
 
     <!-- Core CSS -->
-    <link rel="stylesheet" href="/sneat-1.0.0/sneat-1.0.0/assets/vendor/css/core.css" class="template-customizer-core-css" />
-    <link rel="stylesheet" href="/sneat-1.0.0/sneat-1.0.0/assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="/sneat-1.0.0/sneat-1.0.0/assets/vendor/css/core.css"
+        class="template-customizer-core-css" />
+    <link rel="stylesheet" href="/sneat-1.0.0/sneat-1.0.0/assets/vendor/css/theme-default.css"
+        class="template-customizer-theme-css" />
     <link rel="stylesheet" href="/sneat-1.0.0/sneat-1.0.0/assets/css/demo.css" />
 
     <!-- Vendors CSS -->
@@ -45,9 +61,15 @@
                         <div class="app-brand justify-content-center mb-4">
                             <a href="/" class="app-brand-link gap-2">
                                 <span class="app-brand-logo demo">
-                                    <i class='bx bxs-graduation' style="font-size: 40px; color: #696cff;"></i>
+                                    @if ($logo)
+                                        <img src="{{ $logo }}" alt="Logo"
+                                            style="height: 40px; width: auto;">
+                                    @else
+                                        <i class='bx bxs-graduation' style="font-size: 40px; color: #696cff;"></i>
+                                    @endif
                                 </span>
-                                <span class="app-brand-text demo text-body fw-bolder fs-3">E-Learning</span>
+                                <span
+                                    class="app-brand-text demo text-body fw-bolder fs-3">{{ $settings->nama_sekolah }}</span>
                             </a>
                         </div>
                         <!-- /Logo -->
@@ -57,7 +79,8 @@
 
                         @if ($errors->any())
                             <div class="alert alert-danger alert-dismissible" role="alert">
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"
+                                    aria-label="Close"></button>
                                 <strong>Error!</strong> {{ $errors->first() }}
                             </div>
                         @endif
@@ -66,7 +89,9 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email</label>
-                                <input type="email" class="form-control @error('email') is-invalid @enderror" id="email" name="email" placeholder="Masukkan email Anda" value="{{ old('email') }}" autofocus required />
+                                <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                    id="email" name="email" placeholder="Masukkan email Anda"
+                                    value="{{ old('email') }}" autofocus required />
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -77,7 +102,9 @@
                                     <label class="form-label" for="password">Password</label>
                                 </div>
                                 <div class="input-group input-group-merge">
-                                    <input type="password" id="password" class="form-control @error('password') is-invalid @enderror" name="password" placeholder="············" aria-describedby="password" required />
+                                    <input type="password" id="password"
+                                        class="form-control @error('password') is-invalid @enderror" name="password"
+                                        placeholder="············" aria-describedby="password" required />
                                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                                 </div>
                                 @error('password')
@@ -120,4 +147,5 @@
     <!-- Main JS -->
     <script src="/sneat-1.0.0/sneat-1.0.0/assets/js/main.js"></script>
 </body>
+
 </html>

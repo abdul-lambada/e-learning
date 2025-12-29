@@ -24,5 +24,7 @@ class AppServiceProvider extends ServiceProvider
             $view->with('appSettings', \App\Models\PengaturanAplikasi::getSettings());
             $view->with('activeAkademik', \App\Models\PengaturanAkademik::active());
         });
+
+
     }
 }

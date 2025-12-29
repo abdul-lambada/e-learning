@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" class="light-style layout-menu-fixed" dir="ltr" data-theme="theme-default"
+<html lang="id" class="light-style layout-menu-fixed" dir="ltr"
     data-assets-path="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/') }}/" data-template="vertical-menu-template-free">
 
 <head>
@@ -11,8 +11,13 @@
     <title>@yield('title', 'Dashboard') - Guru E-Learning</title>
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon"
-        href="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/img/favicon/favicon.ico') }}" />
+    <!-- Favicon -->
+    @if ($appSettings->favicon)
+        <link rel="icon" type="image/x-icon" href="{{ Storage::url($appSettings->favicon) }}" />
+    @else
+        <link rel="icon" type="image/x-icon"
+            href="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/img/favicon/favicon.ico') }}" />
+    @endif
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -51,10 +56,17 @@
                 <div class="app-brand demo">
                     <a href="{{ route('guru.dashboard') }}" class="app-brand-link">
                         <span class="app-brand-logo demo">
-                            <i class='bx bxs-graduation' style="font-size: 32px; color: #696cff;"></i>
+                            @if ($appSettings->logo_sekolah)
+                                <img src="{{ Storage::url($appSettings->logo_sekolah) }}" alt="Logo"
+                                    style="height: 32px; width: auto;">
+                            @else
+                                <i class='bx bxs-graduation' style="font-size: 32px; color: #696cff;"></i>
+                            @endif
                         </span>
-                        <span
-                            class="app-brand-text demo menu-text fw-bolder ms-2">{{ $appSettings->nama_sekolah }}</span>
+                        <span class="app-brand-text demo menu-text fw-bolder ms-2"
+                            style="white-space: normal !important; line-height: 1.2; font-size: 0.9rem; text-transform: uppercase; text-align: left; display: inline-block; width: 12rem; word-wrap: break-word;">
+                            {{ $appSettings->nama_sekolah }}
+                        </span>
                     </a>
                     <a href="javascript:void(0);"
                         class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
@@ -187,8 +199,7 @@
                         </div>
 
                         <ul class="navbar-nav flex-row align-items-center ms-auto">
-                            <!-- Theme Toggle / Dark Mode -->
-                            @include('partials.theme-toggle')
+                            <!-- Theme Toggle Removed -->
 
                             <!-- Notifications -->
                             @include('partials.notifications')
