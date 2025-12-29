@@ -3,73 +3,101 @@
 @section('title', 'Manajemen Komponen Nilai')
 
 @section('content')
-    <div class="container-xxl flex-grow-1 container-p-y">
-        <div class="d-flex justify-content-between align-items-center py-3 mb-2">
-            <h4 class="fw-bold m-0"><span class="text-muted fw-light">Pengaturan /</span> Komponen Nilai</h4>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKomponenModal">
-                <i class="bx bx-plus me-1"></i> Atur Bobot Baru
-            </button>
-        </div>
+    <div class="row">
+        <div class="col-12">
+            <x-card title="Daftar Pengaturan Komponen Nilai">
+                <x-slot name="headerAction">
+                    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addKomponenModal">
+                        <i class="bx bx-plus me-1"></i> Atur Bobot Baru
+                    </button>
+                </x-slot>
 
-        <div class="card">
-            <div class="table-responsive text-nowrap">
-                <table class="table table-hover">
-                    <thead>
-                        <tr>
-                            <th>Mata Pelajaran</th>
-                            <th>Tahun Ajaran</th>
-                            <th>Semester</th>
-                            <th>KKM</th>
-                            <th>Bobot (Tgs/Kuis/Ujian/Abs)</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse($komponens as $k)
+                <div class="table-responsive text-nowrap mx-n4">
+                    <table class="table table-hover">
+                        <thead>
                             <tr>
-                                <td><strong>{{ $k->mataPelajaran->nama_mapel }}</strong></td>
-                                <td>{{ $k->tahun_ajaran }}</td>
-                                <td>{{ ucfirst($k->semester) }}</td>
-                                <td><span class="badge bg-label-info">{{ $k->kkm }}</span></td>
-                                <td>
-                                    <small>
-                                        T: {{ (int) $k->bobot_tugas }}% |
-                                        K: {{ (int) $k->bobot_kuis }}% |
-                                        U: {{ (int) $k->bobot_ujian }}% |
-                                        A: {{ (int) $k->bobot_absensi }}%
-                                    </small>
-                                </td>
-                                <td>
-                                    @if ($k->aktif)
-                                        <span class="badge bg-label-success">Aktif</span>
-                                    @else
-                                        <span class="badge bg-label-secondary">Tidak Aktif</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <a href="{{ route('guru.komponen-nilai.edit', $k->id) }}"
-                                            class="btn btn-sm btn-icon btn-outline-primary me-1">
-                                            <i class="bx bx-edit"></i>
-                                        </a>
-                                        <button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete"
-                                            data-url="{{ route('guru.komponen-nilai.destroy', $k->id) }}"
-                                            data-name="{{ $k->mataPelajaran->nama_mapel }}"
-                                            data-title="Hapus Pengaturan Komponen Nilai">
-                                            <i class="bx bx-trash"></i>
-                                        </button>
-                                    </div>
-                                </td>
+                                <th>Mata Pelajaran</th>
+                                <th>Tahun Ajaran</th>
+                                <th>Semester</th>
+                                <th class="text-center">KKM</th>
+                                <th>Bobot (Tgs/Kuis/Ujian/Abs)</th>
+                                <th>Status</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="7" class="text-center py-5">Belum ada pengaturan bobot nilai.</td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                            @forelse($komponens as $k)
+                                <tr>
+                                    <td>
+                                        <div class="fw-bold">{{ $k->mataPelajaran->nama_mapel }}</div>
+                                        <small class="text-muted">{{ $k->mataPelajaran->kode_mapel }}</small>
+                                    </td>
+                                    <td>{{ $k->tahun_ajaran }}</td>
+                                    <td>
+                                        <span class="badge bg-label-info">{{ ucfirst($k->semester) }}</span>
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="fw-bold text-primary">{{ $k->kkm }}</span>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex flex-column gap-1" style="font-size: 0.8rem;">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Tugas:</span> <span
+                                                    class="fw-bold">{{ (int) $k->bobot_tugas }}%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <span>Kuis:</span> <span class="fw-bold">{{ (int) $k->bobot_kuis }}%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between text-primary">
+                                                <span>Ujian:</span> <span
+                                                    class="fw-bold">{{ (int) $k->bobot_ujian }}%</span>
+                                            </div>
+                                            <div class="d-flex justify-content-between text-success">
+                                                <span>Absensi:</span> <span
+                                                    class="fw-bold">{{ (int) $k->bobot_absensi }}%</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        @if ($k->aktif)
+                                            <span class="badge bg-label-success">
+                                                <i class="bx bx-check me-1"></i> Aktif
+                                            </span>
+                                        @else
+                                            <span class="badge bg-label-secondary">
+                                                <i class="bx bx-x me-1"></i> Tidak Aktif
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center">
+                                        <div class="d-flex justify-content-center gap-1">
+                                            <a href="{{ route('guru.komponen-nilai.edit', $k->id) }}"
+                                                class="btn btn-sm btn-icon btn-label-primary">
+                                                <i class="bx bx-edit"></i>
+                                            </a>
+                                            <button type="button" class="btn btn-sm btn-icon btn-label-danger btn-delete"
+                                                data-url="{{ route('guru.komponen-nilai.destroy', $k->id) }}"
+                                                data-name="{{ $k->mataPelajaran->nama_mapel }}"
+                                                data-title="Hapus Pengaturan Komponen Nilai">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="7" class="text-center py-5">
+                                        <div class="text-muted">
+                                            <i class="bx bx-info-circle fs-1 mb-2"></i><br>
+                                            Belum ada pengaturan bobot nilai.
+                                        </div>
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </x-card>
         </div>
     </div>
 

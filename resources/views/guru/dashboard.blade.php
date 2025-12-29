@@ -39,21 +39,19 @@
         <div class="col-lg-4 col-md-4 order-1">
             <div class="row">
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0 bg-label-warning p-1 rounded">
-                                    <i class='bx bx-file fs-3 text-warning'></i>
-                                </div>
+                    <x-card class="h-100">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0 bg-label-warning p-1 rounded">
+                                <i class='bx bx-file fs-3 text-warning'></i>
                             </div>
-                            <span class="fw-semibold d-block mb-1">Perlu Dinilai</span>
-                            <h3 class="card-title mb-2 text-warning">{{ $tugasPerluDinilai }}</h3>
-                            <small class="text-muted text-nowrap">Tugas Siswa</small>
                         </div>
-                    </div>
+                        <span class="fw-semibold d-block mb-1">Perlu Dinilai</span>
+                        <h3 class="card-title mb-2 text-warning">{{ $tugasPerluDinilai }}</h3>
+                        <small class="text-muted text-nowrap">Tugas Siswa</small>
+                    </x-card>
                 </div>
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card h-100">
+                    <x-card class="h-100">
                         <div class="card-body">
                             <div class="card-title d-flex align-items-start justify-content-between">
                                 <div class="avatar flex-shrink-0 bg-label-info p-1 rounded">
@@ -64,7 +62,7 @@
                             <h3 class="card-title mb-2 text-info">{{ $absensiPerluVerifikasi }}</h3>
                             <small class="text-muted">Absensi</small>
                         </div>
-                    </div>
+                    </x-card>
                 </div>
             </div>
         </div>
@@ -105,11 +103,10 @@
             @endif
 
             <!-- Upcoming Classes / Schedule Today -->
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Aktivitas Mengajar Hari Ini</h5>
+            <x-card title="Aktivitas Mengajar Hari Ini">
+                <x-slot name="headerAction">
                     <span class="badge bg-label-secondary">{{ now()->format('d M, Y') }}</span>
-                </div>
+                </x-slot>
                 <div class="table-responsive">
                     <table class="table table-borderless border-top">
                         <thead>
@@ -165,73 +162,65 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </x-card>
 
             <!-- Recent Submissions Activity -->
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Pengumpulan Tugas Terbaru</h5>
+            <x-card title="Pengumpulan Tugas Terbaru">
+                <x-slot name="headerAction">
                     <small class="text-muted">5 Aktivitas Terakhir</small>
-                </div>
-                <div class="card-body pt-0">
-                    <div class="list-group list-group-flush">
-                        @forelse($pengumpulanTerbaru as $p)
-                            <div
-                                class="list-group-item list-group-item-action d-flex align-items-center px-0 py-3 border-bottom">
-                                <div class="avatar me-3">
-                                    <span class="avatar-initial rounded bg-label-info"><i class='bx bx-user'></i></span>
+                </x-slot>
+                <div class="list-group list-group-flush">
+                    @forelse($pengumpulanTerbaru as $p)
+                        <div
+                            class="list-group-item list-group-item-action d-flex align-items-center px-0 py-3 border-bottom">
+                            <div class="avatar me-3">
+                                <span class="avatar-initial rounded bg-label-info"><i class='bx bx-user'></i></span>
+                            </div>
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <h6 class="mb-0 fw-bold">{{ $p->siswa->nama_lengkap }}</h6>
+                                    <small class="text-muted">{{ $p->tugas->judul }} • Mapel:
+                                        {{ $p->tugas->pertemuan->guruMengajar->mataPelajaran->nama_mapel }}</small>
                                 </div>
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <h6 class="mb-0 fw-bold">{{ $p->siswa->nama_lengkap }}</h6>
-                                        <small class="text-muted">{{ $p->tugas->judul }} • Mapel:
-                                            {{ $p->tugas->pertemuan->guruMengajar->mataPelajaran->nama_mapel }}</small>
-                                    </div>
-                                    <div class="user-progress d-flex align-items-center">
-                                        <small class="text-muted me-3">{{ $p->created_at->diffForHumans() }}</small>
-                                        <a href="{{ route('guru.tugas.show', $p->tugas_id) }}"
-                                            class="btn btn-xs btn-outline-info">Nilai</a>
-                                    </div>
+                                <div class="user-progress d-flex align-items-center">
+                                    <small class="text-muted me-3">{{ $p->created_at->diffForHumans() }}</small>
+                                    <a href="{{ route('guru.tugas.show', $p->tugas_id) }}"
+                                        class="btn btn-xs btn-outline-info">Nilai</a>
                                 </div>
                             </div>
-                        @empty
-                            <div class="text-center py-4 text-muted">
-                                Belum ada aktivitas pengumpulan tugas.
-                            </div>
-                        @endforelse
-                    </div>
+                        </div>
+                    @empty
+                        <div class="text-center py-4 text-muted">
+                            Belum ada aktivitas pengumpulan tugas.
+                        </div>
+                    @endforelse
                 </div>
-            </div>
+            </x-card>
         </div>
 
         <!-- Right Column Sidebar -->
         <div class="col-lg-4">
             <!-- Quick Stats Cards -->
-            <div class="card mb-4">
-                <div class="card-header pb-2">
-                    <h5 class="card-title mb-0">Ringkasan Statistik</h5>
-                </div>
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="avatar bg-label-primary me-3 p-2 rounded">
-                            <i class='bx bxs-school fs-3'></i>
-                        </div>
-                        <div>
-                            <h5 class="mb-0">{{ $totalKelas }}</h5>
-                            <small>Total Kelas Diampu</small>
-                        </div>
+            <x-card title="Ringkasan Statistik">
+                <div class="d-flex align-items-center mb-3">
+                    <div class="avatar bg-label-primary me-3 p-2 rounded">
+                        <i class='bx bxs-school fs-3'></i>
                     </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="avatar bg-label-info me-3 p-2 rounded">
-                            <i class='bx bxs-calendar-event fs-3'></i>
-                        </div>
-                        <div>
-                            <h5 class="mb-0">{{ $totalPertemuan }}</h5>
-                            <small>Total Sesi Pertemuan</small>
-                        </div>
+                    <div>
+                        <h5 class="mb-0">{{ $totalKelas }}</h5>
+                        <small>Total Kelas Diampu</small>
                     </div>
                 </div>
-            </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="avatar bg-label-info me-3 p-2 rounded">
+                        <i class='bx bxs-calendar-event fs-3'></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">{{ $totalPertemuan }}</h5>
+                        <small>Total Sesi Pertemuan</small>
+                    </div>
+                </div>
+            </x-card>
 
             <!-- Quick Actions -->
             <div class="card mb-4 shadow-sm border-0">
@@ -341,12 +330,12 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Chart Data
             var chartData = {
-                pertemuan: {!! json_encode($weeklyData['pertemuan'] ?? [0,0,0,0,0,0,0]) !!},
-                tugas: {!! json_encode($weeklyData['tugas'] ?? [0,0,0,0,0,0,0]) !!},
-                kuis: {!! json_encode($weeklyData['kuis'] ?? [0,0,0,0,0,0,0]) !!},
-                labels: {!! json_encode($weekLabels ?? ['Sen','Sel','Rab','Kam','Jum','Sab','Min']) !!},
-                statusData: {!! json_encode($statusTugas['data'] ?? [0,0,0]) !!},
-                statusLabels: {!! json_encode($statusTugas['labels'] ?? ['Dinilai','Belum Dinilai','Terlambat']) !!}
+                pertemuan: {!! json_encode($weeklyData['pertemuan'] ?? [0, 0, 0, 0, 0, 0, 0]) !!},
+                tugas: {!! json_encode($weeklyData['tugas'] ?? [0, 0, 0, 0, 0, 0, 0]) !!},
+                kuis: {!! json_encode($weeklyData['kuis'] ?? [0, 0, 0, 0, 0, 0, 0]) !!},
+                labels: {!! json_encode($weekLabels ?? ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min']) !!},
+                statusData: {!! json_encode($statusTugas['data'] ?? [0, 0, 0]) !!},
+                statusLabels: {!! json_encode($statusTugas['labels'] ?? ['Dinilai', 'Belum Dinilai', 'Terlambat']) !!}
             };
 
             // Weekly Activity Chart
@@ -364,7 +353,9 @@
                 chart: {
                     type: 'bar',
                     height: 300,
-                    toolbar: { show: false },
+                    toolbar: {
+                        show: false
+                    },
                     stacked: false
                 },
                 colors: ['#696cff', '#03c3ec', '#71dd37'],
@@ -375,24 +366,48 @@
                         borderRadius: 4
                     }
                 },
-                dataLabels: { enabled: false },
-                stroke: { show: true, width: 2, colors: ['transparent'] },
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    show: true,
+                    width: 2,
+                    colors: ['transparent']
+                },
                 xaxis: {
                     categories: chartData.labels,
-                    axisBorder: { show: false },
-                    axisTicks: { show: false }
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
                 },
                 yaxis: {
                     labels: {
-                        formatter: function(val) { return Math.floor(val); }
+                        formatter: function(val) {
+                            return Math.floor(val);
+                        }
                     }
                 },
-                fill: { opacity: 1 },
-                legend: { position: 'top', horizontalAlign: 'left' },
-                tooltip: {
-                    y: { formatter: function(val) { return val + " aktivitas"; } }
+                fill: {
+                    opacity: 1
                 },
-                grid: { borderColor: '#f1f1f1', strokeDashArray: 3 }
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'left'
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return val + " aktivitas";
+                        }
+                    }
+                },
+                grid: {
+                    borderColor: '#f1f1f1',
+                    strokeDashArray: 3
+                }
             };
 
             new ApexCharts(document.querySelector("#guruWeeklyActivityChart"), weeklyOptions).render();
@@ -400,7 +415,10 @@
             // Task Status Donut Chart
             const statusOptions = {
                 series: chartData.statusData,
-                chart: { type: 'donut', height: 220 },
+                chart: {
+                    type: 'donut',
+                    height: 220
+                },
                 labels: chartData.statusLabels,
                 colors: ['#71dd37', '#ffab00', '#ff3e1d'],
                 plotOptions: {
@@ -409,8 +427,15 @@
                             size: '65%',
                             labels: {
                                 show: true,
-                                name: { show: true, fontSize: '12px' },
-                                value: { show: true, fontSize: '18px', fontWeight: 700 },
+                                name: {
+                                    show: true,
+                                    fontSize: '12px'
+                                },
+                                value: {
+                                    show: true,
+                                    fontSize: '18px',
+                                    fontWeight: 700
+                                },
                                 total: {
                                     show: true,
                                     label: 'Total',
@@ -422,12 +447,15 @@
                         }
                     }
                 },
-                legend: { show: false },
-                dataLabels: { enabled: false }
+                legend: {
+                    show: false
+                },
+                dataLabels: {
+                    enabled: false
+                }
             };
 
             new ApexCharts(document.querySelector("#taskStatusChart"), statusOptions).render();
         });
     </script>
 @endpush
-

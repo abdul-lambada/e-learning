@@ -27,33 +27,62 @@
     <div class="row">
         <!-- Info Tugas -->
         <div class="col-md-12 mb-4">
-            <div class="card accordion-item active">
-                <h2 class="accordion-header" id="headingOne">
-                    <button type="button" class="accordion-button" data-bs-toggle="collapse" data-bs-target="#accordionOne"
-                        aria-expanded="true" aria-controls="accordionOne">
-                        Detail Instruksi Tugas
-                    </button>
-                </h2>
-                <div id="accordionOne" class="accordion-collapse collapse show" data-bs-parent="#accordionExample">
-                    <div class="accordion-body">
-                        <strong>Deskripsi:</strong>
-                        <p>{{ $tugas->deskripsi }}</p>
+            <x-card title="Instruksi & Deskripsi Tugas">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="bg-light p-3 rounded-3 mb-3 border-start border-4 border-primary">
+                            <h6 class="fw-bold mb-2">Deskripsi:</h6>
+                            <p class="mb-0 text-dark">{{ $tugas->deskripsi }}</p>
+                        </div>
                         @if ($tugas->instruksi)
-                            <strong>Instruksi:</strong>
-                            <p class="mb-0">{!! nl2br(e($tugas->instruksi)) !!}</p>
+                            <div class="bg-light p-3 rounded-3 border-start border-4 border-info">
+                                <h6 class="fw-bold mb-2">Instruksi Detail:</h6>
+                                <p class="mb-0 text-dark">{!! nl2br(e($tugas->instruksi)) !!}</p>
+                            </div>
                         @endif
                     </div>
+                    <div class="col-md-5 mt-3 mt-md-0">
+                        <div class="table-responsive">
+                            <table class="table table-sm table-borderless">
+                                <tr>
+                                    <td width="150" class="text-muted">Status Tugas</td>
+                                    <td>:
+                                        @if ($tugas->aktif)
+                                            <span class="badge bg-label-success">Aktif / Terlihat</span>
+                                        @else
+                                            <span class="badge bg-label-secondary">Hidden / Draft</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">Nilai Maksimal</td>
+                                    <td>: <span class="fw-bold">{{ $tugas->nilai_maksimal }} Poin</span></td>
+                                </tr>
+                                <tr>
+                                    <td class="text-muted">Tipe Pengumpulan</td>
+                                    <td>:
+                                        @if ($tugas->upload_file)
+                                            <span class="badge badge-dot bg-primary me-1"></span> File Upload
+                                        @endif
+                                        @if ($tugas->upload_link)
+                                            <span class="badge badge-dot bg-info ms-2 me-1"></span> Link / URL
+                                        @endif
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </x-card>
         </div>
 
         <!-- Tabel Pengumpulan -->
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Daftar Pengumpulan Siswa</h5>
+            <x-card title="Daftar Pengumpulan Siswa">
+                <x-slot name="headerAction">
                     <span class="badge bg-label-primary">Total Siswa: {{ $allSiswa->count() }}</span>
-                </div>
+                </x-slot>
+
                 <div class="table-responsive text-nowrap">
                     <table class="table table-hover">
                         <thead>
@@ -133,10 +162,10 @@
                                     </td>
                                     <td>
                                         @if ($submission)
-                                            <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal"
-                                                data-bs-target="#modalNilai{{ $submission->id }}">
-                                                <i class="bx bx-check-circle me-1"></i> Nilai
-                                            </button>
+                                            <x-button size="sm" color="primary" data-bs-toggle="modal"
+                                                data-bs-target="#modalNilai{{ $submission->id }}" icon="bx-check-circle">
+                                                Nilai
+                                            </x-button>
 
                                             <!-- Modal Nilai -->
                                             <div class="modal fade" id="modalNilai{{ $submission->id }}" tabindex="-1"
@@ -144,8 +173,8 @@
                                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="modalCenterTitle">Beri Nilai:
-                                                                {{ $siswa->nama_lengkap }}</h5>
+                                                            <h5 class="modal-title">Beri Nilai: {{ $siswa->nama_lengkap }}
+                                                            </h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"
                                                                 aria-label="Close"></button>
                                                         </div>
@@ -153,30 +182,20 @@
                                                             method="POST">
                                                             @csrf
                                                             <div class="modal-body">
-                                                                <div class="row">
-                                                                    <div class="col mb-3">
-                                                                        <label for="nilai" class="form-label">Nilai (0 -
-                                                                            {{ $tugas->nilai_maksimal }})</label>
-                                                                        <input type="number" id="nilai" name="nilai"
-                                                                            class="form-control"
-                                                                            placeholder="Masukkan nilai"
-                                                                            value="{{ $submission->nilai }}"
-                                                                            max="{{ $tugas->nilai_maksimal }}" required>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="row">
-                                                                    <div class="col mb-0">
-                                                                        <label for="komentar_guru"
-                                                                            class="form-label">Komentar / Feedback</label>
-                                                                        <textarea name="komentar_guru" id="komentar_guru" class="form-control" rows="3">{{ $submission->komentar_guru }}</textarea>
-                                                                    </div>
-                                                                </div>
+                                                                <x-input label="Nilai (0 - {{ $tugas->nilai_maksimal }})"
+                                                                    type="number" name="nilai"
+                                                                    placeholder="Masukkan nilai"
+                                                                    value="{{ $submission->nilai }}"
+                                                                    max="{{ $tugas->nilai_maksimal }}" required />
+
+                                                                <x-textarea label="Komentar / Feedback" name="komentar_guru"
+                                                                    rows="3"
+                                                                    value="{{ $submission->komentar_guru }}" />
                                                             </div>
                                                             <div class="modal-footer">
                                                                 <button type="button" class="btn btn-outline-secondary"
                                                                     data-bs-dismiss="modal">Tutup</button>
-                                                                <button type="submit" class="btn btn-primary">Simpan
-                                                                    Nilai</button>
+                                                                <x-button type="submit">Simpan Nilai</x-button>
                                                             </div>
                                                         </form>
                                                     </div>
@@ -196,7 +215,7 @@
                         <p class="text-muted">Tidak ada siswa di kelas ini.</p>
                     </div>
                 @endif
-            </div>
+            </x-card>
         </div>
     </div>
 @endsection

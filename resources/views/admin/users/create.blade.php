@@ -5,166 +5,79 @@
 @section('content')
     <div class="row">
         <div class="col-md-12">
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Tambah Pengguna Baru</h5>
+            <x-card title="Tambah Pengguna Baru">
+                <x-slot name="headerAction">
                     <a href="{{ route('admin.users.index') }}" class="btn btn-secondary btn-sm">
                         <i class="bx bx-arrow-back me-1"></i> Kembali
                     </a>
-                </div>
-                <div class="card-body">
-                    <form action="{{ route('admin.users.store') }}" method="POST">
-                        @csrf
+                </x-slot>
 
-                        <div class="row">
-                            <!-- Informasi Akun -->
-                            <div class="col-md-6">
-                                <h6 class="mb-3 text-primary">Informasi Akun</h6>
+                <form action="{{ route('admin.users.store') }}" method="POST">
+                    @csrf
 
-                                <div class="mb-3">
-                                    <label class="form-label" for="nama_lengkap">Nama Lengkap <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('nama_lengkap') is-invalid @enderror"
-                                        id="nama_lengkap" name="nama_lengkap" value="{{ old('nama_lengkap') }}" required>
-                                    @error('nama_lengkap')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                    <div class="row">
+                        <!-- Informasi Akun -->
+                        <div class="col-md-6">
+                            <h6 class="mb-3 text-primary">Informasi Akun</h6>
 
-                                <div class="mb-3">
-                                    <label class="form-label" for="email">Email <span
-                                            class="text-danger">*</span></label>
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                        id="email" name="email" value="{{ old('email') }}" required>
-                                    @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                            <x-input name="nama_lengkap" label="Nama Lengkap" placeholder="Masukkan nama lengkap"
+                                required />
+                            <x-input name="email" type="email" label="Email" placeholder="email@example.com"
+                                required />
+                            <x-input name="username" label="Username" placeholder="Username unik" required />
+                            <x-input name="password" type="password" label="Password" placeholder="Minimal 8 karakter"
+                                required />
 
-                                <div class="mb-3">
-                                    <label class="form-label" for="username">Username <span
-                                            class="text-danger">*</span></label>
-                                    <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                        id="username" name="username" value="{{ old('username') }}" required>
-                                    @error('username')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="password">Password <span
-                                            class="text-danger">*</span></label>
-                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
-                                        id="password" name="password" required>
-                                    <small class="text-muted">Minimal 8 karakter</small>
-                                    @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="peran">Role <span class="text-danger">*</span></label>
-                                    <select class="form-select @error('peran') is-invalid @enderror" id="peran"
-                                        name="peran" required>
-                                        <option value="">Pilih Role</option>
-                                        <option value="admin" {{ old('peran') == 'admin' ? 'selected' : '' }}>Admin
-                                        </option>
-                                        <option value="guru" {{ old('peran') == 'guru' ? 'selected' : '' }}>Guru</option>
-                                        <option value="siswa" {{ old('peran') == 'siswa' ? 'selected' : '' }}>Siswa
-                                        </option>
-                                    </select>
-                                    @error('peran')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
-
-                            <!-- Informasi Pribadi -->
-                            <div class="col-md-6">
-                                <h6 class="mb-3 text-primary">Informasi Pribadi</h6>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="jenis_kelamin">Jenis Kelamin <span
-                                            class="text-danger">*</span></label>
-                                    <select class="form-select @error('jenis_kelamin') is-invalid @enderror"
-                                        id="jenis_kelamin" name="jenis_kelamin" required>
-                                        <option value="">Pilih Jenis Kelamin</option>
-                                        <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>
-                                            Laki-laki</option>
-                                        <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>
-                                            Perempuan</option>
-                                    </select>
-                                    @error('jenis_kelamin')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="tempat_lahir">Tempat Lahir</label>
-                                    <input type="text" class="form-control @error('tempat_lahir') is-invalid @enderror"
-                                        id="tempat_lahir" name="tempat_lahir" value="{{ old('tempat_lahir') }}">
-                                    @error('tempat_lahir')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="tanggal_lahir">Tanggal Lahir</label>
-                                    <input type="date" class="form-control @error('tanggal_lahir') is-invalid @enderror"
-                                        id="tanggal_lahir" name="tanggal_lahir" value="{{ old('tanggal_lahir') }}">
-                                    @error('tanggal_lahir')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="no_telepon">No. Telepon</label>
-                                    <input type="text" class="form-control @error('no_telepon') is-invalid @enderror"
-                                        id="no_telepon" name="no_telepon" value="{{ old('no_telepon') }}">
-                                    @error('no_telepon')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3" id="nis_field" style="display: none;">
-                                    <label class="form-label" for="nis">NIS (Nomor Induk Siswa)</label>
-                                    <input type="text" class="form-control @error('nis') is-invalid @enderror"
-                                        id="nis" name="nis" value="{{ old('nis') }}">
-                                    @error('nis')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3" id="nip_field" style="display: none;">
-                                    <label class="form-label" for="nip">NIP (Nomor Induk Pegawai)</label>
-                                    <input type="text" class="form-control @error('nip') is-invalid @enderror"
-                                        id="nip" name="nip" value="{{ old('nip') }}">
-                                    @error('nip')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
-                                    <label class="form-label" for="alamat">Alamat</label>
-                                    <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3">{{ old('alamat') }}</textarea>
-                                    @error('alamat')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            </div>
+                            <x-select name="peran" label="Role" required>
+                                <option value="">Pilih Role</option>
+                                <option value="admin" {{ old('peran') == 'admin' ? 'selected' : '' }}>Admin</option>
+                                <option value="guru" {{ old('peran') == 'guru' ? 'selected' : '' }}>Guru</option>
+                                <option value="siswa" {{ old('peran') == 'siswa' ? 'selected' : '' }}>Siswa</option>
+                            </x-select>
                         </div>
 
-                        <div class="mt-4">
-                            <button type="submit" class="btn btn-primary me-2">
-                                <i class="bx bx-save me-1"></i> Simpan
-                            </button>
-                            <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">
-                                Batal
-                            </a>
+                        <!-- Informasi Pribadi -->
+                        <div class="col-md-6">
+                            <h6 class="mb-3 text-primary">Informasi Pribadi</h6>
+
+                            <x-select name="jenis_kelamin" label="Jenis Kelamin" required>
+                                <option value="">Pilih Jenis Kelamin</option>
+                                <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki
+                                </option>
+                                <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan
+                                </option>
+                            </x-select>
+
+                            <x-input name="tempat_lahir" label="Tempat Lahir" />
+                            <x-input name="tanggal_lahir" type="date" label="Tanggal Lahir" />
+                            <x-input name="no_telepon" label="No. Telepon" />
+
+                            <div id="nis_field" style="display: none;">
+                                <x-input name="nis" label="NIS (Nomor Induk Siswa)" />
+                            </div>
+
+                            <div id="nip_field" style="display: none;">
+                                <x-input name="nip" label="NIP (Nomor Induk Pegawai)" />
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label" for="alamat">Alamat</label>
+                                <textarea class="form-control @error('alamat') is-invalid @enderror" id="alamat" name="alamat" rows="3">{{ old('alamat') }}</textarea>
+                                @error('alamat')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
-                    </form>
-                </div>
-            </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <x-button icon="bx-save">Simpan Pengguna</x-button>
+                        <a href="{{ route('admin.users.index') }}" class="btn btn-outline-secondary">
+                            Batal
+                        </a>
+                    </div>
+                </form>
+            </x-card>
         </div>
     </div>
 @endsection

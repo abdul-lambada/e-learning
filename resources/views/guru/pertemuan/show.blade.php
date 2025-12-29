@@ -24,28 +24,26 @@
     <div class="row">
         <!-- Info Pertemuan -->
         <div class="col-md-12 mb-4">
-            <div class="card">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <h5>Deskripsi</h5>
-                            <p>{{ $pertemuan->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
-                        </div>
-                        <div class="col-md-4 text-md-end">
-                            <div class="d-flex flex-column gap-2">
-                                <div class="badge bg-label-info p-2" style="font-size: 0.9rem;">
-                                    <i class="bx bx-calendar me-1"></i>
-                                    {{ $pertemuan->tanggal_pertemuan->format('l, d F Y') }}
-                                </div>
-                                <div class="badge bg-label-warning p-2" style="font-size: 0.9rem;">
-                                    <i class="bx bx-time me-1"></i> {{ $pertemuan->jam_mulai->format('H:i') }} -
-                                    {{ $pertemuan->jam_selesai->format('H:i') }}
-                                </div>
+            <x-card>
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5 class="fw-bold mb-2">Deskripsi</h5>
+                        <p class="mb-0">{{ $pertemuan->deskripsi ?? 'Tidak ada deskripsi.' }}</p>
+                    </div>
+                    <div class="col-md-4 text-md-end">
+                        <div class="d-flex flex-column gap-2 mt-3 mt-md-0">
+                            <div class="badge bg-label-info p-2" style="font-size: 0.9rem;">
+                                <i class="bx bx-calendar me-1"></i>
+                                {{ $pertemuan->tanggal_pertemuan->format('l, d F Y') }}
+                            </div>
+                            <div class="badge bg-label-warning p-2" style="font-size: 0.9rem;">
+                                <i class="bx bx-time me-1"></i> {{ $pertemuan->jam_mulai->format('H:i') }} -
+                                {{ $pertemuan->jam_selesai->format('H:i') }}
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
     </div>
 
@@ -395,9 +393,9 @@
                             </div>
                             <div class="text-end">
                                 @can('kelola absensi')
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="bx bx-save me-1"></i> Simpan Absensi
-                                    </button>
+                                    <x-button type="submit" icon="bx-save">
+                                        Simpan Absensi
+                                    </x-button>
                                 @endcan
                             </div>
                         </form>

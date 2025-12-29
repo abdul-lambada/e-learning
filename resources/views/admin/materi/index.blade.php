@@ -5,15 +5,15 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Materi Pembelajaran (Monitoring)</h5>
+            <x-card title="Materi Pembelajaran (Monitoring)">
+                <x-slot name="headerAction">
                     <form action="{{ route('admin.materi.index') }}" method="GET" class="d-flex">
                         <input type="text" name="search" class="form-control me-2" placeholder="Cari materi..."
                             value="{{ request('search') }}">
                         <button type="submit" class="btn btn-primary">Cari</button>
                     </form>
-                </div>
+                </x-slot>
+
                 <div class="table-responsive text-nowrap">
                     <table class="table table-hover">
                         <thead>
@@ -57,10 +57,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="card-footer">
+                <div class="mt-4">
                     {{ $materis->links() }}
                 </div>
-            </div>
+            </x-card>
         </div>
     </div>
 @endsection

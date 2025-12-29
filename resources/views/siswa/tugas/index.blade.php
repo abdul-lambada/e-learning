@@ -9,8 +9,7 @@
                 <span class="text-muted fw-light">Siswa /</span> Daftar Tugas
             </h4>
 
-            <div class="card">
-                <h5 class="card-header">Semua Tugas</h5>
+            <x-card title="Semua Tugas">
                 <div class="table-responsive text-nowrap">
                     <table class="table table-hover">
                         <thead>
@@ -74,10 +73,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="card-footer py-3">
+                <div class="mt-4">
                     {{ $tugasList->links() }}
                 </div>
-            </div>
+            </x-card>
         </div>
     </div>
 @endsection

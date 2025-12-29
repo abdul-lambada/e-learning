@@ -42,35 +42,31 @@
         <div class="col-lg-4 col-md-4 order-1">
             <div class="row">
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0 bg-label-success p-1 rounded">
-                                    <i class='bx bx-check-circle fs-3 text-success'></i>
-                                </div>
-                            </div>
-                            <span class="fw-semibold d-block mb-1">Kehadiran</span>
-                            <h3 class="card-title mb-2 text-success">{{ number_format($persenHadir, 0) }}%</h3>
-                            <div class="progress" style="height: 6px;">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: {{ $persenHadir }}%"
-                                    aria-valuenow="{{ $persenHadir }}" aria-valuemin="0" aria-valuemax="100"></div>
+                    <x-card class="h-100">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0 bg-label-success p-1 rounded">
+                                <i class='bx bx-check-circle fs-3 text-success'></i>
                             </div>
                         </div>
-                    </div>
+                        <span class="fw-semibold d-block mb-1">Kehadiran</span>
+                        <h3 class="card-title mb-2 text-success">{{ number_format($persenHadir, 0) }}%</h3>
+                        <div class="progress" style="height: 6px;">
+                            <div class="progress-bar bg-success" role="progressbar" style="width: {{ $persenHadir }}%"
+                                aria-valuenow="{{ $persenHadir }}" aria-valuemin="0" aria-valuemax="100"></div>
+                        </div>
+                    </x-card>
                 </div>
                 <div class="col-lg-6 col-md-12 col-6 mb-4">
-                    <div class="card h-100">
-                        <div class="card-body">
-                            <div class="card-title d-flex align-items-start justify-content-between">
-                                <div class="avatar flex-shrink-0 bg-label-info p-1 rounded">
-                                    <i class='bx bx-line-chart fs-3 text-info'></i>
-                                </div>
+                    <x-card class="h-100">
+                        <div class="card-title d-flex align-items-start justify-content-between">
+                            <div class="avatar flex-shrink-0 bg-label-info p-1 rounded">
+                                <i class='bx bx-line-chart fs-3 text-info'></i>
                             </div>
-                            <span class="fw-semibold d-block mb-1">Rata-rata</span>
-                            <h3 class="card-title mb-2 text-info">{{ number_format($avgNilai, 1) }}</h3>
-                            <small class="text-muted">Nilai Akhir</small>
                         </div>
-                    </div>
+                        <span class="fw-semibold d-block mb-1">Rata-rata</span>
+                        <h3 class="card-title mb-2 text-info">{{ number_format($avgNilai, 1) }}</h3>
+                        <small class="text-muted">Nilai Akhir</small>
+                    </x-card>
                 </div>
             </div>
         </div>
@@ -125,46 +121,40 @@
             @endif
 
             <!-- Tugas Pending -->
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Tugas yang Belum Selesai</h5>
+            <x-card title="Tugas yang Belum Selesai">
+                <x-slot name="headerAction">
                     <a href="{{ route('siswa.tugas.index') }}" class="btn btn-xs btn-outline-primary">Lihat Semua</a>
-                </div>
-                <div class="card-body pt-0">
-                    <div class="list-group list-group-flush">
-                        @forelse($tugasPending as $t)
-                            <div
-                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-transparent px-0 border-bottom">
-                                <div class="d-flex align-items-center">
-                                    <div class="avatar me-3">
-                                        <span class="avatar-initial rounded bg-label-warning"><i
-                                                class='bx bx-file'></i></span>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-0 fw-bold">{{ $t->judul }}</h6>
-                                        <small
-                                            class="text-muted">{{ $t->pertemuan->guruMengajar->mataPelajaran->nama_mapel }}
-                                            • <span class="text-danger">Deadline:
-                                                {{ $t->tanggal_deadline->diffForHumans() }}</span></small>
-                                    </div>
+                </x-slot>
+                <div class="list-group list-group-flush">
+                    @forelse($tugasPending as $t)
+                        <div
+                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center bg-transparent px-0 border-bottom">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar me-3">
+                                    <span class="avatar-initial rounded bg-label-warning"><i class='bx bx-file'></i></span>
                                 </div>
-                                <a href="{{ route('siswa.tugas.show', $t->id) }}"
-                                    class="btn btn-sm btn-label-warning">Kumpulkan</a>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">{{ $t->judul }}</h6>
+                                    <small class="text-muted">{{ $t->pertemuan->guruMengajar->mataPelajaran->nama_mapel }}
+                                        • <span class="text-danger">Deadline:
+                                            {{ $t->tanggal_deadline->diffForHumans() }}</span></small>
+                                </div>
                             </div>
-                        @empty
-                            <div class="text-center py-4">
-                                <img src="/sneat-1.0.0/sneat-1.0.0/assets/img/illustrations/girl-doing-yoga-light.png"
-                                    width="120" alt="No pending tasks">
-                                <p class="mt-2 mb-0">Semua tugas sudah dikumpulkan!</p>
-                            </div>
-                        @endforelse
-                    </div>
+                            <a href="{{ route('siswa.tugas.show', $t->id) }}"
+                                class="btn btn-sm btn-label-warning">Kumpulkan</a>
+                        </div>
+                    @empty
+                        <div class="text-center py-4">
+                            <img src="/sneat-1.0.0/sneat-1.0.0/assets/img/illustrations/girl-doing-yoga-light.png"
+                                width="120" alt="No pending tasks">
+                            <p class="mt-2 mb-0">Semua tugas sudah dikumpulkan!</p>
+                        </div>
+                    @endforelse
                 </div>
-            </div>
+            </x-card>
 
             <!-- Nilai Terbaru -->
-            <div class="card">
-                <h5 class="card-header">Postingan Nilai Terbaru</h5>
+            <x-card title="Postingan Nilai Terbaru">
                 <div class="table-responsive text-nowrap">
                     <table class="table table-hover">
                         <thead>
@@ -205,66 +195,61 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+            </x-card>
         </div>
 
         <!-- Right Col -->
         <div class="col-lg-4">
             <!-- Today's Classes -->
-            <div class="card mb-4">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Kelas Hari Ini</h5>
+            <x-card title="Kelas Hari Ini">
+                <x-slot name="headerAction">
                     <span class="badge bg-label-primary rounded-pill">{{ now()->format('d M') }}</span>
-                </div>
-                <div class="card-body">
-                    <ul class="timeline mb-0">
-                        @forelse($jadwalHariIni as $j)
-                            <li class="timeline-item timeline-item-transparent pb-3">
-                                <span class="timeline-point timeline-point-primary"></span>
-                                <div class="timeline-event">
-                                    <div class="timeline-header mb-1">
-                                        <h6 class="mb-0 fw-bold text-primary">{{ $j->mataPelajaran->nama_mapel }}</h6>
-                                        <small
-                                            class="text-muted">{{ \Carbon\Carbon::parse($j->jam_mulai)->format('H:i') }}</small>
-                                    </div>
-                                    <p class="mb-2">{{ $j->guru->nama_lengkap }}</p>
-                                    <a href="{{ route('siswa.pembelajaran.show', $j->id) }}"
-                                        class="btn btn-xs btn-primary">Buka</a>
+                </x-slot>
+                <ul class="timeline mb-0">
+                    @forelse($jadwalHariIni as $j)
+                        <li class="timeline-item timeline-item-transparent pb-3">
+                            <span class="timeline-point timeline-point-primary"></span>
+                            <div class="timeline-event">
+                                <div class="timeline-header mb-1">
+                                    <h6 class="mb-0 fw-bold text-primary">{{ $j->mataPelajaran->nama_mapel }}</h6>
+                                    <small
+                                        class="text-muted">{{ \Carbon\Carbon::parse($j->jam_mulai)->format('H:i') }}</small>
                                 </div>
-                            </li>
-                        @empty
-                            <li class="text-center py-3">
-                                <i class='bx bx-coffee fs-1 text-muted'></i>
-                                <p class="text-muted mt-2 small">Tidak ada jadwal kuliah hari ini.</p>
-                            </li>
-                        @endforelse
-                    </ul>
-                </div>
-            </div>
+                                <p class="mb-2">{{ $j->guru->nama_lengkap }}</p>
+                                <a href="{{ route('siswa.pembelajaran.show', $j->id) }}"
+                                    class="btn btn-xs btn-primary">Buka</a>
+                            </div>
+                        </li>
+                    @empty
+                        <li class="text-center py-3">
+                            <i class='bx bx-coffee fs-1 text-muted'></i>
+                            <p class="text-muted mt-2 small">Tidak ada jadwal Pelajaran hari ini.</p>
+                        </li>
+                    @endforelse
+                </ul>
+            </x-card>
 
             <!-- Summary Statistics -->
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="avatar bg-label-danger me-3 p-2 rounded">
-                            <i class='bx bxs-game fs-3'></i>
-                        </div>
-                        <div>
-                            <h5 class="mb-0">{{ $kuisAktif }}</h5>
-                            <small>Kuis Berlangsung</small>
-                        </div>
+            <x-card>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="avatar bg-label-danger me-3 p-2 rounded">
+                        <i class='bx bxs-game fs-3'></i>
                     </div>
-                    <div class="d-flex align-items-center mb-3">
-                        <div class="avatar bg-label-primary me-3 p-2 rounded">
-                            <i class='bx bxs-book-content fs-3'></i>
-                        </div>
-                        <div>
-                            <h5 class="mb-0">{{ $kelas ? $kelas->guruMengajar()->count() : 0 }}</h5>
-                            <small>Mata Pelajaran Diikuti</small>
-                        </div>
+                    <div>
+                        <h5 class="mb-0">{{ $kuisAktif }}</h5>
+                        <small>Kuis Berlangsung</small>
                     </div>
                 </div>
-            </div>
+                <div class="d-flex align-items-center mb-3">
+                    <div class="avatar bg-label-primary me-3 p-2 rounded">
+                        <i class='bx bxs-book-content fs-3'></i>
+                    </div>
+                    <div>
+                        <h5 class="mb-0">{{ $kelas ? $kelas->guruMengajar()->count() : 0 }}</h5>
+                        <small>Mata Pelajaran Diikuti</small>
+                    </div>
+                </div>
+            </x-card>
 
             <!-- Motivational Quote or Info -->
             <div class="card bg-primary text-white">
@@ -282,33 +267,23 @@
     <div class="row mt-4">
         <!-- Weekly Activity Chart -->
         <div class="col-lg-8 mb-4">
-            <div class="card">
-                <div class="card-header d-flex align-items-center justify-content-between">
-                    <div>
-                        <h5 class="card-title mb-0">Aktivitas Belajar Mingguan</h5>
-                        <small class="text-muted">Progress belajar 7 hari terakhir</small>
-                    </div>
+            <x-card title="Aktivitas Belajar Mingguan">
+                <x-slot name="headerAction">
                     <span class="badge bg-success">
                         <i class="bx bx-trending-up me-1"></i> Semangat!
                     </span>
-                </div>
-                <div class="card-body">
-                    <div id="siswaWeeklyActivityChart"></div>
-                </div>
-            </div>
+                </x-slot>
+                <div id="siswaWeeklyActivityChart"></div>
+            </x-card>
         </div>
 
         <!-- Attendance Distribution Chart -->
         <div class="col-lg-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Rekap Kehadiran</h5>
-                    <small class="text-muted">Distribusi status absensi</small>
-                </div>
-                <div class="card-body d-flex justify-content-center align-items-center">
+            <x-card title="Rekap Kehadiran" class="h-100">
+                <div class="d-flex justify-content-center align-items-center">
                     <div id="attendanceChart" style="min-height: 220px;"></div>
                 </div>
-                <div class="card-footer border-top pt-3">
+                <div class="border-top pt-3 mt-3">
                     <div class="d-flex justify-content-around text-center">
                         <div>
                             <span class="badge bg-label-success rounded-circle p-1"><i class="bx bx-check"></i></span>
@@ -329,7 +304,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </x-card>
         </div>
     </div>
 @endsection

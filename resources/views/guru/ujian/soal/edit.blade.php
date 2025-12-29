@@ -2,85 +2,89 @@
 @section('title', 'Edit Soal Ujian')
 
 @section('content')
-    <div class="container-xxl flex-grow-1 container-p-y">
-        <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Ujian / Soal /</span> Edit</h4>
-
-        <div class="card mb-4">
-            <h5 class="card-header">Edit Soal No. {{ $soal->nomor_soal }}</h5>
-            <div class="card-body">
+    <div class="row">
+        <div class="col-md-12">
+            <x-card :title="'Edit Soal No. ' . $soal->nomor_soal">
                 <form action="{{ route('guru.ujian.soal.update', [$ujian->id, $soal->id]) }}" method="POST"
                     enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
-                    <div class="mb-3">
-                        <label class="form-label">Tipe Soal</label>
-                        <select name="tipe_soal" id="tipe_soal" class="form-select" onchange="toggleTipeSoal()">
-                            <option value="pilihan_ganda" {{ $soal->tipe_soal == 'pilihan_ganda' ? 'selected' : '' }}>
-                                Pilihan Ganda</option>
-                            <option value="essay" {{ $soal->tipe_soal == 'essay' ? 'selected' : '' }}>Essay / Uraian
-                            </option>
-                        </select>
+                    <div class="row text-primary">
+                        <div class="col-md-6">
+                            <x-select label="Tipe Soal" name="tipe_soal" onchange="toggleTipeSoal()">
+                                <option value="pilihan_ganda" {{ $soal->tipe_soal == 'pilihan_ganda' ? 'selected' : '' }}>
+                                    Pilihan Ganda</option>
+                                <option value="essay" {{ $soal->tipe_soal == 'essay' ? 'selected' : '' }}>Essay / Uraian
+                                </option>
+                            </x-select>
+                        </div>
+                        <div class="col-md-6">
+                            <x-input label="Bobot Nilai" type="number" step="0.5" name="bobot_nilai"
+                                value="{{ $soal->bobot_nilai }}" required />
+                        </div>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Pertanyaan</label>
-                        <textarea class="form-control" name="pertanyaan" rows="3" required>{{ $soal->pertanyaan }}</textarea>
-                    </div>
+                    <x-textarea label="Pertanyaan" name="pertanyaan" rows="3"
+                        required>{{ $soal->pertanyaan }}</x-textarea>
 
-                    <div class="mb-3">
+                    <div class="mb-4">
                         <label class="form-label">Gambar Soal</label>
                         @if ($soal->gambar_soal)
-                            <div class="mb-2">
+                            <div class="mb-3 p-2 border rounded bg-light d-inline-block position-relative">
                                 <img src="{{ Storage::url($soal->gambar_soal) }}" alt="Gambar Soal"
-                                    style="max-height: 150px;" class="rounded">
-                                <div class="form-check mt-1">
+                                    style="max-height: 200px;" class="rounded">
+                                <div class="form-check mt-2">
                                     <input class="form-check-input" type="checkbox" name="hapus_gambar_soal" id="hapus_img">
-                                    <label class="form-check-label" for="hapus_img">Hapus Gambar</label>
+                                    <label class="form-check-label text-danger fw-bold" for="hapus_img">Hapus Gambar
+                                        Ini</label>
                                 </div>
                             </div>
                         @endif
                         <input type="file" class="form-control" name="gambar_soal">
-                    </div>
-
-                    <div class="mb-3">
-                        <label class="form-label">Bobot Nilai</label>
-                        <input type="number" step="0.5" class="form-control" name="bobot_nilai"
-                            value="{{ $soal->bobot_nilai }}" required>
+                        <div class="form-text">Pilih file baru jika ingin mengganti gambar. Format: JPG, PNG. Max: 2MB.
+                        </div>
                     </div>
 
                     <div id="pilihan_ganda_section" style="{{ $soal->tipe_soal == 'essay' ? 'display:none;' : '' }}">
-                        <hr class="my-3">
-                        <h6 class="mb-3">Pilihan Jawaban</h6>
+                        <hr class="my-4">
+                        <h6 class="mb-3 fw-bold"><i class="bx bx-list-check me-1"></i> Pilihan Jawaban</h6>
 
                         @foreach (['A', 'B', 'C', 'D', 'E'] as $opt)
                             @php $field = 'pilihan_' . strtolower($opt); @endphp
-                            <div class="row mb-3">
-                                <label class="col-sm-2 col-form-label">Pilihan {{ $opt }}</label>
-                                <div class="col-sm-10">
-                                    <div class="input-group">
-                                        <div class="input-group-text">
-                                            <input class="form-check-input mt-0" type="radio" name="kunci_jawaban"
-                                                value="{{ $opt }}"
-                                                {{ $soal->kunci_jawaban == $opt ? 'checked' : '' }}
-                                                aria-label="Is Correct">
-                                        </div>
-                                        <textarea class="form-control" name="pilihan_{{ strtolower($opt) }}" rows="1">{{ $soal->$field }}</textarea>
+                            <div class="row mb-3 align-items-center">
+                                <div class="col-sm-2">
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="kunci_jawaban"
+                                            value="{{ $opt }}" id="kunci_{{ $opt }}"
+                                            {{ $soal->kunci_jawaban == $opt ? 'checked' : '' }}>
+                                        <label class="form-check-label fw-bold" for="kunci_{{ $opt }}">
+                                            Pilihan {{ $opt }}
+                                        </label>
                                     </div>
+                                </div>
+                                <div class="col-sm-10">
+                                    <textarea class="form-control" name="pilihan_{{ strtolower($opt) }}" rows="1"
+                                        placeholder="Ketik pilihan {{ $opt }} di sini...">{{ $soal->$field }}</textarea>
                                 </div>
                             </div>
                         @endforeach
                     </div>
 
                     <div id="essay_section" style="{{ $soal->tipe_soal == 'pilihan_ganda' ? 'display:none;' : '' }}">
-                        <div class="alert alert-info">Untuk soal Essay, koreksi dilakukan secara manual oleh guru.</div>
+                        <div class="alert alert-info d-flex align-items-center">
+                            <i class="bx bx-info-circle me-2"></i>
+                            <span>Untuk soal Essay, koreksi dilakukan secara manual oleh guru melalui menu Hasil
+                                Ujian.</span>
+                        </div>
                     </div>
 
-                    <hr class="my-4">
-                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                    <a href="{{ route('guru.ujian.show', $ujian->id) }}" class="btn btn-label-secondary">Batal</a>
+                    <div class="mt-5">
+                        <x-button type="submit" icon="bx-save">Simpan Perubahan</x-button>
+                        <a href="{{ route('guru.ujian.show', $ujian->id) }}" class="btn btn-outline-secondary">Batal</a>
+                    </div>
                 </form>
-            </div>
+            </x-card>
         </div>
     </div>
 

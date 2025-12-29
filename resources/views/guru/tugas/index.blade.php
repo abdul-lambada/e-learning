@@ -9,8 +9,7 @@
             'breadcrumbs' => [['name' => 'Dashboard', 'url' => route('guru.dashboard')], ['name' => 'Tugas']],
         ])
 
-        <div class="card">
-            <h5 class="card-header">Daftar Tugas Saya</h5>
+        <x-card title="Daftar Tugas Saya">
             <div class="table-responsive text-nowrap">
                 <table class="table table-hover">
                     <thead>
@@ -78,9 +77,9 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer py-3">
+            <div class="mt-4">
                 {{ $tugas->links() }}
             </div>
-        </div>
+        </x-card>
     </div>
 @endsection

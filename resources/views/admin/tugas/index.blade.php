@@ -5,15 +5,15 @@
 @section('content')
     <div class="row">
         <div class="col-12">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Tugas (Monitoring)</h5>
+            <x-card title="Tugas (Monitoring)">
+                <x-slot name="headerAction">
                     <form action="{{ route('admin.tugas.index') }}" method="GET" class="d-flex">
                         <input type="text" name="search" class="form-control me-2" placeholder="Cari tugas..."
                             value="{{ request('search') }}">
                         <button type="submit" class="btn btn-primary">Cari</button>
                     </form>
-                </div>
+                </x-slot>
+
                 <div class="table-responsive text-nowrap">
                     <table class="table table-hover">
                         <thead>
@@ -30,7 +30,7 @@
                             @forelse($tugas as $t)
                                 <tr>
                                     <td>
-                                        <strong>{{ $t->judul }}</strong>
+                                        <strong>{{ $t->judul_tugas }}</strong>
                                     </td>
                                     <td>{{ $t->pertemuan->guruMengajar->guru->nama_lengkap ?? '-' }}</td>
                                     <td>
@@ -49,7 +49,7 @@
                                     <td>
                                         <button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete"
                                             data-url="{{ route('admin.tugas.destroy', $t->id) }}"
-                                            data-name="{{ $t->judul }}" data-title="Hapus Tugas">
+                                            data-name="{{ $t->judul_tugas }}" data-title="Hapus Tugas">
                                             <i class="bx bx-trash"></i>
                                         </button>
                                     </td>
@@ -62,10 +62,10 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="card-footer">
+                <div class="mt-4">
                     {{ $tugas->links() }}
                 </div>
-            </div>
+            </x-card>
         </div>
     </div>
 @endsection
