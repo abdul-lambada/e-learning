@@ -355,6 +355,22 @@
 
     @stack('scripts')
 
+    <!-- Initialize Bootstrap Dropdowns with Error Handling -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof bootstrap !== 'undefined') {
+                var dropdownElementList = [].slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
+                dropdownElementList.forEach(function(dropdownToggleEl) {
+                    try {
+                        new bootstrap.Dropdown(dropdownToggleEl);
+                    } catch (e) {
+                        console.error('Dropdown init error:', e);
+                    }
+                });
+            }
+        });
+    </script>
+
     <!-- Dynamic Delete Modal -->
     @include('partials.delete-modal-dynamic')
 </body>
