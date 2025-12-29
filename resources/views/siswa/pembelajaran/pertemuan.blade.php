@@ -110,6 +110,43 @@
                     @endforelse
                 </div>
             </x-card>
+
+            <!-- Forum Diskusi -->
+            <x-card title="Forum Diskusi" class="mt-4">
+                <div id="diskusi-container" class="mb-4" style="max-height: 500px; overflow-y: auto; padding: 10px;">
+                    <div class="text-center py-5" id="diskusi-loading">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-2 text-muted">Memuat diskusi...</p>
+                    </div>
+                </div>
+
+                <div class="card bg-lighter border-0 shadow-none">
+                    <div class="card-body">
+                        <form id="form-diskusi">
+                            <input type="hidden" name="parent_id" id="diskusi-parent-id" value="">
+                            <div id="reply-info" class="mb-2 d-none">
+                                <span class="badge bg-label-info d-flex align-items-center justify-content-between">
+                                    <span>Membalas pesan...</span>
+                                    <i class="bx bx-x cursor-pointer" onclick="cancelReply()"></i>
+                                </span>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <div class="flex-grow-1">
+                                    <textarea class="form-control" name="pesan" id="diskusi-pesan" rows="2"
+                                        placeholder="Tulis pertanyaan atau tanggapan Anda..."></textarea>
+                                </div>
+                                <div class="align-self-end">
+                                    <button type="submit" class="btn btn-primary btn-icon" id="btn-send-diskusi">
+                                        <i class="bx bx-paper-plane"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </x-card>
         </div>
 
         <!-- Sidebar Aktivitas (Tugas/Kuis) -->
@@ -235,4 +272,191 @@
             </x-card>
         </div>
     </div>
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const discussionContainer = document.getElementById('diskusi-container');
+                const formDiskusi = document.getElementById('form-diskusi');
+                const diskusiPesan = document.getElementById('diskusi-pesan');
+                const diskusiParentId = document.getElementById('diskusi-parent-id');
+                const replyInfo = document.getElementById('reply-info');
+                const btnSend = document.getElementById('btn-send-diskusi');
+
+                let lastFetchTime = null;
+
+                // Load Initial Data
+                loadDiscussion();
+
+                // Poll for updates every 10 seconds
+                setInterval(loadDiscussion, 10000);
+
+                function loadDiscussion() {
+                    fetch("{{ route('diskusi.index', $pertemuan->id) }}")
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.data.length > 0) {
+                                renderDiscussion(data.data);
+                            } else {
+                                if (!lastFetchTime) {
+                                    discussionContainer.innerHTML = `
+                                        <div class="text-center py-5">
+                                            <i class="bx bx-chat text-muted" style="font-size: 3rem;"></i>
+                                            <p class="mt-2 text-muted">Belum ada diskusi. Mulai percakapan sekarang!</p>
+                                        </div>
+                                    `;
+                                }
+                            }
+                            lastFetchTime = new Date();
+                        })
+                        .catch(err => console.error('Error loading discussion:', err));
+                }
+
+                function renderDiscussion(comments) {
+                    let html = '';
+                    comments.forEach(comment => {
+                        html += `
+                            <div class="d-flex align-items-start mb-4">
+                                <div class="avatar avatar-sm me-3 flex-shrink-0">
+                                    <span class="avatar-initial rounded-circle bg-label-${comment.user.peran === 'guru' ? 'primary' : 'info'}">
+                                        ${comment.user.nama_lengkap.charAt(0)}
+                                    </span>
+                                </div>
+                                <div class="w-100">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <div>
+                                            <span class="fw-bold me-2">${comment.user.nama_lengkap}</span>
+                                            <span class="badge bg-label-${comment.user.peran === 'guru' ? 'primary' : 'info'} btn-xs">
+                                                ${comment.user.peran.toUpperCase()}
+                                            </span>
+                                        </div>
+                                        <small class="text-muted">${formatDate(comment.created_at)}</small>
+                                    </div>
+                                    <div class="bg-light p-3 rounded mb-2">
+                                        <p class="mb-0 text-wrap" style="word-break: break-word;">${comment.pesan}</p>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        <button class="btn btn-xs text-primary p-0" onclick="prepareReply(${comment.id}, '${comment.user.nama_lengkap}')">Balas</button>
+                                        ${(comment.user_id == {{ Auth::id() }}) ?
+                                            `<button class="btn btn-xs text-danger p-0" onclick="deleteComment(${comment.id})">Hapus</button>` : ''}
+                                    </div>
+
+                                    <!-- Replies -->
+                                    <div class="ms-5 mt-3 border-start ps-3" id="replies-${comment.id}">
+                                        ${renderReplies(comment.replies || [])}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    discussionContainer.innerHTML = html;
+                }
+
+                function renderReplies(replies) {
+                    let html = '';
+                    replies.forEach(reply => {
+                        html += `
+                            <div class="d-flex align-items-start mb-3">
+                                <div class="avatar avatar-xs me-2 flex-shrink-0">
+                                    <span class="avatar-initial rounded-circle bg-label-${reply.user.peran === 'guru' ? 'primary' : 'info'}">
+                                        ${reply.user.nama_lengkap.charAt(0)}
+                                    </span>
+                                </div>
+                                <div class="w-100">
+                                    <div class="d-flex justify-content-between align-items-center mb-1">
+                                        <div class="d-flex align-items-center">
+                                            <span class="fw-bold me-2 small">${reply.user.nama_lengkap}</span>
+                                            <span class="badge bg-label-${reply.user.peran === 'guru' ? 'primary' : 'info'}" style="font-size: 0.6rem;">
+                                                ${reply.user.peran.toUpperCase()}
+                                            </span>
+                                        </div>
+                                        <small class="text-muted" style="font-size: 0.7rem;">${formatDate(reply.created_at)}</small>
+                                    </div>
+                                    <div class="bg-lighter p-2 rounded mb-1">
+                                        <p class="mb-0 small text-wrap" style="word-break: break-word;">${reply.pesan}</p>
+                                    </div>
+                                    <div class="d-flex gap-2">
+                                        ${(reply.user_id == {{ Auth::id() }}) ?
+                                            `<button class="btn btn-xs text-danger p-0" style="font-size: 0.7rem;" onclick="deleteComment(${reply.id})">Hapus</button>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    return html;
+                }
+
+                function formatDate(dateStr) {
+                    const date = new Date(dateStr);
+                    return date.toLocaleString('id-ID', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        day: '2-digit',
+                        month: 'short'
+                    });
+                }
+
+                window.prepareReply = function(id, name) {
+                    diskusiParentId.value = id;
+                    replyInfo.classList.remove('d-none');
+                    replyInfo.querySelector('span').innerText = `Membalas ke: ${name}`;
+                    diskusiPesan.focus();
+                }
+
+                window.cancelReply = function() {
+                    diskusiParentId.value = '';
+                    replyInfo.classList.add('d-none');
+                }
+
+                window.deleteComment = function(id) {
+                    if (confirm('Hapus pesan ini?')) {
+                        fetch(`/diskusi/${id}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                    'Accept': 'application/json'
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(res => {
+                                if (res.success) {
+                                    loadDiscussion();
+                                }
+                            });
+                    }
+                }
+
+                formDiskusi.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const pesan = diskusiPesan.value.trim();
+                    if (!pesan) return;
+
+                    btnSend.disabled = true;
+
+                    fetch("{{ route('diskusi.store', $pertemuan->id) }}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                'Accept': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                pesan: pesan,
+                                parent_id: diskusiParentId.value
+                            })
+                        })
+                        .then(response => response.json())
+                        .then(res => {
+                            if (res.success) {
+                                diskusiPesan.value = '';
+                                cancelReply();
+                                loadDiscussion();
+                            }
+                        })
+                        .finally(() => {
+                            btnSend.disabled = false;
+                        });
+                });
+            });
+        </script>
+    @endpush
 @endsection

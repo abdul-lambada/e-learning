@@ -59,6 +59,11 @@ class Pertemuan extends Model
         return $this->hasMany(Absensi::class);
     }
 
+    public function diskusi()
+    {
+        return $this->hasMany(Diskusi::class)->whereNull('parent_id')->latest();
+    }
+
     // Scopes
     public function scopeAktif($query)
     {

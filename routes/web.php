@@ -48,6 +48,11 @@ Route::middleware(['auth'])->group(function () {
         return back();
     })->name('notifications.read');
 
+    // Diskusi / Forum Routes
+    Route::get('pertemuan/{pertemuan}/diskusi', [\App\Http\Controllers\Shared\DiskusiController::class, 'index'])->name('diskusi.index');
+    Route::post('pertemuan/{pertemuan}/diskusi', [\App\Http\Controllers\Shared\DiskusiController::class, 'store'])->name('diskusi.store');
+    Route::delete('diskusi/{diskusi}', [\App\Http\Controllers\Shared\DiskusiController::class, 'destroy'])->name('diskusi.destroy');
+
     // Admin Routes
     Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [AdminDashboard::class, 'index'])->name('dashboard');
