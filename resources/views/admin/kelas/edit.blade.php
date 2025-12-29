@@ -53,15 +53,7 @@
                             <x-input label="Tahun Ajaran" name="tahun_ajaran"
                                 value="{{ old('tahun_ajaran', $kelas->tahun_ajaran) }}" required />
 
-                            <x-select label="Wali Kelas" name="wali_kelas_id" required>
-                                <option value="">Pilih Wali Kelas</option>
-                                @foreach ($gurus as $guru)
-                                    <option value="{{ $guru->id }}"
-                                        {{ old('wali_kelas_id', $kelas->wali_kelas_id) == $guru->id ? 'selected' : '' }}>
-                                        {{ $guru->nama_lengkap }} ({{ $guru->nip ?? '-' }})
-                                    </option>
-                                @endforeach
-                            </x-select>
+
 
                             <div class="mb-3">
                                 <label class="form-label" for="keterangan">Keterangan</label>

@@ -18,7 +18,6 @@ class Kelas extends Model
         'tingkat',
         'jurusan',
         'tahun_ajaran',
-        'wali_kelas_id',
         'kapasitas',
         'keterangan',
         'aktif',
@@ -31,10 +30,7 @@ class Kelas extends Model
     ];
 
     // Relationships
-    public function waliKelas()
-    {
-        return $this->belongsTo(User::class, 'wali_kelas_id');
-    }
+
 
     public function kelasSiswa()
     {

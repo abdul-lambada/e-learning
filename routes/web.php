@@ -101,7 +101,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [GuruDashboard::class, 'index'])->name('dashboard');
 
         // Manajemen Pembelajaran
-        Route::get('/siswa', [\App\Http\Controllers\Guru\SiswaController::class, 'index'])->name('siswa.index');
+
         Route::get('/jadwal', [\App\Http\Controllers\Guru\JadwalSayaController::class, 'index'])->name('jadwal.index');
         Route::get('/jadwal/{jadwal}', [\App\Http\Controllers\Guru\JadwalSayaController::class, 'show'])->name('jadwal.show');
 
@@ -156,10 +156,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('laporan/absensi', [\App\Http\Controllers\Guru\LaporanController::class, 'absensi'])->name('laporan.absensi');
         Route::get('laporan/pembelajaran', [\App\Http\Controllers\Guru\LaporanController::class, 'pembelajaran'])->name('laporan.pembelajaran');
 
-        // Wali Kelas
-        Route::get('wali-kelas', [\App\Http\Controllers\Guru\WaliKelasController::class, 'index'])->name('wali-kelas.index');
-        Route::get('wali-kelas/{id}', [\App\Http\Controllers\Guru\WaliKelasController::class, 'show'])->name('wali-kelas.show');
-        Route::get('wali-kelas/{kelasId}/siswa/{siswaId}', [\App\Http\Controllers\Guru\WaliKelasController::class, 'showSiswa'])->name('wali-kelas.siswa.show');
+
 
         // Pengaturan Nilai
         Route::resource('komponen-nilai', \App\Http\Controllers\Guru\KomponenNilaiController::class)->parameters(['komponen-nilai' => 'komponenNilai']);

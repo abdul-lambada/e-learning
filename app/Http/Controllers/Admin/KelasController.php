@@ -16,7 +16,7 @@ class KelasController extends Controller
 
     public function index(Request $request)
     {
-        $query = Kelas::with(['waliKelas', 'users']);
+        $query = Kelas::with(['users']);
 
         // Search
         if ($request->has('search') && $request->search != '') {
@@ -38,9 +38,7 @@ class KelasController extends Controller
 
     public function create()
     {
-        // Get all users with role 'guru' for Wali Kelas selection
-        $gurus = User::role('guru')->where('aktif', true)->get();
-        return view('admin.kelas.create', compact('gurus'));
+        return view('admin.kelas.create');
     }
 
     public function store(Request $request)
@@ -51,7 +49,6 @@ class KelasController extends Controller
             'tingkat' => 'required|in:10,11,12', // Asumsi SMA/SMK
             'jurusan' => 'required|string|max:50',
             'tahun_ajaran' => 'required|string|max:9', // Format: 2024/2025
-            'wali_kelas_id' => 'required|exists:users,id',
             'keterangan' => 'nullable|string',
         ]);
 
@@ -65,14 +62,13 @@ class KelasController extends Controller
 
     public function show(Kelas $kelas)
     {
-        $kelas->load(['waliKelas', 'users']);
+        $kelas->load(['users']);
         return view('admin.kelas.show', compact('kelas'));
     }
 
     public function edit(Kelas $kelas)
     {
-        $gurus = User::role('guru')->where('aktif', true)->get();
-        return view('admin.kelas.edit', compact('kelas', 'gurus'));
+        return view('admin.kelas.edit', compact('kelas'));
     }
 
     public function update(Request $request, Kelas $kelas)
@@ -83,7 +79,6 @@ class KelasController extends Controller
             'tingkat' => 'required|in:10,11,12',
             'jurusan' => 'required|string|max:50',
             'tahun_ajaran' => 'required|string|max:9',
-            'wali_kelas_id' => 'required|exists:users,id',
             'aktif' => 'required|boolean',
             'keterangan' => 'nullable|string',
         ]);

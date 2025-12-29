@@ -43,15 +43,7 @@
                                 value="{{ old('tahun_ajaran', date('Y') . '/' . (date('Y') + 1)) }}"
                                 placeholder="Contoh: 2024/2025" required />
 
-                            <x-select label="Wali Kelas" name="wali_kelas_id" required>
-                                <option value="">Pilih Wali Kelas</option>
-                                @foreach ($gurus as $guru)
-                                    <option value="{{ $guru->id }}"
-                                        {{ old('wali_kelas_id') == $guru->id ? 'selected' : '' }}>
-                                        {{ $guru->nama_lengkap }} ({{ $guru->nip ?? '-' }})
-                                    </option>
-                                @endforeach
-                            </x-select>
+
 
                             <div class="mb-3">
                                 <label class="form-label" for="keterangan">Keterangan</label>

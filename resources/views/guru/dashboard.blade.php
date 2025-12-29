@@ -85,22 +85,7 @@
                 </div>
             @endif
 
-            @if ($isWaliKelas)
-                <!-- Wali Kelas Card -->
-                <div class="card border-primary mb-4 shadow-sm">
-                    <div class="card-body d-flex align-items-center">
-                        <div class="avatar avatar-lg bg-label-primary me-3 p-2 rounded">
-                            <i class="bx bx-group fs-2"></i>
-                        </div>
-                        <div class="me-3">
-                            <h5 class="mb-0 fw-bold">Wali Kelas: {{ $totalSiswaBinaan }} Siswa</h5>
-                            <small class="text-muted">Pantau perkembangan akademik dan kehadiran siswa binaan Anda.</small>
-                        </div>
-                        <a href="{{ route('guru.wali-kelas.index') }}" class="btn btn-primary btn-sm ms-auto">Kelola
-                            Siswa</a>
-                    </div>
-                </div>
-            @endif
+
 
             <!-- Upcoming Classes / Schedule Today -->
             <x-card title="Aktivitas Mengajar Hari Ini">

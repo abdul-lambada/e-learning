@@ -47,7 +47,6 @@
                         <th>Kode Kelas</th>
                         <th>Nama Kelas</th>
                         <th>Tingkat</th>
-                        <th>Wali Kelas</th>
                         <th>Tahun Ajaran</th>
                         <th>Jumlah Siswa</th>
                         <th>Status</th>
@@ -61,19 +60,7 @@
                             <td><span class="fw-bold">{{ $data->kode_kelas }}</span></td>
                             <td>{{ $data->nama_kelas }}</td>
                             <td>{{ $data->tingkat }}</td>
-                            <td>
-                                @if ($data->waliKelas)
-                                    <div class="d-flex align-items-center">
-                                        <div class="avatar avatar-xs me-2">
-                                            <img src="/sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png" alt
-                                                class="rounded-circle">
-                                        </div>
-                                        {{ $data->waliKelas->nama_lengkap }}
-                                    </div>
-                                @else
-                                    <span class="text-danger">Belum diset</span>
-                                @endif
-                            </td>
+
                             <td>{{ $data->tahun_ajaran }}</td>
                             <td>
                                 <span class="badge bg-label-primary">{{ $data->users->count() }} Siswa</span>

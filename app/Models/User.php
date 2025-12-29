@@ -65,11 +65,7 @@ class User extends Authenticatable
         return $this->hasMany(GuruMengajar::class, 'guru_id');
     }
 
-    // Wali Kelas
-    public function kelasWali()
-    {
-        return $this->hasMany(Kelas::class, 'wali_kelas_id');
-    }
+
 
     // Tugas
     public function pengumpulanTugas()

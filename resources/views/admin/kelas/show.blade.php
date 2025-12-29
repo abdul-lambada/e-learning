@@ -33,16 +33,7 @@
                                     <span class="fw-bold d-block mb-1">Tahun Ajaran:</span>
                                     <span>{{ $kelas->tahun_ajaran }}</span>
                                 </li>
-                                <li class="mb-3">
-                                    <span class="fw-bold d-block mb-1">Wali Kelas:</span>
-                                    <div class="d-flex align-items-center mt-1">
-                                        <div class="avatar avatar-xs me-2">
-                                            <img src="/sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png" alt
-                                                class="rounded-circle">
-                                        </div>
-                                        <span>{{ $kelas->waliKelas->nama_lengkap ?? 'Belum diset' }}</span>
-                                    </div>
-                                </li>
+
                                 <li class="mb-3">
                                     <span class="fw-bold d-block mb-1">Status:</span>
                                     <span
