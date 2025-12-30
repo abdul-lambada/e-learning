@@ -155,10 +155,12 @@ Route::middleware(['auth'])->group(function () {
         Route::resource('kuis', \App\Http\Controllers\Guru\KuisController::class)->parameters(['kuis' => 'kuis']);
         Route::resource('kuis.soal', \App\Http\Controllers\Guru\SoalKuisController::class)->parameters(['kuis' => 'kuis'])->shallow();
 
-        // Kuis Hasil & Review
+        // Kuis Hasil, Review & Import
         Route::get('kuis/{kuis}/hasil', [\App\Http\Controllers\Guru\KuisController::class, 'hasil'])->name('kuis.hasil');
         Route::get('kuis/review/{jawabanKuis}', [\App\Http\Controllers\Guru\KuisController::class, 'review'])->name('kuis.review');
         Route::post('kuis/review/{jawabanKuis}/simpan', [\App\Http\Controllers\Guru\KuisController::class, 'simpanKoreksi'])->name('kuis.simpan_koreksi');
+        Route::get('kuis/{kuis}/soal-template', [\App\Http\Controllers\Guru\SoalKuisController::class, 'downloadTemplate'])->name('kuis.soal.template');
+        Route::post('kuis/{kuis}/soal-import', [\App\Http\Controllers\Guru\SoalKuisController::class, 'importSoal'])->name('kuis.soal.import');
 
         // Laporan
         Route::get('laporan/nilai', [\App\Http\Controllers\Guru\LaporanController::class, 'nilai'])->name('laporan.nilai');

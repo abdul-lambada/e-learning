@@ -137,4 +137,33 @@ class SoalKuisController extends Controller
         return redirect()->route('guru.kuis.show', $kuisId)
                          ->with('success', 'Soal berhasil dihapus.');
     }
+    public function downloadTemplate(Kuis $kuis)
+    {
+        if (!$kuis->pertemuan || !$kuis->pertemuan->guruMengajar || $kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
+            abort(403);
+        }
+
+        return \Maatwebsite\Excel\Facades\Excel::download(new \App\Exports\SoalKuisTemplateExport, 'template_soal_kuis.xlsx');
+    }
+
+    public function importSoal(Request $request, Kuis $kuis)
+    {
+        if (!$kuis->pertemuan || !$kuis->pertemuan->guruMengajar || $kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv|max:2048'
+        ]);
+
+        try {
+            \Maatwebsite\Excel\Facades\Excel::import(new \App\Imports\SoalKuisImport($kuis->id), $request->file('file_excel'));
+
+            return redirect()->route('guru.kuis.show', $kuis->id)
+                             ->with('success', 'Soal berhasil diimport.');
+        } catch (\Exception $e) {
+            return redirect()->route('guru.kuis.show', $kuis->id)
+                             ->with('error', 'Gagal mengimport soal: ' . $e->getMessage());
+        }
+    }
 }

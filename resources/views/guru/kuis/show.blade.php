@@ -23,6 +23,15 @@
                 </div>
             @endif
 
+            @if (session('error'))
+                <div class="col-12">
+                    <div class="alert alert-danger alert-dismissible mb-3" role="alert">
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            @endif
+
             <!-- Info Kuis -->
             <div class="col-md-4 order-md-2 mb-4">
                 <x-card title="Informasi Kuis">
@@ -58,6 +67,10 @@
                             <a href="{{ route('guru.kuis.soal.create', $kuis->id) }}" class="btn btn-primary">
                                 <i class="bx bx-plus me-1"></i> Tambah Soal
                             </a>
+                            <button type="button" class="btn btn-outline-success" data-bs-toggle="modal"
+                                data-bs-target="#importSoalModal">
+                                <i class="bx bx-import me-1"></i> Import Soal Excel
+                            </button>
                         @endcan
                     </div>
                 </x-card>
@@ -151,4 +164,43 @@
             </div>
         </div>
     </div>
+    @can('kelola kuis')
+        <!-- Import Soal Modal -->
+        <div class="modal fade" id="importSoalModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Import Soal dari Excel</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <form action="{{ route('guru.kuis.soal.import', $kuis->id) }}" method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">Download Template</label>
+                                <div>
+                                    <a href="{{ route('guru.kuis.soal.template', $kuis->id) }}"
+                                        class="btn btn-sm btn-label-primary">
+                                        <i class="bx bx-download me-1"></i> Download Template .xlsx
+                                    </a>
+                                </div>
+                                <small class="text-muted mt-1 d-block">Gunakan template ini agar format data sesuai.</small>
+                            </div>
+                            <div class="mb-3">
+                                <label for="file_excel" class="form-label">Pilih File Excel</label>
+                                <input class="form-control" type="file" id="file_excel" name="file_excel"
+                                    accept=".xlsx, .xls, .csv" required>
+                                <div class="form-text">Maksimal ukuran file 2MB.</div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Mulai Import</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    @endcan
 @endsection
