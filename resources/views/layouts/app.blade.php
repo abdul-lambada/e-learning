@@ -355,17 +355,10 @@
                                 class="menu-header-text">Pembelajaran</span>
                         </li>
 
-                        <li class="menu-item {{ request()->routeIs('siswa.jadwal.*') ? 'active' : '' }}">
-                            <a href="{{ route('siswa.jadwal.index') }}" class="menu-link">
-                                <i class="menu-icon tf-icons bx bx-calendar"></i>
-                                <div>Jadwal Pelajaran</div>
-                            </a>
-                        </li>
-
-                        <li class="menu-item {{ request()->routeIs('siswa.materi.*') ? 'active' : '' }}">
-                            <a href="{{ route('siswa.materi.index') }}" class="menu-link">
+                        <li class="menu-item {{ request()->routeIs('siswa.pembelajaran.*') ? 'active' : '' }}">
+                            <a href="{{ route('siswa.pembelajaran.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-book-open"></i>
-                                <div>Materi Pelajaran</div>
+                                <div>Jadwal & Materi</div>
                             </a>
                         </li>
 
