@@ -132,6 +132,16 @@
                                 Default password: <strong>password</strong>
                             </small>
                         </p>
+
+                        <div class="divider my-4">
+                            <div class="divider-text">ATAU</div>
+                        </div>
+
+                        <div class="text-center">
+                            <a href="{{ route('login.siswa') }}" class="btn btn-outline-primary w-100">
+                                <i class='bx bx-mobile-alt me-1'></i> Login Khusus Siswa (Mobile UI)
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <!-- /Login Card -->

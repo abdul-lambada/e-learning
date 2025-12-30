@@ -13,6 +13,11 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
+    public function showSiswaLoginForm()
+    {
+        return view('auth.login_siswa');
+    }
+
     public function login(Request $request)
     {
         $credentials = $request->validate([
