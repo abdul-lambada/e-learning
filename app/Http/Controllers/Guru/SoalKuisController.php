@@ -18,7 +18,8 @@ class SoalKuisController extends Controller
 
     public function create(Kuis $kuis)
     {
-        if ($kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
+        // Pastikan kuis memiliki pertemuan dan guru yang sesuai
+        if (!$kuis->pertemuan || !$kuis->pertemuan->guruMengajar || $kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }
         return view('guru.kuis.soal.create', compact('kuis'));
@@ -26,7 +27,7 @@ class SoalKuisController extends Controller
 
     public function store(Request $request, Kuis $kuis)
     {
-        if ($kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
+        if (!$kuis->pertemuan || !$kuis->pertemuan->guruMengajar || $kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }
 
@@ -72,7 +73,7 @@ class SoalKuisController extends Controller
 
     public function edit(SoalKuis $soal)
     {
-        if ($soal->kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
+        if (!$soal->kuis || !$soal->kuis->pertemuan || !$soal->kuis->pertemuan->guruMengajar || $soal->kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }
         return view('guru.kuis.soal.edit', compact('soal'));
@@ -80,7 +81,7 @@ class SoalKuisController extends Controller
 
     public function update(Request $request, SoalKuis $soal)
     {
-        if ($soal->kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
+        if (!$soal->kuis || !$soal->kuis->pertemuan || !$soal->kuis->pertemuan->guruMengajar || $soal->kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }
 
@@ -118,7 +119,7 @@ class SoalKuisController extends Controller
 
     public function destroy(SoalKuis $soal)
     {
-        if ($soal->kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
+        if (!$soal->kuis || !$soal->kuis->pertemuan || !$soal->kuis->pertemuan->guruMengajar || $soal->kuis->pertemuan->guruMengajar->guru_id !== Auth::id()) {
             abort(403);
         }
 

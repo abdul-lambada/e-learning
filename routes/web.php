@@ -153,7 +153,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('tugas/nilai/{pengumpulan}', [\App\Http\Controllers\Guru\TugasController::class, 'nilai'])->name('tugas.nilai');
 
         Route::resource('kuis', \App\Http\Controllers\Guru\KuisController::class)->parameters(['kuis' => 'kuis']);
-        Route::resource('kuis.soal', \App\Http\Controllers\Guru\SoalKuisController::class)->shallow();
+        Route::resource('kuis.soal', \App\Http\Controllers\Guru\SoalKuisController::class)->parameters(['kuis' => 'kuis'])->shallow();
 
         // Kuis Hasil & Review
         Route::get('kuis/{kuis}/hasil', [\App\Http\Controllers\Guru\KuisController::class, 'hasil'])->name('kuis.hasil');
