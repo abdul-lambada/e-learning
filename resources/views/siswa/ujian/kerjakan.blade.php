@@ -46,7 +46,7 @@
 
     <div class="flex flex-col h-screen bg-gray-50">
         <!-- Sticky Exam Header -->
-        <header class="bg-white border-b border-gray-100 flex-shrink-0 z-50">
+        <header class="bg-white border-b border-gray-100 shrink-0 z-50">
             <div class="px-5 py-3 flex justify-between items-center">
                 <div class="min-w-0 flex-1">
                     <h1 class="text-sm font-black text-gray-900 leading-tight truncate">
@@ -149,7 +149,7 @@
         </footer>
 
         <!-- Navigation Sheet (Sidebar replacement for Mobile) -->
-        <div id="nav-sheet" class="hidden fixed inset-0 z-[100] p-6 items-end justify-center bg-black/60 backdrop-blur-sm">
+        <div id="nav-sheet" class="hidden fixed inset-0 z-100 p-6 items-end justify-center bg-black/60 backdrop-blur-sm">
             <div class="bg-white w-full rounded-[40px] p-8 space-y-6 animate-in slide-in-from-bottom duration-300">
                 <div class="flex justify-between items-center">
                     <h3 class="text-xl font-black text-gray-900">Daftar Soal</h3>

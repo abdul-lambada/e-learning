@@ -49,10 +49,22 @@
             </div>
         </div>
         <div class="flex items-center gap-2">
+            @php
+                $unreadNotifCount = auth()->user()->unreadNotifications->count();
+            @endphp
             <a href="{{ route('siswa.notifications.index') }}"
                 class="relative w-10 h-10 bg-gray-50 rounded-xl flex items-center justify-center text-gray-500 active:bg-gray-100 transition-colors">
                 <i class='bx bx-bell text-xl'></i>
-                <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                @if ($unreadNotifCount > 0)
+                    <span class="absolute -top-1 -right-1 flex h-5 w-5">
+                        <span
+                            class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+                        <span
+                            class="relative inline-flex rounded-full h-5 w-5 bg-red-600 text-[9px] font-black text-white items-center justify-center border-2 border-white">
+                            {{ $unreadNotifCount > 9 ? '9+' : $unreadNotifCount }}
+                        </span>
+                    </span>
+                @endif
             </a>
         </div>
     </header>
@@ -101,8 +113,59 @@
         <!-- Home Indicator (Cosmetic) -->
         <div class="flex justify-center pb-1">
             <div class="w-24 h-1 bg-gray-100 rounded-full"></div>
-        </div>
     </nav>
+
+    <!-- Global Flash Toast -->
+    <div id="toast-container" class="fixed top-20 left-4 right-4 z-100 pointer-events-none space-y-3"></div>
+
+    <script>
+        window.showToast = function(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+
+            const colors = {
+                success: 'bg-green-600',
+                error: 'bg-red-600',
+                info: 'bg-indigo-600',
+                warning: 'bg-orange-500'
+            };
+
+            const icons = {
+                success: 'bx-check-circle',
+                error: 'bx-error-circle',
+                info: 'bx-info-circle',
+                warning: 'bx-alarm'
+            };
+
+            toast.className =
+                `max-w-md w-full ${colors[type]} text-white p-4 rounded-2xl shadow-xl shadow-indigo-100 flex items-center gap-3 animate-in slide-in-from-top duration-300 pointer-events-auto`;
+            toast.innerHTML = `
+                <i class='bx ${icons[type]} text-xl'></i>
+                <p class="text-xs font-bold flex-1">${message}</p>
+                <button onclick="this.parentElement.remove()" class="text-white/50 hover:text-white"><i class='bx bx-x'></i></button>
+            `;
+
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('animate-out', 'fade-out', 'slide-out-to-top');
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        };
+
+        // Auto-show session messages
+        @if (session('success'))
+            showToast("{{ session('success') }}", 'success');
+        @endif
+        @if (session('error'))
+            showToast("{{ session('error') }}", 'error');
+        @endif
+        @if (session('info'))
+            showToast("{{ session('info') }}", 'info');
+        @endif
+        @if ($errors->any())
+            showToast("Ada beberapa kesalahan penginputan.", 'error');
+        @endif
+    </script>
 
     <!-- Logout Modal -->
     <div id="logoutModal"

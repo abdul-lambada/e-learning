@@ -228,29 +228,32 @@
                 let html = '';
                 comments.forEach(c => {
                     const isMe = c.user_id == {{ auth()->id() }};
+                    const isGuru = c.user.peran === 'guru';
                     html += `
                         <div class="animate-in fade-in slide-in-from-bottom-2 duration-300">
-                            <div class="flex gap-3">
-                                <div class="w-9 h-9 rounded-xl bg-indigo-100 flex items-center justify-center text-indigo-700 font-black text-xs flex-shrink-0">
+                            <div class="flex gap-3 ${isMe ? 'flex-row-reverse' : ''}">
+                                <div class="w-8 h-8 rounded-xl shrink-0 flex items-center justify-center text-[10px] font-black 
+                                    ${isGuru ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-500'}">
                                     ${c.user.nama_lengkap.charAt(0)}
                                 </div>
-                                <div class="flex-1 space-y-1">
-                                    <div class="flex items-center gap-2">
-                                        <span class="text-xs font-bold text-gray-900">${c.user.nama_lengkap}</span>
-                                        <span class="text-[9px] font-bold text-gray-400 capitalize">${c.user.peran}</span>
+                                <div class="flex-1 space-y-1 ${isMe ? 'items-end' : ''} flex flex-col min-w-0">
+                                    <div class="flex items-center gap-1.5 px-1 truncate max-w-full">
+                                        <span class="text-[9px] font-bold text-gray-900 truncate">${c.user.nama_lengkap}</span>
+                                        ${isGuru ? `<span class="bg-indigo-600 text-[6px] text-white px-1.5 py-0.5 rounded-full font-black uppercase tracking-widest shrink-0">Guru</span>` : ''}
                                     </div>
-                                    <div class="bg-gray-50 p-3 rounded-2xl rounded-tl-none border border-gray-100">
-                                        <p class="text-xs text-gray-700 leading-relaxed">${c.pesan}</p>
+                                    <div class="p-3 rounded-2xl text-xs leading-relaxed max-w-[90%]
+                                        ${isMe ? 'bg-indigo-600 text-white rounded-tr-none shadow-sm shadow-indigo-100' : 'bg-white border border-gray-100 text-gray-700 rounded-tl-none shadow-sm'}">
+                                        ${c.pesan}
                                     </div>
-                                    <div class="flex items-center gap-4 pl-1">
-                                        <span class="text-[9px] text-gray-400 font-medium">${formatDate(c.created_at)}</span>
-                                        <button class="text-[10px] font-bold text-indigo-500" onclick="prepareReply(${c.id}, '${c.user.nama_lengkap}')">Balas</button>
-                                        ${isMe ? `<button class="text-[10px] font-bold text-red-400" onclick="deleteComment(${c.id})">Hapus</button>` : ''}
+                                    <div class="flex items-center gap-3 px-1">
+                                        <span class="text-[8px] text-gray-400 font-bold">${formatDate(c.created_at)}</span>
+                                        <button class="text-[8px] font-black text-indigo-500 uppercase tracking-widest" onclick="prepareReply(${c.id}, '${c.user.nama_lengkap}')">Balas</button>
+                                        ${isMe ? `<button class="text-[8px] font-black text-red-400 uppercase tracking-widest" onclick="deleteComment(${c.id})">Hapus</button>` : ''}
                                     </div>
 
                                     <!-- Replies -->
-                                    <div class="mt-4 space-y-4 border-l-2 border-indigo-50 pl-4 ml-1">
-                                        ${renderReplies(c.replies || [])}
+                                    <div class="w-full space-y-3 mt-3">
+                                        ${renderReplies(c.replies || [], isMe)}
                                     </div>
                                 </div>
                             </div>
@@ -260,23 +263,23 @@
                 container.innerHTML = html;
             }
 
-            function renderReplies(replies) {
+            function renderReplies(replies, parentIsMe) {
                 let html = '';
                 replies.forEach(r => {
                     const isMe = r.user_id == {{ auth()->id() }};
                     html += `
-                        <div class="flex gap-2">
-                            <div class="flex-1">
-                                <div class="flex items-center gap-2 mb-1">
-                                    <span class="text-xs font-bold text-gray-900">${r.user.nama_lengkap}</span>
-                                    <span class="text-[8px] font-bold text-indigo-500 uppercase">${r.user.peran}</span>
+                        <div class="flex gap-2 ${isMe ? 'flex-row-reverse' : ''} animate-in fade-in zoom-in duration-300">
+                            <div class="w-6 h-6 rounded-lg shrink-0 bg-gray-50 flex items-center justify-center text-[8px] font-black text-gray-400">
+                                ${r.user.nama_lengkap.charAt(0)}
+                            </div>
+                            <div class="max-w-[90%] space-y-1 ${isMe ? 'items-end' : ''} flex flex-col">
+                                <div class="p-2 rounded-xl text-[10px] leading-relaxed 
+                                    ${isMe ? 'bg-indigo-600 text-white rounded-tr-none' : 'bg-gray-100 text-gray-700 rounded-tl-none'}">
+                                    ${r.pesan}
                                 </div>
-                                <div class="bg-indigo-50/30 p-2.5 rounded-xl rounded-tl-none border border-indigo-50">
-                                    <p class="text-xs text-gray-700 leading-relaxed font-medium">${r.pesan}</p>
-                                </div>
-                                <div class="flex items-center gap-3 mt-1 pl-1">
-                                    <span class="text-[8px] text-gray-400">${formatDate(r.created_at)}</span>
-                                    ${isMe ? `<button class="text-[8px] font-bold text-red-300" onclick="deleteComment(${r.id})">Hapus</button>` : ''}
+                                <div class="flex items-center gap-2 px-1">
+                                    <span class="text-[7px] text-gray-400 font-bold">${formatDate(r.created_at)}</span>
+                                    ${isMe ? `<button class="text-[7px] font-black text-red-300 uppercase" onclick="deleteComment(${r.id})">Hapus</button>` : ''}
                                 </div>
                             </div>
                         </div>

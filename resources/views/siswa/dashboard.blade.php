@@ -3,31 +3,61 @@
 @section('title', 'Dashboard')
 
 @section('content')
+    @php
+        $hour = date('H');
+        $greeting =
+            $hour < 11
+                ? 'Selamat Pagi'
+                : ($hour < 15
+                    ? 'Selamat Siang'
+                    : ($hour < 19
+                        ? 'Selamat Sore'
+                        : 'Selamat Malam'));
+    @endphp
+
     <!-- Welcome Card -->
-    <div
-        class="bg-linear-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg shadow-indigo-200 relative overflow-hidden">
+    <div class="bg-indigo-600 rounded-[32px] p-8 text-white shadow-xl shadow-indigo-100 relative overflow-hidden mb-6">
         <div class="relative z-10">
-            <h2 class="text-2xl font-bold mb-1">Halo, {{ explode(' ', auth()->user()->nama_lengkap)[0] }}!</h2>
-            <p class="text-indigo-100 text-sm mb-4">
+            <h2 class="text-xs font-black uppercase tracking-[0.2em] text-indigo-200 mb-2">{{ $greeting }}</h2>
+            <h1 class="text-2xl font-black mb-1 leading-tight">Halo, {{ explode(' ', auth()->user()->nama_lengkap)[0] }}!
+            </h1>
+            <p class="text-indigo-100 text-[11px] font-medium opacity-80 mb-6">
                 @if ($kelas)
-                    Kamu di kelas <span class="font-bold">{{ $kelas->nama_kelas }}</span>.
+                    Kamu di kelas <span class="font-bold border-b border-indigo-300">#{{ $kelas->nama_kelas }}</span>.
                     @if ($jadwalHariIni->count() > 0)
-                        Ada <span class="font-bold text-white">{{ $jadwalHariIni->count() }}</span> mapel hari ini.
-                    @else
-                        Hari ini bebas!
+                        Ada {{ $jadwalHariIni->count() }} mapel hari ini.
                     @endif
                 @else
                     Belum masuk kelas.
                 @endif
             </p>
-            <a href="{{ route('siswa.pembelajaran.index') }}"
-                class="inline-block bg-white text-indigo-600 px-4 py-2 rounded-xl text-sm font-bold shadow-sm active:scale-95 transition-transform">
-                Mulai Belajar
-            </a>
+            <div class="flex gap-3">
+                <a href="{{ route('siswa.pembelajaran.index') }}"
+                    class="bg-white text-indigo-600 px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all">
+                    Belajar
+                </a>
+                <a href="{{ route('siswa.absensi.index') }}"
+                    class="bg-indigo-500/30 text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all border border-white/10 ring-1 ring-white/10">
+                    Absen
+                </a>
+            </div>
         </div>
-        <!-- Decorative Circle -->
-        <div class="absolute -right-8 -bottom-12 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
-        <div class="absolute -right-4 -top-8 w-24 h-24 bg-white/10 rounded-full blur-xl"></div>
+        <!-- Modern Decorative Elements -->
+        <div class="absolute -right-12 -top-12 w-48 h-48 bg-white/10 rounded-full"></div>
+        <div class="absolute -left-12 -bottom-12 w-32 h-32 bg-indigo-400/20 rounded-full blur-2xl"></div>
+    </div>
+
+    <!-- Weekly Activity Chart -->
+    <div class="bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm mb-6">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="font-bold text-gray-800 text-sm">Aktivitas Belajar</h3>
+            <span
+                class="text-[8px] font-black text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg uppercase tracking-widest">7
+                Hari Terakhir</span>
+        </div>
+        <div class="h-40 relative">
+            <canvas id="activityChart"></canvas>
+        </div>
     </div>
 
     <!-- Quick Stats -->
@@ -165,4 +195,63 @@
             </div>
         @endforelse
     </div>
+    @push('scripts')
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const ctx = document.getElementById('activityChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: {!! json_encode($weekLabels) !!},
+                        datasets: [{
+                            label: 'Tugas',
+                            data: {!! json_encode($weeklyData['tugas']) !!},
+                            borderColor: '#4f46e5',
+                            backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }, {
+                            label: 'Kuis',
+                            data: {!! json_encode($weeklyData['kuis']) !!},
+                            borderColor: '#9333ea',
+                            backgroundColor: 'rgba(147, 51, 234, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                display: false
+                            },
+                            x: {
+                                grid: {
+                                    display: false
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 9,
+                                        family: "'Outfit', sans-serif",
+                                        weight: 'bold'
+                                    },
+                                    color: '#94a3b8'
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        </script>
+    @endpush
 @endsection
