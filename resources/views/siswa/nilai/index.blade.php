@@ -1,124 +1,84 @@
-@extends('layouts.app')
+@extends('layouts.siswa_mobile')
 
 @section('title', 'Nilai Saya')
 
 @section('content')
-    <div class="row">
-        <div class="col-12">
-            <h4 class="fw-bold py-3 mb-4">
-                <span class="text-muted fw-light">Siswa /</span> Nilai Akhir
-            </h4>
-
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Rekap Nilai Perkuliahan/Pelajaran</h5>
-                    @if ($nilai->isNotEmpty())
-                        <a href="{{ route('siswa.nilai.cetak') }}" class="btn btn-primary" target="_blank">
-                            <i class="bx bx-printer me-1"></i> Cetak Laporan PDF
-                        </a>
-                    @endif
-                </div>
-                <div class="table-responsive text-nowrap">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Mata Pelajaran</th>
-                                <th>Kelas</th>
-                                <th>Nilai Akhir</th>
-                                <th>Predikat</th>
-                                <th>Status</th>
-                                <th>Detail</th>
-                            </tr>
-                        </thead>
-                        <tbody class="table-border-bottom-0">
-                            @forelse($nilai as $n)
-                                <tr>
-                                    <td><strong>{{ $n->mataPelajaran->nama_mapel }}</strong></td>
-                                    <td>{{ $n->kelas->nama_kelas }}</td>
-                                    <td><span class="fw-bold fs-5">{{ number_format($n->nilai_akhir, 2) }}</span></td>
-                                    <td><span class="badge bg-label-primary">{{ $n->getPredikat() }}</span></td>
-                                    <td>
-                                        <span class="badge {{ $n->lulus ? 'bg-label-success' : 'bg-label-danger' }}">
-                                            {{ $n->lulus ? 'Lulus' : 'Tidak Lulus' }}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-outline-secondary"
-                                            data-bs-toggle="modal" data-bs-target="#modal-{{ $n->id }}">
-                                            <i class="bx bx-info-circle"></i> Komponen
-                                        </button>
-
-                                        <!-- Modal Component Details -->
-                                        <div class="modal fade" id="modal-{{ $n->id }}" tabindex="-1"
-                                            aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Rincian Nilai -
-                                                            {{ $n->mataPelajaran->nama_mapel }}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <ul class="list-group list-group-flush">
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center">
-                                                                <span>Absensi</span>
-                                                                <span
-                                                                    class="fw-bold">{{ number_format($n->nilai_absensi, 2) }}
-                                                                    ({{ number_format($n->bobot_absensi, 0) }}%)
-                                                                </span>
-                                                            </li>
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center">
-                                                                <span>Tugas</span>
-                                                                <span
-                                                                    class="fw-bold">{{ number_format($n->nilai_tugas, 2) }}
-                                                                    ({{ number_format($n->bobot_tugas, 0) }}%)</span>
-                                                            </li>
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center">
-                                                                <span>Kuis</span>
-                                                                <span
-                                                                    class="fw-bold">{{ number_format($n->nilai_kuis, 2) }}
-                                                                    ({{ number_format($n->bobot_kuis, 0) }}%)</span>
-                                                            </li>
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center">
-                                                                <span>Ujian (UTS/UAS)</span>
-                                                                <span
-                                                                    class="fw-bold">{{ number_format($n->nilai_ujian, 2) }}
-                                                                    ({{ number_format($n->bobot_ujian, 0) }}%)</span>
-                                                            </li>
-                                                            <li
-                                                                class="list-group-item d-flex justify-content-between align-items-center bg-label-light">
-                                                                <span class="fw-bold">Nilai Akhir</span>
-                                                                <span
-                                                                    class="h4 mb-0 fw-bold text-primary">{{ number_format($n->nilai_akhir, 2) }}</span>
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-outline-secondary"
-                                                            data-bs-dismiss="modal">Tutup</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center py-5">
-                                        <i class="bx bx-no-entry fs-1 text-muted"></i>
-                                        <p class="mt-2">Belum ada nilai yang dipublikasikan.</p>
-                                    </td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
+    <div class="space-y-6 pb-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-900">Laporan Nilai</h2>
+                <p class="text-xs text-gray-500">Lihat pencapaian belajarmu di sini</p>
             </div>
+            @if ($nilai->isNotEmpty())
+                <a href="{{ route('siswa.nilai.cetak') }}" target="_blank"
+                    class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100">
+                    <i class='bx bx-printer text-2xl'></i>
+                </a>
+            @endif
+        </div>
+
+        <!-- Grade Summary Cards -->
+        <div class="space-y-4">
+            @forelse($nilai as $n)
+                <div class="bg-white rounded-3xl p-5 shadow-sm border border-gray-100 space-y-4">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1 pr-4">
+                            <span
+                                class="text-[10px] uppercase tracking-wider font-bold text-indigo-500">{{ $n->kelas->nama_kelas }}</span>
+                            <h3 class="font-bold text-gray-900 text-lg leading-tight mt-0.5">
+                                {{ $n->mataPelajaran->nama_mapel }}</h3>
+                        </div>
+                        <div class="bg-indigo-50 rounded-2xl p-3 text-center min-w-[65px]">
+                            <span class="block text-[8px] text-indigo-400 font-bold uppercase tracking-widest">Akhir</span>
+                            <span
+                                class="text-xl font-black text-indigo-600 leading-none">{{ number_format($n->nilai_akhir, 1) }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <span
+                            class="px-3 py-1.5 bg-gray-50 rounded-xl text-xs font-bold text-gray-600 border border-gray-100">Predikat
+                            {{ $n->getPredikat() }}</span>
+                        <span
+                            class="px-3 py-1.5 {{ $n->lulus ? 'bg-green-50 text-green-600 border-green-100' : 'bg-red-50 text-red-600 border-red-100' }} rounded-xl text-xs font-bold border">
+                            {{ $n->lulus ? 'Lulus' : 'Tidak Lulus' }}
+                        </span>
+                    </div>
+
+                    <!-- Components Breakdown (Inline on Mobile instead of Modal) -->
+                    <div class="pt-4 border-t border-gray-50 grid grid-cols-2 gap-y-3">
+                        <div>
+                            <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-widest">Absensi
+                                ({{ number_format($n->bobot_absensi, 0) }}%)</span>
+                            <span class="text-xs font-bold text-gray-700">{{ number_format($n->nilai_absensi, 1) }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-widest">Tugas
+                                ({{ number_format($n->bobot_tugas, 0) }}%)</span>
+                            <span class="text-xs font-bold text-gray-700">{{ number_format($n->nilai_tugas, 1) }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-widest">Kuis
+                                ({{ number_format($n->bobot_kuis, 0) }}%)</span>
+                            <span class="text-xs font-bold text-gray-700">{{ number_format($n->nilai_kuis, 1) }}</span>
+                        </div>
+                        <div>
+                            <span class="block text-[9px] font-bold text-gray-400 uppercase tracking-widest">Ujian
+                                ({{ number_format($n->bobot_ujian, 0) }}%)</span>
+                            <span class="text-xs font-bold text-gray-700">{{ number_format($n->nilai_ujian, 1) }}</span>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200 py-16 px-10 text-center">
+                    <div class="w-20 h-20 bg-white rounded-full flex items-center justify-center shadow-sm mx-auto mb-4">
+                        <i class='bx bx-book-content text-4xl text-gray-200'></i>
+                    </div>
+                    <h4 class="font-bold text-gray-800 italic">Belum Ada Nilai</h4>
+                    <p class="text-gray-400 text-xs mt-1">Nilai kamu belum dipublikasikan oleh guru pengampu.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 @endsection

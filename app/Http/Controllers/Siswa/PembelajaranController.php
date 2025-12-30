@@ -98,7 +98,7 @@ class PembelajaranController extends Controller
             $q->where('aktif', true);
         }, 'guruMengajar.mataPelajaran', 'guruMengajar.guru']);
 
-        return view('siswa.pembelajaran.pertemuan', compact('pertemuan'));
+        return view('siswa.pembelajaran.pertemuan_mobile', compact('pertemuan'));
     }
     public function absenMandiri(Pertemuan $pertemuan)
     {

@@ -109,4 +109,44 @@ class AbsensiController extends Controller
 
         return view('siswa.absensi.riwayat', compact('absensi', 'statistik'));
     }
+    public function scan()
+    {
+        return view('siswa.absensi.scan');
+    }
+
+    public function scanSubmit(Request $request)
+    {
+        $request->validate([
+            'qr_code' => 'required|string',
+        ]);
+
+        // Minimalist logic: QR contains MEETING_ID
+        // In real app, it should be a signed token.
+        $pertemuanId = $request->qr_code;
+        $pertemuan = Pertemuan::find($pertemuanId);
+
+        if (!$pertemuan) {
+            return response()->json(['success' => false, 'message' => 'QR Code tidak valid atau pertemuan tidak ditemukan.']);
+        }
+
+        if (!$pertemuan->aktif) {
+            return response()->json(['success' => false, 'message' => 'Sesi absensi untuk pertemuan ini belum dibuka atau sudah ditutup.']);
+        }
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        // Validasi anggota kelas
+        $isMyClass = $user->kelas()->where('kelas.id', $pertemuan->guruMengajar->kelas_id)->exists();
+        if (!$isMyClass) {
+            return response()->json(['success' => false, 'message' => 'Anda tidak terdaftar di kelas untuk mata pelajaran ini.']);
+        }
+
+        Absensi::updateOrCreate(
+            ['pertemuan_id' => $pertemuan->id, 'siswa_id' => $user->id],
+            ['status' => 'hadir', 'waktu_absen' => now()]
+        );
+
+        return response()->json(['success' => true, 'message' => 'Absensi berhasil! Selamat belajar.']);
+    }
 }

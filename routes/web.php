@@ -178,6 +178,10 @@ Route::middleware(['auth'])->group(function () {
         // Ujian
         Route::get('/ujian/hasil', [\App\Http\Controllers\Siswa\UjianController::class, 'hasil'])->name('ujian.hasil');
 
+        // Notifikasi
+        Route::get('/notifications', [\App\Http\Controllers\Siswa\NotificationController::class, 'index'])->name('notifications.index');
+        Route::post('/notifications/read-all', [\App\Http\Controllers\Siswa\NotificationController::class, 'markAllAsRead'])->name('notifications.read_all');
+
         // Bantuan
         Route::get('/bantuan', [\App\Http\Controllers\Siswa\BantuanController::class, 'index'])->name('bantuan.index');
 
@@ -185,6 +189,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/absensi/hari-ini', [\App\Http\Controllers\Siswa\AbsensiController::class, 'index'])->name('absensi.index');
         Route::post('/absensi/store', [\App\Http\Controllers\Siswa\AbsensiController::class, 'store'])->name('absensi.store');
         Route::get('/absensi/riwayat', [\App\Http\Controllers\Siswa\AbsensiController::class, 'riwayat'])->name('absensi.riwayat');
+        Route::get('/absensi/scan', [\App\Http\Controllers\Siswa\AbsensiController::class, 'scan'])->name('absensi.scan');
+        Route::post('/absensi/scan/submit', [\App\Http\Controllers\Siswa\AbsensiController::class, 'scanSubmit'])->name('absensi.scan.submit');
 
         // Pembelajaran
         Route::get('/pembelajaran', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'index'])->name('pembelajaran.index');

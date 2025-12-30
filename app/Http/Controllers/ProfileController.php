@@ -16,9 +16,13 @@ class ProfileController extends Controller
         $role = $user->peran;
 
         // Use the appropriate layout based on role
-        $layout = 'layouts.' . $role;
-
-        return view('profile.index', compact('user', 'layout'));
+        if ($role === 'siswa') {
+            $layout = 'layouts.siswa_mobile';
+            return view('profile.mobile', compact('user', 'layout'));
+        } else {
+            $layout = 'layouts.app';
+            return view('profile.index', compact('user', 'layout'));
+        }
     }
 
     public function update(Request $request)

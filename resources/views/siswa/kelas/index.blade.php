@@ -1,146 +1,117 @@
-@extends('layouts.app')
+@extends('layouts.siswa_mobile')
 
 @section('title', 'Informasi Kelas')
 
 @section('content')
-    <div class="row">
-        <!-- Informasi Utama Kelas -->
-        <div class="col-md-12 mb-4">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-start justify-content-between">
-                        <div class="d-flex align-items-start">
-                            <div class="avatar avatar-lg me-3">
-                                <span class="avatar-initial rounded bg-label-primary"><i
-                                        class='bx bx-buildings fs-1'></i></span>
-                            </div>
-                            <div class="me-2">
-                                <h4 class="mb-1">{{ $kelas->nama_kelas }}</h4>
-                                <div class="text-muted mb-1">{{ $kelas->tingkat }} | {{ $kelas->jurusan }}</div>
-                                <span class="badge bg-label-success">Tahun Ajaran {{ $kelas->tahun_ajaran }}</span>
-                            </div>
-                        </div>
-                        <div class="text-end">
-                            <h6 class="mb-1">Wali Kelas</h6>
-                            <div class="d-flex align-items-center justify-content-end">
-                                <div class="avatar avatar-xs me-2">
-                                    <img src="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}" alt
-                                        class="rounded-circle">
-                                </div>
-                                <span class="fw-semibold">{{ $kelas->waliKelas->nama_lengkap ?? 'Belum ditentukan' }}</span>
-                            </div>
-                        </div>
+    <div class="space-y-6 pb-12">
+        <!-- Header Section -->
+        <div class="bg-indigo-600 rounded-[32px] p-6 text-white shadow-lg shadow-indigo-100 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16"></div>
+            <div class="relative z-10 flex flex-col gap-3">
+                <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center">
+                    <i class='bx bx-buildings text-3xl'></i>
+                </div>
+                <div>
+                    <h2 class="text-2xl font-black leading-tight">{{ $kelas->nama_kelas }}</h2>
+                    <p class="text-indigo-100 text-xs font-medium">{{ $kelas->tingkat }} • {{ $kelas->jurusan }} • TA
+                        {{ $kelas->tahun_ajaran }}</p>
+                </div>
+
+                <div class="pt-4 mt-2 border-t border-white/10 flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full border-2 border-white/20 overflow-hidden shrink-0">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($kelas->waliKelas->nama_lengkap ?? 'WK') }}&color=7F9CF5&background=EBF4FF"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <span class="block text-[8px] font-bold text-indigo-200 uppercase tracking-widest">Wali Kelas</span>
+                        <p class="text-[11px] font-bold truncate">
+                            {{ $kelas->waliKelas->nama_lengkap ?? 'Belum ditentukan' }}</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Daftar Pengajar & Mapel -->
-        <div class="col-md-8 mb-4">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Daftar Mata Pelajaran & Guru</h5>
-                </div>
-                <div class="table-responsive text-nowrap">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Mata Pelajaran</th>
-                                <th>Guru Pengajar</th>
-                                <th>Jadwal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse ($kelas->guruMengajar as $jadwal)
-                                <tr>
-                                    <td>
-                                        <div class="d-flex align-items-center">
-                                            <div class="avatar avatar-xs me-2">
-                                                <span
-                                                    class="avatar-initial rounded-circle bg-label-info">{{ substr($jadwal->mataPelajaran->nama_mapel, 0, 1) }}</span>
-                                            </div>
-                                            <strong>{{ $jadwal->mataPelajaran->nama_mapel }}</strong>
-                                        </div>
-                                    </td>
-                                    <td>{{ $jadwal->guru->nama_lengkap }}</td>
-                                    <td>
-                                        <span class="badge bg-label-secondary">
-                                            {{ $jadwal->hari }}, {{ $jadwal->jam_mulai->format('H:i') }} -
-                                            {{ $jadwal->jam_selesai->format('H:i') }}
-                                        </span>
-                                    </td>
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="3" class="text-center">Belum ada jadwal pelajaran.</td>
-                                </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <!-- Section Toggles -->
+        <div class="flex p-1 bg-gray-100 rounded-2xl">
+            <button onclick="switchTab('jadwal')" id="tab-jadwal"
+                class="flex-1 py-2.5 text-[10px] font-bold bg-white text-indigo-600 rounded-xl shadow-sm transition-all">MATA
+                PELAJARAN</button>
+            <button onclick="switchTab('teman')" id="tab-teman"
+                class="flex-1 py-2.5 text-[10px] font-bold text-gray-400 rounded-xl transition-all">TEMAN SEKELAS</button>
         </div>
 
-        <!-- Teman Sekelas -->
-        <div class="col-md-4 mb-4">
-            <div class="card h-100">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h5 class="mb-0">Teman Sekelas ({{ $temanSekelas->count() }})</h5>
+        <!-- Schedule/Teachers List -->
+        <div id="content-jadwal" class="space-y-4 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            @forelse ($kelas->guruMengajar as $jadwal)
+                <div class="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm flex items-center gap-4">
+                    <div
+                        class="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-indigo-600 shrink-0">
+                        <i class='bx bx-book-open text-2xl'></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-bold text-gray-900 leading-tight truncate">
+                            {{ $jadwal->mataPelajaran->nama_mapel }}</h4>
+                        <p class="text-[10px] text-gray-400 font-medium truncate">{{ $jadwal->guru->nama_lengkap }}</p>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span
+                                class="text-[9px] font-bold px-2 py-0.5 bg-indigo-50 text-indigo-500 rounded-lg">{{ $jadwal->hari }}</span>
+                            <span class="text-[9px] font-medium text-gray-400">{{ $jadwal->jam_mulai->format('H:i') }} -
+                                {{ $jadwal->jam_selesai->format('H:i') }}</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <ul class="list-unstyled mb-0">
-                        @forelse ($temanSekelas->take(10) as $teman)
-                            <li class="d-flex align-items-center mb-3">
-                                <div class="avatar avatar-sm me-3">
-                                    <img src="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}" alt
-                                        class="rounded-circle">
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <span class="fw-semibold">{{ $teman->nama_lengkap }}</span>
-                                    <small class="text-muted">{{ $teman->nis }}</small>
-                                </div>
-                            </li>
-                        @empty
-                            <li class="text-center text-muted">Belum ada siswa lain di kelas ini.</li>
-                        @endforelse
+            @empty
+                <div class="text-center py-10 bg-gray-50 rounded-3xl border border-dashed border-gray-100">
+                    <p class="text-xs text-gray-400">Belum ada mata pelajaran.</p>
+                </div>
+            @endforelse
+        </div>
 
-                        @if ($temanSekelas->count() > 10)
-                            <li class="text-center mt-3">
-                                <button class="btn btn-sm btn-outline-primary" data-bs-toggle="modal"
-                                    data-bs-target="#modalTemanKelas">Lihat Semua</button>
-                            </li>
-                        @endif
-                    </ul>
+        <!-- Classmates List -->
+        <div id="content-teman" class="hidden grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            @forelse ($temanSekelas as $teman)
+                <div
+                    class="bg-white p-4 rounded-3xl border border-gray-100 shadow-sm flex flex-col items-center text-center gap-2">
+                    <div class="w-14 h-14 rounded-2xl border-4 border-gray-50 overflow-hidden mb-1">
+                        <img src="https://ui-avatars.com/api/?name={{ urlencode($teman->nama_lengkap) }}&color=7F9CF5&background=EBF4FF"
+                            class="w-full h-full object-cover">
+                    </div>
+                    <div class="min-w-0 w-full px-1">
+                        <h4 class="text-[11px] font-bold text-gray-800 leading-tight truncate">{{ $teman->nama_lengkap }}
+                        </h4>
+                        <p class="text-[9px] text-gray-400 font-medium">{{ $teman->nis }}</p>
+                    </div>
                 </div>
-            </div>
+            @empty
+                <div class="col-span-2 text-center py-10 bg-gray-50 rounded-3xl border border-dashed border-gray-100">
+                    <p class="text-xs text-gray-400">Kamu sendirian di kelas ini.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 
-    <!-- Modal Teman Sekelas (Full List) -->
-    <div class="modal fade" id="modalTemanKelas" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Daftar Teman Sekelas</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <ul class="list-group list-group-flush">
-                        @foreach ($temanSekelas as $teman)
-                            <li class="list-group-item d-flex align-items-center">
-                                <div class="avatar me-3">
-                                    <img src="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}" alt
-                                        class="rounded-circle">
-                                </div>
-                                <div>
-                                    <span class="fw-semibold">{{ $teman->nama_lengkap }}</span><br>
-                                    <small class="text-muted">NIS: {{ $teman->nis }}</small>
-                                </div>
-                            </li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
+    <script>
+        function switchTab(tab) {
+            const tj = document.getElementById('tab-jadwal');
+            const tt = document.getElementById('tab-teman');
+            const cj = document.getElementById('content-jadwal');
+            const ct = document.getElementById('content-teman');
+
+            if (tab === 'jadwal') {
+                tj.className =
+                    'flex-1 py-2.5 text-[10px] font-bold bg-white text-indigo-600 rounded-xl shadow-sm transition-all';
+                tt.className = 'flex-1 py-2.5 text-[10px] font-bold text-gray-400 rounded-xl transition-all';
+                cj.classList.remove('hidden');
+                ct.classList.add('hidden');
+                ct.classList.remove('grid');
+            } else {
+                tt.className =
+                    'flex-1 py-2.5 text-[10px] font-bold bg-white text-indigo-600 rounded-xl shadow-sm transition-all';
+                tj.className = 'flex-1 py-2.5 text-[10px] font-bold text-gray-400 rounded-xl transition-all';
+                ct.classList.remove('hidden');
+                ct.classList.add('grid');
+                cj.classList.add('hidden');
+            }
+        }
+    </script>
 @endsection

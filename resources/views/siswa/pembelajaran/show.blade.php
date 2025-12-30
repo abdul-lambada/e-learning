@@ -1,121 +1,107 @@
-@extends('layouts.app')
+@extends('layouts.siswa_mobile')
 
-@section('title', 'Detail Pembelajaran')
+@section('title', $jadwal->mataPelajaran->nama_mapel)
 
 @section('content')
-    <div class="row mb-4">
-        <div class="col-md-12 d-flex justify-content-between align-items-center">
-            <div>
-                <h4 class="fw-bold mb-1">
-                    <span class="text-muted fw-light">Mata Pelajaran /</span> {{ $jadwal->mataPelajaran->nama_mapel }}
-                </h4>
-                <p class="mb-0 text-muted">
-                    Guru: {{ $jadwal->guru->nama_lengkap }} | {{ $jadwal->hari }},
-                    {{ \Carbon\Carbon::parse($jadwal->jam_mulai)->format('H:i') }}
-                </p>
-            </div>
-            <a href="{{ route('siswa.pembelajaran.index') }}" class="btn btn-secondary">
-                <i class="bx bx-arrow-back me-1"></i> Kembali
+    <div class="space-y-6 pb-12">
+        <!-- Back Button & Title -->
+        <div class="flex items-center gap-3">
+            <a href="{{ route('siswa.pembelajaran.index') }}"
+                class="w-10 h-10 bg-white border border-gray-100 rounded-xl flex items-center justify-center text-gray-600 shadow-sm">
+                <i class='bx bx-chevron-left text-2xl'></i>
             </a>
+            <div>
+                <h2 class="text-xl font-bold text-gray-900 leading-tight line-clamp-1">
+                    {{ $jadwal->mataPelajaran->nama_mapel }}</h2>
+                <p class="text-xs text-gray-500 font-medium">{{ $jadwal->guru->nama_lengkap }}</p>
+            </div>
         </div>
-    </div>
 
-    <div class="row">
-        <!-- List Pertemuan -->
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header border-bottom">
-                    <h5 class="mb-0">Daftar Materi & Pertemuan</h5>
+        <!-- Subject Hero -->
+        <div class="relative h-44 rounded-3xl overflow-hidden shadow-lg shadow-indigo-100">
+            @if ($jadwal->mataPelajaran->gambar_cover)
+                <img src="{{ Storage::url($jadwal->mataPelajaran->gambar_cover) }}" class="w-full h-full object-cover">
+            @else
+                <div class="w-full h-full bg-linear-to-br from-indigo-600 to-purple-700 flex items-center justify-center">
+                    <i class='bx bx-book-open text-white/20 text-8xl absolute right-[-20px] bottom-[-20px]'></i>
                 </div>
-
-                <div class="card-body pt-4">
-                    <!-- Pendahuluan Link -->
-                    <div class="alert alert-primary d-flex align-items-center mb-4" role="alert">
-                        <span class="badge badge-center rounded-pill bg-primary me-3"><i
-                                class="bx bx-info-circle"></i></span>
-                        <div class="d-flex flex-column">
-                            <h6 class="mb-0 fw-bold">Pengantar & Kontrak Belajar</h6>
-                            <small>Pelajari informasi awal, kriteria penilaian, dan kontrak belajar di sini.</small>
-                        </div>
-                        <a href="{{ route('siswa.pendahuluan.show', $jadwal->id) }}"
-                            class="btn btn-primary btn-sm ms-auto">Buka</a>
+            @endif
+            <div
+                class="absolute inset-x-0 bottom-0 p-4 bg-linear-to-t from-black/80 via-black/40 to-transparent text-white">
+                <div class="flex justify-between items-end">
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-300">Target</span>
+                        <p class="text-sm font-bold">{{ $jadwal->mataPelajaran->jumlah_pertemuan }} Pertemuan</p>
                     </div>
-
-                    @if ($jadwal->pertemuan->count() > 0)
-                        <div class="timeline-basic mb-2">
-                            <ul class="timeline mb-0">
-                                @foreach ($jadwal->pertemuan as $pertemuan)
-                                    <li class="timeline-item timeline-item-transparent text-primary">
-                                        <span class="timeline-point timeline-point-primary"></span>
-                                        <div class="timeline-event">
-                                            <div class="timeline-header mb-1">
-                                                <h6 class="mb-0">Pertemuan {{ $pertemuan->pertemuan_ke }}:
-                                                    {{ $pertemuan->judul_pertemuan }}</h6>
-                                                <small
-                                                    class="text-muted">{{ $pertemuan->tanggal_pertemuan->format('d M Y') }}</small>
-                                            </div>
-                                            <p class="mb-2 text-muted small">{{ Str::limit($pertemuan->deskripsi, 100) }}
-                                            </p>
-
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    @if ($pertemuan->status == 'berlangsung')
-                                                        <span class="badge bg-label-success">Sedang Berlangsung</span>
-                                                    @elseif($pertemuan->status == 'selesai')
-                                                        <span class="badge bg-label-secondary">Selesai</span>
-                                                    @else
-                                                        <span class="badge bg-label-warning">Dijadwalkan</span>
-                                                    @endif
-                                                </div>
-                                                <a href="{{ route('siswa.pembelajaran.pertemuan', $pertemuan->id) }}"
-                                                    class="btn btn-sm btn-primary">
-                                                    <i class="bx bx-play-circle me-1"></i> Buka Materi
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @else
-                        <div class="text-center py-5">
-                            <i class="bx bx-time-five" style="font-size: 3rem; color: #d1d5db;"></i>
-                            <p class="mt-3 text-muted">Belum ada pertemuan yang aktif.</p>
-                        </div>
-                    @endif
+                    <div>
+                        <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-300">Durasi</span>
+                        <p class="text-sm font-bold">{{ $jadwal->mataPelajaran->durasi_menit }} Menit</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Sidebar Info -->
-        <div class="col-md-4">
-            <div class="card mb-4">
-                <div class="card-body text-center">
-                    <div class="mx-auto mb-3">
-                        @if ($jadwal->mataPelajaran->gambar_cover)
-                            <img src="{{ Storage::url($jadwal->mataPelajaran->gambar_cover) }}" alt="Avatar Image"
-                                class="rounded" width="100%" style="max-height: 200px; object-fit: cover">
+        <!-- Pendahuluan Section -->
+        <a href="{{ route('siswa.pendahuluan.show', $jadwal->id) }}"
+            class="flex items-center gap-4 bg-indigo-50 p-4 rounded-2xl border border-indigo-100 group">
+            <div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-indigo-600 shadow-sm">
+                <i class='bx bx-info-circle text-2xl'></i>
+            </div>
+            <div class="flex-1">
+                <h4 class="font-bold text-indigo-900 text-sm">Kontrak Belajar</h4>
+                <p class="text-[10px] text-indigo-500">Klik untuk melihat detail materi awal</p>
+            </div>
+            <i class='bx bx-chevron-right text-indigo-400 text-xl group-hover:translate-x-1 transition-transform'></i>
+        </a>
+
+        <!-- Timeline Pertemuan -->
+        <div class="space-y-4">
+            <h3 class="font-bold text-gray-800 text-lg px-1">Daftar Pertemuan</h3>
+
+            @forelse ($jadwal->pertemuan as $pertemuan)
+                <div class="flex gap-4">
+                    <!-- Left Timeline Pillar -->
+                    <div class="flex flex-col items-center">
+                        <div
+                            class="w-2.5 h-2.5 rounded-full {{ $pertemuan->status == 'berlangsung' ? 'bg-indigo-600 ring-4 ring-indigo-100' : 'bg-gray-300' }}">
+                        </div>
+                        @if (!$loop->last)
+                            <div class="w-0.5 flex-1 bg-gray-100 my-1"></div>
                         @endif
                     </div>
-                    <h5 class="mb-1">{{ $jadwal->mataPelajaran->nama_mapel }}</h5>
-                    <p class="text-muted">{{ $jadwal->mataPelajaran->kode_mapel }}</p>
 
-                    <div class="row text-start mt-4">
-                        <div class="col-12 mb-2">
-                            <i class="bx bx-user me-2 text-primary"></i> Guru:
-                            <strong>{{ $jadwal->guru->nama_lengkap }}</strong>
-                        </div>
-                        <div class="col-12 mb-2">
-                            <i class="bx bx-time me-2 text-primary"></i> Durasi:
-                            <strong>{{ $jadwal->mataPelajaran->durasi_menit }} Menit</strong>
-                        </div>
-                        <div class="col-12 mb-2">
-                            <i class="bx bx-target-lock me-2 text-primary"></i> Target:
-                            <strong>{{ $jadwal->mataPelajaran->jumlah_pertemuan }} Pertemuan</strong>
+                    <!-- Content Card -->
+                    <div class="flex-1 pb-6">
+                        <div class="bg-white p-4 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <h4 class="font-bold text-gray-900 text-sm leading-tight">
+                                        Ke-{{ $pertemuan->pertemuan_ke }}: {{ $pertemuan->judul_pertemuan }}</h4>
+                                    <span
+                                        class="text-[10px] text-gray-400 font-medium">{{ $pertemuan->tanggal_pertemuan->format('d M Y') }}</span>
+                                </div>
+                                @if ($pertemuan->status == 'berlangsung')
+                                    <span
+                                        class="text-[8px] font-black uppercase bg-green-500 text-white px-2 py-1 rounded-full animate-pulse">Live</span>
+                                @endif
+                            </div>
+
+                            <p class="text-[11px] text-gray-500 leading-relaxed line-clamp-2">
+                                {{ $pertemuan->deskripsi }}
+                            </p>
+
+                            <a href="{{ route('siswa.pembelajaran.pertemuan', $pertemuan->id) }}"
+                                class="inline-flex items-center gap-2 text-indigo-600 font-bold text-xs hover:gap-3 transition-all">
+                                Buka Materi <i class='bx bx-right-arrow-alt'></i>
+                            </a>
                         </div>
                     </div>
                 </div>
-            </div>
+            @empty
+                <div class="text-center py-12">
+                    <p class="text-gray-400 text-sm">Belum ada pertemuan yang dibuat.</p>
+                </div>
+            @endforelse
         </div>
     </div>
 @endsection

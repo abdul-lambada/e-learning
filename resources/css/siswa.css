@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+/* Mobile optimizations */
+body {
+    -webkit-tap-highlight-color: transparent;
+    padding-bottom: 80px;
+    /* Space for bottom nav */
+}
+
+.bottom-nav-item.active {
+    @apply text-blue-600;
+}
+
+.bottom-nav-item.active svg {
+    @apply fill-current;
+}

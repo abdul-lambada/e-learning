@@ -1,154 +1,224 @@
-@extends('layouts.app')
+@extends('layouts.siswa_mobile')
 
 @section('title', 'Detail Tugas')
 
 @section('content')
-    <div class="row mb-4">
-        <div class="col-md-12 d-flex justify-content-between align-items-center">
-            <div>
-                <h4 class="fw-bold mb-1">{{ $tugas->judul_tugas }}</h4>
-                <p class="mb-0 text-muted">Deadline: <strong>{{ $tugas->tanggal_deadline->format('l, d F Y, H:i') }}</strong>
+    <div class="space-y-6 pb-20">
+        <!-- Back Button & Header -->
+        <div class="flex items-center gap-3">
+            <a href="{{ route('siswa.tugas.index') }}"
+                class="w-10 h-10 bg-white border border-gray-100 rounded-xl flex items-center justify-center text-gray-600 shadow-sm">
+                <i class='bx bx-chevron-left text-2xl'></i>
+            </a>
+            <div class="min-w-0">
+                <h2 class="text-xl font-bold text-gray-900 leading-tight truncate">Detail Tugas</h2>
+                <p class="text-[10px] text-indigo-600 font-bold uppercase tracking-widest leading-none">Manajemen Penugasan
                 </p>
             </div>
-            <a href="{{ route('siswa.pembelajaran.pertemuan', $tugas->pertemuan_id) }}" class="btn btn-secondary">
-                <i class="bx bx-arrow-back me-1"></i> Kembali ke Materi
-            </a>
-        </div>
-    </div>
-
-    <div class="row">
-        <!-- Instruksi Tugas -->
-        <div class="col-md-7 mb-4">
-            <x-card title="Instruksi Tugas" class="h-100">
-                <p>{{ $tugas->deskripsi }}</p>
-
-                @if ($tugas->instruksi)
-                    <div class="alert alert-primary">
-                        <h6><i class="bx bx-info-circle me-1"></i> Petunjuk Pengerjaan:</h6>
-                        <p class="mb-0 small">{!! nl2br(e($tugas->instruksi)) !!}</p>
-                    </div>
-                @endif
-
-                <hr>
-
-                <h6 class="text-muted small text-uppercase">Informasi Tambahan</h6>
-                <ul class="list-unstyled small">
-                    <li class="mb-1"><i class="bx bx-file me-2"></i> Tipe Pengumpulan:
-                        @if ($tugas->upload_file)
-                            File
-                        @endif
-                        @if ($tugas->upload_file && $tugas->upload_link)
-                            &
-                        @endif
-                        @if ($tugas->upload_link)
-                            Link
-                        @endif
-                    </li>
-                    <li class="mb-1"><i class="bx bx-calendar me-2"></i> Dibuka:
-                        {{ $tugas->tanggal_mulai->format('d M Y, H:i') }}</li>
-                    <li class="mb-1"><i class="bx bx-error-circle me-2"></i> Terlambat Diizinkan:
-                        {{ $tugas->izinkan_terlambat ? 'Ya' : 'Tidak' }}</li>
-                </ul>
-            </x-card>
         </div>
 
-        <!-- Status & Form Upload -->
-        <div class="col-md-5 mb-4">
-            <x-card title="Status Pengumpulan">
-                <!-- Status Badge -->
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Status Pengumpulan</span>
-                    @if ($pengumpulan)
-                        @if ($pengumpulan->status == 'dinilai')
-                            <span class="badge bg-success">Sudah Dinilai</span>
-                        @elseif($pengumpulan->status == 'terlambat')
-                            <span class="badge bg-danger">Terlambat</span>
-                        @else
-                            <span class="badge bg-info">Dikumpulkan</span>
-                        @endif
-                    @else
-                        <span class="badge bg-secondary">Belum Mengumpulkan</span>
-                    @endif
+        <!-- Task Info Card -->
+        <div class="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-4 relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50/50 rounded-full -mr-16 -mt-16 z-0"></div>
+
+            <div class="relative z-10 space-y-4">
+                <div class="flex flex-col gap-1">
+                    <span
+                        class="text-[10px] font-bold text-indigo-500 uppercase tracking-widest">{{ $tugas->pertemuan->guruMengajar->mataPelajaran->nama_mapel }}</span>
+                    <h1 class="text-xl font-black text-gray-900 leading-tight">{{ $tugas->judul }}</h1>
                 </div>
 
-                <div class="d-flex justify-content-between mb-3">
-                    <span>Nilai</span>
-                    @if ($pengumpulan && $pengumpulan->nilai !== null)
-                        <span class="fw-bold fs-5">{{ $pengumpulan->nilai }} / {{ $tugas->nilai_maksimal }}</span>
-                    @else
-                        <span>- / {{ $tugas->nilai_maksimal }}</span>
-                    @endif
-                </div>
-
-                @if ($pengumpulan && $pengumpulan->komentar_guru)
-                    <div class="alert alert-warning mb-3">
-                        <strong>Feedback Guru:</strong><br>
-                        {{ $pengumpulan->komentar_guru }}
+                <div class="grid grid-cols-2 gap-3 py-4 border-y border-gray-50">
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-red-50 text-red-500 flex items-center justify-center">
+                            <i class='bx bx-time-five'></i>
+                        </div>
+                        <div>
+                            <span class="block text-[8px] font-bold text-gray-400 uppercase">Deadline</span>
+                            <span
+                                class="text-[10px] font-bold text-gray-700">{{ $tugas->tanggal_deadline->format('d M, H:i') }}</span>
+                        </div>
                     </div>
-                @endif
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 rounded-lg bg-green-50 text-green-500 flex items-center justify-center">
+                            <i class='bx bx-star'></i>
+                        </div>
+                        <div>
+                            <span class="block text-[8px] font-bold text-gray-400 uppercase">Max Nilai</span>
+                            <span class="text-[10px] font-bold text-gray-700">{{ $tugas->nilai_maksimal ?? 100 }}</span>
+                        </div>
+                    </div>
+                </div>
 
-                <hr>
+                <div class="space-y-4 pt-1">
+                    <div class="prose prose-sm text-gray-600 leading-relaxed text-xs">
+                        {!! nl2br(e($tugas->deskripsi)) !!}
+                    </div>
 
-                <!-- List File/Link yang sudah dikumpulkan -->
-                @if ($pengumpulan)
+                    @if ($tugas->instruksi)
+                        <div class="bg-blue-50 p-4 rounded-2xl border border-blue-100">
+                            <h4 class="text-[10px] font-bold text-blue-700 uppercase tracking-widest mb-1">Petunjuk Khusus
+                            </h4>
+                            <p class="text-[11px] text-blue-800 leading-relaxed font-medium">
+                                {!! nl2br(e($tugas->instruksi)) !!}
+                            </p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        <!-- Grade & Feedback Section (If Evaluated) -->
+        @if ($pengumpulan && $pengumpulan->status == 'dinilai')
+            <div class="bg-indigo-600 rounded-[32px] p-6 text-white shadow-lg shadow-indigo-100 space-y-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="font-bold text-indigo-100">Hasil Penilaian</h3>
+                    <div
+                        class="px-3 py-1 bg-white/20 rounded-full text-[10px] font-black uppercase tracking-widest text-white">
+                        Sudah Dinilai</div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="text-4xl font-black">{{ $pengumpulan->nilai }}<span
+                            class="text-sm font-medium text-indigo-300">/{{ $tugas->nilai_maksimal }}</span></div>
+                    @if ($pengumpulan->komentar_guru)
+                        <div class="flex-1 bg-white/10 p-3 rounded-2xl border border-white/10 italic text-[10px]">
+                            "{{ $pengumpulan->komentar_guru }}"
+                        </div>
+                    @endif
+                </div>
+            </div>
+        @endif
+
+        <!-- Submission Status & Form -->
+        <div class="bg-white rounded-[32px] p-6 shadow-sm border border-gray-100 space-y-6">
+            <h3 class="font-bold text-gray-900 border-b border-gray-50 pb-3">Status Pengumpulan</h3>
+
+            @if ($pengumpulan)
+                <div class="space-y-4">
                     @if ($pengumpulan->filePengumpulan->isNotEmpty())
-                        <h6 class="text-muted small">File Anda:</h6>
-                        @foreach ($pengumpulan->filePengumpulan as $file)
-                            <div class="d-flex align-items-center mb-2 p-2 border rounded bg-light">
-                                <i class="bx bxs-file-pdf me-2 text-warning"></i>
-                                <div class="flex-grow-1 text-truncate">
-                                    <small>{{ $file->nama_file }}</small>
+                        <div class="space-y-2">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">File Terkirim</span>
+                            @foreach ($pengumpulan->filePengumpulan as $file)
+                                <div
+                                    class="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl border border-gray-100 group">
+                                    <div
+                                        class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-orange-400 shadow-sm">
+                                        <i
+                                            class='bx bxs-file-{{ in_array(pathinfo($file->nama_file, PATHINFO_EXTENSION), ['jpg', 'png', 'jpeg']) ? 'image' : 'pdf' }} text-xl'></i>
+                                    </div>
+                                    <div class="flex-1 min-w-0">
+                                        <p class="text-xs font-bold text-gray-800 truncate">{{ $file->nama_file }}</p>
+                                        <p class="text-[9px] text-gray-400 uppercase">
+                                            {{ pathinfo($file->nama_file, PATHINFO_EXTENSION) }} •
+                                            {{ round(Storage::size($file->path_file) / 1024, 1) }} KB</p>
+                                    </div>
+                                    <a href="{{ Storage::url($file->path_file) }}" target="_blank"
+                                        class="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-indigo-600 shadow-sm active:scale-90 transition-transform">
+                                        <i class='bx bx-download text-xl'></i>
+                                    </a>
                                 </div>
-                                <a href="{{ Storage::url($file->path_file) }}" target="_blank" class="ms-2 text-primary"><i
-                                        class="bx bx-download"></i></a>
-                            </div>
-                        @endforeach
+                            @endforeach
+                        </div>
                     @endif
 
                     @if ($pengumpulan->link_url)
-                        <div class="d-flex align-items-center mb-2 p-2 border rounded bg-light">
-                            <i class="bx bx-link me-2 text-info"></i>
-                            <div class="flex-grow-1 text-truncate">
-                                <small><a href="{{ $pengumpulan->link_url }}"
-                                        target="_blank">{{ $pengumpulan->link_url }}</a></small>
+                        <div class="space-y-2">
+                            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Link
+                                Terlampir</span>
+                            <div class="flex items-center gap-3 p-3 bg-blue-50 rounded-2xl border border-blue-100">
+                                <i class='bx bx-link text-blue-500 text-xl'></i>
+                                <a href="{{ $pengumpulan->link_url }}" target="_blank"
+                                    class="text-xs font-bold text-blue-600 truncate flex-1 underline decoration-blue-200">
+                                    {{ $pengumpulan->link_url }}
+                                </a>
                             </div>
                         </div>
                     @endif
 
-                    @if ($pengumpulan->status == 'dinilai')
-                        <div class="alert alert-success mt-3 text-center">
-                            Sudah dinilai, tidak dapat mengubah jawaban.
-                        </div>
-                    @else
-                        <div class="alert alert-info mt-3 text-center small">
-                            Anda sudah mengumpulkan. Mengirim ulang akan menimpa jawaban sebelumnya.
+                    @if ($pengumpulan->status != 'dinilai')
+                        <div
+                            class="bg-emerald-50 text-emerald-600 p-4 rounded-2xl flex items-center gap-3 border border-emerald-100">
+                            <i class='bx bx-check-double text-xl'></i>
+                            <div class="flex-1">
+                                <p class="text-[10px] font-black uppercase tracking-widest">Berhasil Dikirim</p>
+                                <p class="text-[9px] font-medium leading-tight">Kamu masih bisa memperbarui tugas ini
+                                    sebelum dinilai.</p>
+                            </div>
                         </div>
                     @endif
-                @endif
+                </div>
+            @else
+                <div class="text-center py-6 bg-gray-50 rounded-[32px] border-2 border-dashed border-gray-200">
+                    <div class="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mx-auto mb-3">
+                        <i class='bx bx-cloud-upload text-3xl text-gray-300'></i>
+                    </div>
+                    <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Belum Mengumpulkan</p>
+                </div>
+            @endif
 
-                <!-- Form Upload -->
-                @if (!$pengumpulan || $pengumpulan->status != 'dinilai')
-                    <form action="{{ route('siswa.tugas.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <input type="hidden" name="tugas_id" value="{{ $tugas->id }}">
+            <!-- Form Section -->
+            @if (!$pengumpulan || $pengumpulan->status != 'dinilai')
+                <form action="{{ route('siswa.tugas.store') }}" method="POST" enctype="multipart/form-data"
+                    class="space-y-5 pt-4">
+                    @csrf
+                    <input type="hidden" name="tugas_id" value="{{ $tugas->id }}">
 
-                        @if ($tugas->upload_file)
-                            <x-input label="Upload File" type="file" name="files[]" multiple />
-                            <small class="text-muted d-block" style="margin-top: -15px; margin-bottom: 15px;">Max 10MB per
-                                file.</small>
-                        @endif
+                    @if ($tugas->upload_file)
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-2">Pilih File
+                                (Max 10MB)</label>
+                            <div class="relative group">
+                                <input type="file" name="files[]" multiple id="file_input" class="hidden"
+                                    onchange="updateFileLabel(this)">
+                                <label for="file_input"
+                                    class="flex items-center gap-3 p-4 bg-gray-50 rounded-2xl border border-gray-200 border-dashed cursor-pointer group-hover:border-indigo-400 transition-colors">
+                                    <div
+                                        class="w-10 h-10 bg-white rounded-xl flex items-center justify-center text-gray-400 shadow-sm">
+                                        <i class='bx bx-plus text-2xl'></i>
+                                    </div>
+                                    <div>
+                                        <p id="file_name" class="text-xs font-bold text-gray-700">Pilih berkas tugas...</p>
+                                        <p class="text-[9px] text-gray-400 font-medium">Bisa PDF, DOC, atau Gambar</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    @endif
 
-                        @if ($tugas->upload_link)
-                            <x-input label="Tautan Link" type="url" name="link_url" placeholder="https://..."
-                                value="{{ $pengumpulan->link_url ?? '' }}" />
-                        @endif
+                    @if ($tugas->upload_link)
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-2">Tautan Tautan
+                                (Google Drive/Lainnya)</label>
+                            <input type="url" name="link_url" placeholder="https://..."
+                                value="{{ $pengumpulan->link_url ?? '' }}"
+                                class="w-full bg-gray-50 rounded-2xl px-5 py-4 border border-gray-100 text-xs font-bold text-gray-800 placeholder:text-gray-300 focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all">
+                        </div>
+                    @endif
 
-                        <x-button type="submit" class="w-100 mt-2" icon="bx-send">
-                            {{ $pengumpulan ? 'Update Kerjaan' : 'Kumpulkan Tugas' }}
-                        </x-button>
-                    </form>
-                @endif
-            </x-card>
+                    <button type="submit"
+                        class="w-full bg-indigo-600 text-white py-4 rounded-2xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-indigo-100 active:scale-95 transition-all">
+                        <i class='bx bx-paper-plane text-xl'></i>
+                        {{ $pengumpulan ? 'Update Pengumpulan' : 'Kirim Tugas Sekarang' }}
+                    </button>
+                    @if (now()->greaterThan($tugas->tanggal_deadline))
+                        <p class="text-center text-[9px] text-red-500 font-bold uppercase tracking-widest">Tugas Terlambat!
+                            Tetap kumpulkan segera.</p>
+                    @endif
+                </form>
+            @endif
         </div>
     </div>
+
+    <script>
+        function updateFileLabel(input) {
+            const label = document.getElementById('file_name');
+            if (input.files.length > 1) {
+                label.innerText = input.files.length + ' file dipilih';
+            } else if (input.files.length === 1) {
+                label.innerText = input.files[0].name;
+            } else {
+                label.innerText = 'Pilih berkas tugas...';
+            }
+        }
+    </script>
 @endsection
