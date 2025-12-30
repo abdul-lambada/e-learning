@@ -141,4 +141,57 @@ class User extends Authenticatable
     {
         return $this->peran === 'siswa';
     }
+
+    public function awardBadge($slug)
+    {
+        $badge = Badge::where('slug', $slug)->first();
+        if ($badge && !$this->badges()->where('badge_id', $badge->id)->exists()) {
+            $this->badges()->attach($badge->id);
+
+            // Berikan poin bonus untuk badge
+            $this->awardPoints(50, "Mendapatkan lencana: {$badge->nama_badge}");
+
+            return true;
+        }
+        return false;
+    }
+
+    public function progressMateri()
+    {
+        return $this->hasMany(ProgresMateri::class);
+    }
+
+    public function catatanPertemuan()
+    {
+        return $this->hasMany(CatatanPertemuan::class);
+    }
+
+    public function bookmarks()
+    {
+        return $this->hasMany(Bookmark::class);
+    }
+
+    public function badges()
+    {
+        return $this->belongsToMany(Badge::class, 'user_badges')->withTimestamps();
+    }
+
+    public function updateStreak()
+    {
+        $today = now()->toDateString();
+        $yesterday = now()->subDay()->toDateString();
+
+        if ($this->last_activity_date === $today) {
+            return;
+        }
+
+        if ($this->last_activity_date === $yesterday) {
+            $this->increment('streak_count');
+        } else {
+            $this->streak_count = 1;
+        }
+
+        $this->last_activity_date = $today;
+        $this->save();
+    }
 }

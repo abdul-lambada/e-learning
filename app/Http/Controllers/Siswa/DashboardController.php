@@ -12,6 +12,7 @@ class DashboardController extends Controller
     {
         /** @var \App\Models\User $siswa */
         $siswa = auth()->user();
+        $siswa->updateStreak();
         $kelas = $siswa->kelas()->first();
 
         // 1. Jadwal Hari Ini
@@ -167,6 +168,10 @@ class DashboardController extends Controller
                 ->get();
         }
 
+        // 11. Badges & Streak
+        $myBadges = $siswa->badges()->latest()->take(5)->get();
+        $streakCount = $siswa->streak_count;
+
         return view('siswa.dashboard', compact(
             'kelas',
             'jadwalHariIni',
@@ -179,7 +184,9 @@ class DashboardController extends Controller
             'weeklyData',
             'weekLabels',
             'absensiChart',
-            'topSiswa'
+            'topSiswa',
+            'myBadges',
+            'streakCount'
         ));
     }
 }

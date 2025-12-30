@@ -90,6 +90,13 @@
                 <span>Belajar</span>
             </a>
 
+            <a href="{{ route('siswa.kalender') }}"
+                class="flex flex-col items-center justify-center w-full h-full text-xs font-medium {{ request()->routeIs('siswa.kalender') ? 'text-indigo-600' : 'text-gray-400 hover:text-gray-600' }}">
+                <i
+                    class='bx {{ request()->routeIs('siswa.kalender') ? 'bxs-calendar' : 'bx-calendar' }} text-2xl mb-1'></i>
+                <span>Kalender</span>
+            </a>
+
             <div class="relative -top-6">
                 <a href="{{ route('siswa.absensi.index') }}"
                     class="flex flex-col items-center justify-center w-14 h-14 rounded-full bg-indigo-600 text-white shadow-lg shadow-indigo-200 ring-4 ring-white active:scale-90 transition-transform">

@@ -37,6 +37,18 @@ class DiskusiController extends Controller
             'parent_id' => $request->parent_id,
         ]);
 
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+        if ($user->isSiswa()) {
+            $user->awardPoints(1, "Berpartisipasi dalam diskusi");
+
+            // Cek Badge: Pahlawan Diskusi (5 partisipasi)
+            $diskusiCount = Diskusi::where('user_id', $user->id)->count();
+            if ($diskusiCount >= 5) {
+                $user->awardBadge('pahlawan-diskusi');
+            }
+        }
+
         if ($request->ajax()) {
             return response()->json([
                 'success' => true,

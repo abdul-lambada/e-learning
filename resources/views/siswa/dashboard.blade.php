@@ -25,6 +25,12 @@
                     class="bg-yellow-400 text-white text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1 shadow-lg shadow-yellow-500/20">
                     <i class='bx bxs-zap'></i> {{ auth()->user()->poin }}
                 </span>
+                @if ($streakCount > 0)
+                    <span
+                        class="bg-orange-500 text-white text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1 shadow-lg shadow-orange-500/20">
+                        <i class='bx bxs-hot'></i> {{ $streakCount }}
+                    </span>
+                @endif
             </h1>
             <p class="text-indigo-100 text-[11px] font-medium opacity-80 mb-6">
                 @if ($kelas)
@@ -102,6 +108,49 @@
             </div>
         </div>
     @endif
+
+    <!-- Achievement Badges Widget -->
+    <div class="bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm mb-6 overflow-hidden relative">
+        <div class="flex justify-between items-center mb-4 relative z-10">
+            <h3 class="font-bold text-gray-800 text-sm">Pencapaian</h3>
+            <span
+                class="text-[9px] font-black text-indigo-600 bg-indigo-50 px-2 py-1 rounded-lg uppercase tracking-widest">{{ $myBadges->count() }}
+                Lencana</span>
+        </div>
+
+        <div class="flex gap-4 overflow-x-auto pb-2 hide-scrollbar relative z-10">
+            @forelse($myBadges as $badge)
+                <div class="flex flex-col items-center gap-2 shrink-0 group">
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-{{ $badge->warna ?? 'indigo' }}-100 flex items-center justify-center text-{{ $badge->warna ?? 'indigo' }}-600 shadow-sm border border-{{ $badge->warna ?? 'indigo' }}-200 group-hover:scale-110 transition-transform">
+                        <i class='bx {{ $badge->icon }} text-2xl'></i>
+                    </div>
+                    <span
+                        class="text-[10px] font-bold text-gray-700 text-center truncate w-14">{{ $badge->nama_badge }}</span>
+                </div>
+            @empty
+                @php
+                    $allBadges = \App\Models\Badge::take(3)->get();
+                @endphp
+                @foreach ($allBadges as $b)
+                    <div class="flex flex-col items-center gap-2 shrink-0 opacity-20 filter grayscale">
+                        <div
+                            class="w-14 h-14 rounded-2xl bg-gray-100 flex items-center justify-center text-gray-400 border border-gray-200">
+                            <i class='bx {{ $b->icon }} text-2xl'></i>
+                        </div>
+                        <span
+                            class="text-[10px] font-bold text-gray-700 text-center truncate w-14">{{ $b->nama_badge }}</span>
+                    </div>
+                @endforeach
+            @endforelse
+        </div>
+
+        @if ($myBadges->count() == 0)
+            <div class="absolute inset-0 flex items-center justify-center bg-white/40 backdrop-blur-[1px] pt-8">
+                <p class="text-[9px] font-black text-gray-400 uppercase tracking-[0.2em]">Belum ada lencana</p>
+            </div>
+        @endif
+    </div>
 
     <!-- Quick Stats -->
     <div class="grid grid-cols-2 gap-4">

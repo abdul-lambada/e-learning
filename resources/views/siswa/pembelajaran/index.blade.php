@@ -66,6 +66,21 @@
                             </span>
                         </div>
 
+                        <!-- Progress Bar -->
+                        <div class="space-y-1.5 pt-1">
+                            <div
+                                class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest leading-none">
+                                <span class="text-gray-400">Progress Belajar</span>
+                                <span class="text-indigo-600">{{ $data->progress_percent }}%</span>
+                            </div>
+                            <div class="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-indigo-600 rounded-full transition-all duration-1000"
+                                    style="width: {{ $data->progress_percent }}%"></div>
+                            </div>
+                            <div class="text-[8px] text-gray-400 font-bold uppercase">{{ $data->materi_selesai }} dari
+                                {{ $data->total_materi }} materi selesai</div>
+                        </div>
+
                         <a href="{{ route('siswa.pembelajaran.show', $data->id) }}"
                             class="w-full bg-indigo-600 text-white py-3 rounded-xl font-bold text-center block shadow-lg shadow-indigo-100 active:scale-95 transition-all">
                             Buka Materi

@@ -172,6 +172,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:siswa'])->prefix('siswa')->name('siswa.')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Siswa\DashboardController::class, 'index'])->name('dashboard');
         Route::get('/leaderboard', [\App\Http\Controllers\Siswa\LeaderboardController::class, 'index'])->name('leaderboard');
+        Route::get('/kalender', [\App\Http\Controllers\Siswa\CalendarController::class, 'index'])->name('kalender');
 
         // Informasi Kelas
         Route::get('/kelas', [\App\Http\Controllers\Siswa\KelasController::class, 'index'])->name('kelas.index');
@@ -198,6 +199,9 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pembelajaran/{jadwal}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'show'])->name('pembelajaran.show');
         Route::get('/pertemuan/{pertemuan}', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'pertemuan'])->name('pembelajaran.pertemuan');
         Route::post('/pertemuan/{pertemuan}/absen', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'absenMandiri'])->name('pembelajaran.absen');
+        Route::post('/pertemuan/{pertemuan}/catatan', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'saveNote'])->name('pembelajaran.catatan');
+        Route::post('/materi/{materi}/learned', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'markAsLearned'])->name('pembelajaran.mark_learned');
+        Route::post('/bookmark/toggle', [\App\Http\Controllers\Siswa\PembelajaranController::class, 'toggleBookmark'])->name('pembelajaran.bookmark.toggle');
         Route::get('/pendahuluan/{jadwal}', [\App\Http\Controllers\Siswa\PendahuluanController::class, 'show'])->name('pendahuluan.show');
 
 

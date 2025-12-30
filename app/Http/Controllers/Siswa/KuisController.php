@@ -289,6 +289,7 @@ class KuisController extends Controller
 
         if ($nilaiAkhir >= 100) {
             $user->awardPoints(10, "Nilai sempurna pada kuis: " . ($jawabanKuis->kuis->judul_kuis ?? $jawabanKuis->kuis->nama_kuis));
+            $user->awardBadge('quiz-master');
         }
 
         return redirect()->route('siswa.kuis.show', $jawabanKuis->kuis_id)->with('success', 'Ujian selesai! Terima kasih.');

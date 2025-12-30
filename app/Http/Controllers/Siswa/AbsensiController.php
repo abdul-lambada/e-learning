@@ -121,6 +121,12 @@ class AbsensiController extends Controller
         // Award Points
         if ($request->status === 'hadir') {
             $user->awardPoints(2, "Kehadiran pada pertemuan: {$pertemuan->judul_pertemuan}");
+
+            // Cek Badge: Siswa Teladan (5 kehadiran)
+            $hadirCount = \App\Models\Absensi::where('siswa_id', $user->id)->where('status', 'hadir')->count();
+            if ($hadirCount >= 5) {
+                $user->awardBadge('siswa-teladan');
+            }
         }
 
         return back()->with('success', 'Absensi berhasil disimpan.');
