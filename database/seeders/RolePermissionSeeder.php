@@ -52,6 +52,10 @@ class RolePermissionSeeder extends Seeder
             'isi absensi',          // Siswa absen
             'lihat rekap absensi',  // Report
             'lihat rekap nilai',    // Report
+
+            // 7. Forum Diskusi (Semua User Terkait)
+            'lihat diskusi',
+            'tambah diskusi',
         ];
 
         // Buat Permission
@@ -78,7 +82,8 @@ class RolePermissionSeeder extends Seeder
             'lihat kuis', 'kelola kuis',
             'lihat ujian', 'kelola ujian',
             'kelola absensi', 'lihat rekap absensi',
-            'lihat rekap nilai'
+            'lihat rekap nilai',
+            'lihat diskusi', 'tambah diskusi',
         ]);
 
         // 3. SISWA
@@ -92,7 +97,8 @@ class RolePermissionSeeder extends Seeder
             'lihat ujian', 'kerjakan ujian',
             'isi absensi',
             'lihat rekap absensi', // hanya miliknya
-            'lihat rekap nilai'    // hanya miliknya
+            'lihat rekap nilai',    // hanya miliknya
+            'lihat diskusi', 'tambah diskusi',
         ]);
 
         $this->command->info('✓ Setup Role & Permission E-Learning Selesai.');

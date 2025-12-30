@@ -103,6 +103,11 @@ class TugasController extends Controller
 
         $pengumpulan->save();
 
+        // Award Points
+        $poinAmount = $isLate ? 5 : 10;
+        $keteranganPoin = $isLate ? "Mengumpulkan tugas terlambat: {$tugas->judul}" : "Mengumpulkan tugas tepat waktu: {$tugas->judul}";
+        $siswa->awardPoints($poinAmount, $keteranganPoin);
+
         // Handle File Upload
         if ($request->hasFile('files')) {
             foreach ($request->file('files') as $file) {

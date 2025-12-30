@@ -171,6 +171,7 @@ Route::middleware(['auth'])->group(function () {
     // Siswa Routes
     Route::middleware(['role:siswa'])->prefix('siswa')->name('siswa.')->group(function () {
         Route::get('/dashboard', [\App\Http\Controllers\Siswa\DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/leaderboard', [\App\Http\Controllers\Siswa\LeaderboardController::class, 'index'])->name('leaderboard');
 
         // Informasi Kelas
         Route::get('/kelas', [\App\Http\Controllers\Siswa\KelasController::class, 'index'])->name('kelas.index');

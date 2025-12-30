@@ -12,6 +12,12 @@ use Carbon\Carbon;
 
 class AbsensiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:isi absensi')->only(['index', 'store', 'scan', 'scanSubmit']);
+        $this->middleware('permission:lihat rekap absensi')->only(['riwayat']);
+    }
+
     /**
      * Tampilkan halaman absensi hari ini.
      * Menampilkan daftar pertemuan hari ini dan status absensi pengguna.
@@ -93,10 +99,10 @@ class AbsensiController extends Controller
                 $img = str_replace('data:image/png;base64,', '', $img);
                 $img = str_replace(' ', '+', $img);
                 $data = base64_decode($img);
-                
+
                 $fileName = 'selfie_' . $absensi->id . '_' . time() . '.png';
                 $path = 'absensi/selfie/' . $fileName;
-                
+
                 \Illuminate\Support\Facades\Storage::disk('public')->put($path, $data);
 
                 \App\Models\FotoAbsensi::create([
@@ -110,6 +116,11 @@ class AbsensiController extends Controller
                 // Log error but continue
                 \Illuminate\Support\Facades\Log::error('Gagal simpan foto selfie: ' . $e->getMessage());
             }
+        }
+
+        // Award Points
+        if ($request->status === 'hadir') {
+            $user->awardPoints(2, "Kehadiran pada pertemuan: {$pertemuan->judul_pertemuan}");
         }
 
         return back()->with('success', 'Absensi berhasil disimpan.');

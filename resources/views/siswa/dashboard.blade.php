@@ -19,7 +19,12 @@
     <div class="bg-indigo-600 rounded-[32px] p-8 text-white shadow-xl shadow-indigo-100 relative overflow-hidden mb-6">
         <div class="relative z-10">
             <h2 class="text-xs font-black uppercase tracking-[0.2em] text-indigo-200 mb-2">{{ $greeting }}</h2>
-            <h1 class="text-2xl font-black mb-1 leading-tight">Halo, {{ explode(' ', auth()->user()->nama_lengkap)[0] }}!
+            <h1 class="text-2xl font-black mb-1 leading-tight flex items-center gap-2">
+                {{ explode(' ', auth()->user()->nama_lengkap)[0] }}!
+                <span
+                    class="bg-yellow-400 text-white text-[9px] px-2 py-0.5 rounded-full flex items-center gap-1 shadow-lg shadow-yellow-500/20">
+                    <i class='bx bxs-zap'></i> {{ auth()->user()->poin }}
+                </span>
             </h1>
             <p class="text-indigo-100 text-[11px] font-medium opacity-80 mb-6">
                 @if ($kelas)
@@ -59,6 +64,44 @@
             <canvas id="activityChart"></canvas>
         </div>
     </div>
+
+    <!-- Class Leaderboard Widget -->
+    @if ($topSiswa->count() > 0)
+        <div class="bg-white p-6 rounded-[32px] border border-gray-100 shadow-sm mb-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-bold text-gray-800 text-sm">Leaderboard Kelas</h3>
+                <a href="{{ route('siswa.leaderboard') }}"
+                    class="text-[9px] font-black text-indigo-600 uppercase tracking-widest hover:underline">Lihat Semua</a>
+            </div>
+
+            <div class="space-y-4">
+                @foreach ($topSiswa as $index => $s)
+                    @php
+                        $colors = [
+                            'text-yellow-500 bg-yellow-50',
+                            'text-slate-400 bg-slate-50',
+                            'text-orange-500 bg-orange-50',
+                        ];
+                        $icons = ['bx-medal', 'bx-medal', 'bx-medal'];
+                    @endphp
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg {{ $colors[$index] }} flex items-center justify-center shrink-0">
+                            <i class='bx {{ $icons[$index] }} text-lg'></i>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <h4 class="text-xs font-bold text-gray-800 truncate">{{ $s->nama_lengkap }}</h4>
+                            <p class="text-[9px] text-gray-400 font-bold uppercase tracking-wider">{{ $s->poin }}
+                                points</p>
+                        </div>
+                        @if ($index == 0)
+                            <div class="px-2 py-0.5 bg-yellow-400 text-white text-[8px] font-black rounded-full uppercase">
+                                Top 1</div>
+                        @endif
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
 
     <!-- Quick Stats -->
     <div class="grid grid-cols-2 gap-4">

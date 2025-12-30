@@ -281,6 +281,16 @@ class KuisController extends Controller
 
         $jawabanKuis->save();
 
+        // Award Points
+        /** @var \App\Models\User $user */
+        $user = auth()->user();
+        $poinCompletion = 10;
+        $user->awardPoints($poinCompletion, "Menyelesaikan kuis: " . ($jawabanKuis->kuis->judul_kuis ?? $jawabanKuis->kuis->nama_kuis));
+
+        if ($nilaiAkhir >= 100) {
+            $user->awardPoints(10, "Nilai sempurna pada kuis: " . ($jawabanKuis->kuis->judul_kuis ?? $jawabanKuis->kuis->nama_kuis));
+        }
+
         return redirect()->route('siswa.kuis.show', $jawabanKuis->kuis_id)->with('success', 'Ujian selesai! Terima kasih.');
     }
 }

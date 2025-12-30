@@ -155,6 +155,18 @@ class DashboardController extends Controller
             ]
         ];
 
+        // 10. Top 3 Siswa di Kelas
+        $topSiswa = collect();
+        if ($kelas) {
+            $topSiswa = \App\Models\User::role('siswa')
+                ->whereHas('kelas', function($q) use ($kelas) {
+                    $q->where('kelas.id', $kelas->id);
+                })
+                ->orderBy('poin', 'desc')
+                ->take(3)
+                ->get();
+        }
+
         return view('siswa.dashboard', compact(
             'kelas',
             'jadwalHariIni',
@@ -166,7 +178,8 @@ class DashboardController extends Controller
             'avgNilai',
             'weeklyData',
             'weekLabels',
-            'absensiChart'
+            'absensiChart',
+            'topSiswa'
         ));
     }
 }

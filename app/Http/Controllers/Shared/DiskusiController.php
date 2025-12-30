@@ -10,6 +10,12 @@ use Illuminate\Support\Facades\Auth;
 
 class DiskusiController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:lihat diskusi')->only(['index']);
+        $this->middleware('permission:tambah diskusi')->only(['store']);
+    }
+
     /**
      * Store a newly created discussion or reply.
      */
