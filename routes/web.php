@@ -99,6 +99,7 @@ Route::middleware(['auth'])->group(function () {
         // Monitoring Lainnya
         Route::get('absensi', [\App\Http\Controllers\Admin\AbsensiController::class, 'index'])->name('absensi.index');
         Route::get('nilai', [\App\Http\Controllers\Admin\NilaiController::class, 'index'])->name('nilai.index');
+        Route::get('nilai/cetak', [\App\Http\Controllers\Admin\NilaiController::class, 'cetak'])->name('nilai.cetak');
 
         // Laporan
         Route::get('laporan', [\App\Http\Controllers\Admin\LaporanController::class, 'index'])->name('laporan.index');

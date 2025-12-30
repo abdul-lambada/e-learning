@@ -22,6 +22,12 @@
                         </div>
                         <div class="col-md-4">
                             <button type="submit" class="btn btn-primary">Lihat Nilai</button>
+                            @if (request('kelas_id'))
+                                <a href="{{ route('admin.nilai.cetak', ['kelas_id' => request('kelas_id')]) }}"
+                                    target="_blank" class="btn btn-warning">
+                                    <i class="bx bx-printer me-1"></i> Cetak Rekap
+                                </a>
+                            @endif
                         </div>
                     </form>
                 </div>
