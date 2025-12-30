@@ -91,9 +91,9 @@
             </a>
 
             <div class="relative -top-6">
-                <a href="{{ route('siswa.absensi.scan') }}"
+                <a href="{{ route('siswa.absensi.index') }}"
                     class="flex flex-col items-center justify-center w-14 h-14 rounded-full bg-indigo-600 text-white shadow-lg shadow-indigo-200 ring-4 ring-white active:scale-90 transition-transform">
-                    <i class='bx bx-qr-scan text-2xl'></i>
+                    <i class='bx bx-camera text-2xl'></i>
                 </a>
             </div>
 

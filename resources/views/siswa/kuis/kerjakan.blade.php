@@ -159,7 +159,7 @@
     </div>
 
     <!-- Slide-up Question Navigation -->
-    <div id="nav-panel" class="fixed inset-0 z-[60] hidden">
+    <div id="nav-panel" class="fixed inset-0 z-60 hidden">
         <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" onclick="toggleNavPanel()"></div>
         <div
             class="absolute bottom-0 left-0 right-0 bg-white rounded-t-[40px] p-8 space-y-6 animate-in slide-in-from-bottom duration-300">

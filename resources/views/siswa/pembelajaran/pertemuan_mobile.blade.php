@@ -67,7 +67,7 @@
                 <div class="bg-white rounded-3xl p-4 shadow-sm border border-gray-100 space-y-4">
                     <div class="flex items-start gap-4">
                         <div
-                            class="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0
+                            class="w-12 h-12 rounded-2xl flex items-center justify-center shrink-0
                             @if ($materi->tipe_materi == 'video') bg-red-100 text-red-600
                             @elseif($materi->tipe_materi == 'file') bg-orange-100 text-orange-600
                             @elseif($materi->tipe_materi == 'link') bg-blue-100 text-blue-600
@@ -166,7 +166,7 @@
                                 class="w-full bg-transparent border-0 outline-none text-sm px-2 resize-none leading-relaxed min-h-[40px] max-h-[120px]"></textarea>
                         </div>
                         <button type="submit" id="btn-send-diskusi"
-                            class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100 active:scale-95 transition-all flex-shrink-0">
+                            class="w-12 h-12 bg-indigo-600 text-white rounded-2xl flex items-center justify-center shadow-lg shadow-indigo-100 active:scale-95 transition-all shrink-0">
                             <i class='bx bxs-send text-xl'></i>
                         </button>
                     </form>

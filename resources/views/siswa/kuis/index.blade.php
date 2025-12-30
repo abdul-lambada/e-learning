@@ -48,7 +48,7 @@
 
                     <div class="flex items-center gap-3">
                         <div
-                            class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center flex-shrink-0">
+                            class="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
                             <i class='bx bx-notepad text-xl'></i>
                         </div>
                         <div class="min-w-0 pr-12">

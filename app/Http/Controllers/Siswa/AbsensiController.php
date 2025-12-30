@@ -57,12 +57,11 @@ class AbsensiController extends Controller
             'pertemuan_id' => 'required|exists:pertemuan,id',
             'status' => 'required|in:hadir,izin,sakit',
             'keterangan' => 'nullable|string|max:255',
+            'foto_selfie' => 'nullable|string', // Base64 string
         ]);
 
         $pertemuan = Pertemuan::findOrFail($request->pertemuan_id);
 
-        // Validasi: Apakah pertemuan statusnya 'mulai'?
-        // Jika status selesai, mungkin siswa telat atau tidak bisa absen lagi.
         if ($pertemuan->status != 'mulai') {
              return back()->with('error', 'Sesi absensi untuk pertemuan ini sudah ditutup atau belum dibuka.');
         }
@@ -70,11 +69,10 @@ class AbsensiController extends Controller
         /** @var \App\Models\User $user */
         $user = Auth::user();
 
-        // Validasi: Apakah siswa anggota kelas pertemuan ini?
         $isMyClass = $user->kelas()->where('kelas.id', $pertemuan->guruMengajar->kelas_id)->exists();
         if (!$isMyClass) abort(403);
 
-        Absensi::updateOrCreate(
+        $absensi = Absensi::updateOrCreate(
             [
                 'pertemuan_id' => $pertemuan->id,
                 'siswa_id' => $user->id
@@ -82,9 +80,37 @@ class AbsensiController extends Controller
             [
                 'status' => $request->status,
                 'keterangan' => $request->keterangan,
-                'waktu_absen' => now()
+                'waktu_absen' => now(),
+                'ip_address' => $request->ip(),
+                'device_info' => $request->header('User-Agent'),
             ]
         );
+
+        // Handle Selfie Photo
+        if ($request->foto_selfie && strpos($request->foto_selfie, 'data:image') === 0) {
+            try {
+                $img = $request->foto_selfie;
+                $img = str_replace('data:image/png;base64,', '', $img);
+                $img = str_replace(' ', '+', $img);
+                $data = base64_decode($img);
+                
+                $fileName = 'selfie_' . $absensi->id . '_' . time() . '.png';
+                $path = 'absensi/selfie/' . $fileName;
+                
+                \Illuminate\Support\Facades\Storage::disk('public')->put($path, $data);
+
+                \App\Models\FotoAbsensi::create([
+                    'absensi_id' => $absensi->id,
+                    'path_foto' => $path,
+                    'jenis_foto' => 'masuk',
+                    'waktu_foto' => now(),
+                    'ukuran_file' => strlen($data),
+                ]);
+            } catch (\Exception $e) {
+                // Log error but continue
+                \Illuminate\Support\Facades\Log::error('Gagal simpan foto selfie: ' . $e->getMessage());
+            }
+        }
 
         return back()->with('success', 'Absensi berhasil disimpan.');
     }

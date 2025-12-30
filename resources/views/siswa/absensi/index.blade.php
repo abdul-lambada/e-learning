@@ -86,8 +86,9 @@
                                 </div>
                                 <button
                                     onclick="openAbsenModal({{ $pertemuan->id }}, '{{ $pertemuan->guruMengajar->mataPelajaran->nama_mapel }}')"
-                                    class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-100 active:scale-95 transition-all">
-                                    Isi Absen
+                                    class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-100 active:scale-95 transition-all flex items-center gap-2">
+                                    <i class='bx bx-camera text-sm'></i>
+                                    Ambil Foto Selfie
                                 </button>
                             @else
                                 <span class="text-[10px] text-gray-400 font-bold uppercase">Sesi Belum Aktif</span>
@@ -102,59 +103,93 @@
     </div>
 
     <!-- Attendance Modal (Bottom Sheet Style for Mobile) -->
-    <div id="absenModal" class="hidden fixed inset-0 z-70 items-end justify-center bg-black/60 backdrop-blur-[2px]">
-        <div class="bg-white w-full rounded-t-[40px] p-8 space-y-6 animate-in slide-in-from-bottom duration-300">
+    <div id="absenModal"
+        class="hidden fixed inset-0 z-70 items-end justify-center bg-black/60 backdrop-blur-[2px] overflow-y-auto">
+        <div class="bg-white w-full max-w-lg rounded-t-[40px] p-8 space-y-6 animate-in slide-in-from-bottom duration-300">
             <div class="w-12 h-1.5 bg-gray-200 rounded-full mx-auto mb-2"></div>
 
             <div class="text-center space-y-2">
-                <h3 class="text-xl font-bold text-gray-900">Isi Kehadiran</h3>
-                <p id="modalSubjectName" class="text-sm text-gray-500 font-medium"></p>
+                <h3 class="text-xl font-black text-gray-900 leading-tight">Presensi Mandiri</h3>
+                <p id="modalSubjectName" class="text-[10px] text-indigo-600 font-bold uppercase tracking-widest"></p>
             </div>
 
-            <form action="{{ route('siswa.absensi.store') }}" method="POST" class="space-y-6">
+            <!-- Selfie Preview -->
+            <div
+                class="relative w-full aspect-4/3 bg-slate-900 rounded-3xl overflow-hidden border-4 border-white shadow-xl shadow-indigo-100 group">
+                <video id="video" class="w-full h-full object-cover -scale-x-100" autoplay playsinline></video>
+                <canvas id="canvas" class="hidden w-full h-full object-cover -scale-x-100"></canvas>
+                <img id="selfie-preview" class="hidden w-full h-full object-cover -scale-x-100" src="">
+
+                <div id="camera-overlay" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+                    <div class="w-48 h-64 border-2 border-white/30 rounded-full"></div>
+                </div>
+
+                <div class="absolute bottom-4 left-0 right-0 flex justify-center px-4">
+                    <button type="button" id="btn-capture" onclick="captureSelfie()"
+                        class="px-6 py-3 bg-white/20 backdrop-blur-md border border-white/30 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all flex items-center gap-2">
+                        <i class='bx bx-camera text-xl'></i>
+                        Ambil Foto
+                    </button>
+                    <button type="button" id="btn-retake" onclick="resetCamera()"
+                        class="hidden px-6 py-3 bg-white text-indigo-600 rounded-2xl text-[10px] font-black uppercase tracking-widest active:scale-95 transition-all items-center gap-2">
+                        <i class='bx bx-refresh text-xl'></i>
+                        Ulangi
+                    </button>
+                </div>
+            </div>
+
+            <form action="{{ route('siswa.absensi.store') }}" method="POST" class="space-y-6" id="form-absen">
                 @csrf
                 <input type="hidden" name="pertemuan_id" id="modalPertemuanId">
+                <input type="hidden" name="foto_selfie" id="inputFotoSelfie">
 
-                <div class="grid grid-cols-3 gap-3">
-                    <label class="relative group cursor-pointer">
-                        <input type="radio" name="status" value="hadir" checked class="peer hidden">
-                        <div
-                            class="p-4 border-2 border-gray-100 rounded-2xl flex flex-col items-center gap-2 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 transition-all">
-                            <i class='bx bx-check-circle text-2xl text-gray-400 peer-checked:text-indigo-600'></i>
-                            <span class="text-[10px] font-bold text-gray-600">HADIR</span>
-                        </div>
-                    </label>
-                    <label class="relative group cursor-pointer">
-                        <input type="radio" name="status" value="izin" class="peer hidden">
-                        <div
-                            class="p-4 border-2 border-gray-100 rounded-2xl flex flex-col items-center gap-2 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
-                            <i class='bx bx-info-circle text-2xl text-gray-400 peer-checked:text-blue-500'></i>
-                            <span class="text-[10px] font-bold text-gray-600">IZIN</span>
-                        </div>
-                    </label>
-                    <label class="relative group cursor-pointer">
-                        <input type="radio" name="status" value="sakit" class="peer hidden">
-                        <div
-                            class="p-4 border-2 border-gray-100 rounded-2xl flex flex-col items-center gap-2 peer-checked:border-orange-500 peer-checked:bg-orange-50 transition-all">
-                            <i class='bx bx-plus-medical text-2xl text-gray-400 peer-checked:text-orange-500'></i>
-                            <span class="text-[10px] font-bold text-gray-600">SAKIT</span>
-                        </div>
-                    </label>
+                <div class="space-y-3">
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] pl-1">Status
+                        Kehadiran</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <label class="relative group cursor-pointer">
+                            <input type="radio" name="status" value="hadir" checked class="peer hidden"
+                                onchange="toggleKeterangan(false)">
+                            <div
+                                class="py-4 border-2 border-gray-100 rounded-2xl flex flex-col items-center gap-2 peer-checked:border-indigo-600 peer-checked:bg-indigo-50 transition-all">
+                                <i class='bx bxs-check-circle text-2xl text-gray-300 peer-checked:text-indigo-600'></i>
+                                <span class="text-[9px] font-black text-gray-500 peer-checked:text-indigo-600">HADIR</span>
+                            </div>
+                        </label>
+                        <label class="relative group cursor-pointer">
+                            <input type="radio" name="status" value="izin" class="peer hidden"
+                                onchange="toggleKeterangan(true)">
+                            <div
+                                class="py-4 border-2 border-gray-100 rounded-2xl flex flex-col items-center gap-2 peer-checked:border-blue-500 peer-checked:bg-blue-50 transition-all">
+                                <i class='bx bxs-info-circle text-2xl text-gray-300 peer-checked:text-blue-500'></i>
+                                <span class="text-[9px] font-black text-gray-500 peer-checked:text-blue-500">IZIN</span>
+                            </div>
+                        </label>
+                        <label class="relative group cursor-pointer">
+                            <input type="radio" name="status" value="sakit" class="peer hidden"
+                                onchange="toggleKeterangan(true)">
+                            <div
+                                class="py-4 border-2 border-gray-100 rounded-2xl flex flex-col items-center gap-2 peer-checked:border-orange-500 peer-checked:bg-orange-50 transition-all">
+                                <i class='bx bxs-plus-medical text-2xl text-gray-300 peer-checked:text-orange-500'></i>
+                                <span class="text-[9px] font-black text-gray-500 peer-checked:text-orange-500">SAKIT</span>
+                            </div>
+                        </label>
+                    </div>
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest pl-1">Keterangan
-                        (Opsional)</label>
-                    <textarea name="keterangan" rows="2" placeholder="Alasan izin atau sakit..."
-                        class="w-full bg-gray-50 rounded-2xl p-4 border border-gray-100 text-sm focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"></textarea>
+                <div id="ket-container" class="space-y-2 hidden animate-in slide-in-from-top-2 duration-300">
+                    <label class="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] pl-1">Alasan /
+                        Keterangan</label>
+                    <textarea name="keterangan" rows="2" placeholder="Tuliskan alasan izin/sakit..."
+                        class="w-full bg-gray-50 rounded-2xl p-4 border border-gray-100 text-xs font-bold focus:bg-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"></textarea>
                 </div>
 
-                <div class="flex gap-3">
+                <div class="flex gap-3 pt-2">
                     <button type="button" onclick="closeAbsenModal()"
-                        class="flex-1 py-4 text-gray-500 font-bold text-sm">Batal</button>
-                    <button type="submit"
-                        class="flex-2 bg-indigo-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-indigo-100 active:scale-95 transition-all">
-                        Kirim Kehadiran
+                        class="flex-1 py-4 text-gray-400 font-extrabold text-[10px] uppercase tracking-widest">Batal</button>
+                    <button type="submit" id="btn-submit"
+                        class="flex-2 bg-indigo-600 text-white py-4 rounded-2xl font-black text-[10px] uppercase tracking-[0.2em] shadow-xl shadow-indigo-100 active:scale-95 transition-all">
+                        Kirim Absensi
                     </button>
                 </div>
             </form>
@@ -162,21 +197,92 @@
     </div>
 
     <script>
+        let stream = null;
+        const video = document.getElementById('video');
+        const canvas = document.getElementById('canvas');
+        const preview = document.getElementById('selfie-preview');
+        const inputStore = document.getElementById('inputFotoSelfie');
+
         function openAbsenModal(id, name) {
             document.getElementById('modalPertemuanId').value = id;
             document.getElementById('modalSubjectName').innerText = name;
             const modal = document.getElementById('absenModal');
             modal.classList.remove('hidden');
             modal.classList.add('flex');
+            startCamera();
+        }
+
+        async function startCamera() {
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: "user"
+                    },
+                    audio: false
+                });
+                video.srcObject = stream;
+            } catch (err) {
+                console.error("Error accessing camera:", err);
+                showToast("Izin kamera diperlukan untuk presensi mandiri.", "error");
+            }
+        }
+
+        function captureSelfie() {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+            const dataUrl = canvas.toDataURL('image/png');
+            inputStore.value = dataUrl;
+
+            preview.src = dataUrl;
+            preview.classList.remove('hidden');
+            video.classList.add('hidden');
+            document.getElementById('camera-overlay').classList.add('hidden');
+
+            document.getElementById('btn-capture').classList.add('hidden');
+            document.getElementById('btn-retake').classList.remove('hidden');
+            document.getElementById('btn-retake').classList.add('flex');
+        }
+
+        function resetCamera() {
+            preview.classList.add('hidden');
+            video.classList.remove('hidden');
+            document.getElementById('camera-overlay').classList.remove('hidden');
+            document.getElementById('btn-capture').classList.remove('hidden');
+            document.getElementById('btn-retake').classList.add('hidden');
+            document.getElementById('btn-retake').classList.remove('flex');
+            inputStore.value = '';
         }
 
         function closeAbsenModal() {
             const modal = document.getElementById('absenModal');
             modal.classList.add('hidden');
             modal.classList.remove('flex');
+
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+            }
+            resetCamera();
         }
 
-        // Close modal when clicking outside
+        function toggleKeterangan(show) {
+            const container = document.getElementById('ket-container');
+            if (show) container.classList.remove('hidden');
+            else container.classList.add('hidden');
+        }
+
+        document.getElementById('form-absen').addEventListener('submit', function(e) {
+            if (!inputStore.value) {
+                const status = document.querySelector('input[name="status"]:checked').value;
+                if (status === 'hadir') {
+                    e.preventDefault();
+                    showToast("Silakan ambil foto selfie terlebih dahulu!", "warning");
+                }
+            }
+        });
+
         document.getElementById('absenModal').addEventListener('click', function(e) {
             if (e.target === this) closeAbsenModal();
         });

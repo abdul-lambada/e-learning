@@ -6,9 +6,9 @@
     <div class="space-y-6 pb-20 mt-4">
         <!-- Header -->
         <div class="text-center space-y-2">
-            <h2 class="text-2xl font-bold text-gray-900">Scan QR Code</h2>
-            <p class="text-xs text-gray-500 font-medium px-8">Arahkan kamera HP kamu ke QR Code yang ditampilkan oleh Guru di
-                depan kelas.</p>
+            <h2 class="text-2xl font-bold text-gray-900">Presensi Selfie</h2>
+            <p class="text-xs text-gray-500 font-medium px-8">Silakan menuju menu Absensi dan pilih pertemuan untuk mengambil
+                foto selfie kehadiran.</p>
         </div>
 
         <!-- Scanner Container -->
@@ -37,11 +37,11 @@
         </div>
 
         <div class="flex justify-center pt-4">
-            <button id="btn-toggle-camera" onclick="restartScanner()"
-                class="flex items-center gap-2 px-6 py-3 bg-white border border-gray-100 rounded-2xl text-xs font-bold text-gray-600 shadow-sm active:scale-95 transition-all">
-                <i class='bx bx-refresh text-xl'></i>
-                Ulangi Scan
-            </button>
+            <a href="{{ route('siswa.absensi.index') }}"
+                class="flex items-center gap-2 px-6 py-3 bg-indigo-600 text-white rounded-2xl text-xs font-bold shadow-lg shadow-indigo-100 active:scale-95 transition-all">
+                <i class='bx bx-arrow-back text-xl'></i>
+                Kembali ke Absensi
+            </a>
         </div>
     </div>
 
