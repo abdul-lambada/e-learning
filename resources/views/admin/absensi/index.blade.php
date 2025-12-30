@@ -45,8 +45,8 @@
                             @forelse($absensi as $a)
                                 <tr>
                                     <td><strong>{{ $a->siswa->nama_lengkap ?? '-' }}</strong></td>
-                                    <td>{{ $a->guruMengajar->kelas->nama_kelas ?? '-' }}</td>
-                                    <td>{{ $a->guruMengajar->mataPelajaran->nama_mapel ?? '-' }}</td>
+                                    <td>{{ $a->pertemuan->guruMengajar->kelas->nama_kelas ?? '-' }}</td>
+                                    <td>{{ $a->pertemuan->guruMengajar->mataPelajaran->nama_mapel ?? '-' }}</td>
                                     <td>Pertemuan {{ $a->pertemuan->pertemuan_ke ?? '-' }}</td>
                                     <td>
                                         <span

@@ -12,10 +12,10 @@ class AbsensiController extends Controller
     public function index(Request $request)
     {
         $kelas = Kelas::all();
-        $query = Absensi::with(['siswa', 'guruMengajar.mataPelajaran', 'guruMengajar.kelas', 'pertemuan']);
+        $query = Absensi::with(['siswa', 'pertemuan.guruMengajar.mataPelajaran', 'pertemuan.guruMengajar.kelas']);
 
         if ($request->filled('kelas_id')) {
-            $query->whereHas('guruMengajar', function($q) use ($request) {
+            $query->whereHas('pertemuan.guruMengajar', function($q) use ($request) {
                 $q->where('kelas_id', $request->kelas_id);
             });
         }
