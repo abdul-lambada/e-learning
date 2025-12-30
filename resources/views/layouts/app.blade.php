@@ -79,7 +79,7 @@
                 <div class="menu-inner-shadow"></div>
 
                 <ul class="menu-inner py-1">
-                    @if (auth()->user()->role === 'admin')
+                    @if (auth()->user()->peran === 'admin')
                         <!-- Dashboard -->
                         <li class="menu-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                             <a href="{{ route('admin.dashboard') }}" class="menu-link">
@@ -227,27 +227,24 @@
                         </li>
 
                         <!-- System -->
+                        <!-- System -->
                         <li class="menu-header small text-uppercase"><span class="menu-header-text">System</span></li>
 
-                        @can('lihat audit log')
-                            <li class="menu-item {{ request()->routeIs('admin.audit-log.*') ? 'active' : '' }}">
-                                <a href="{{ route('admin.audit-log.index') }}" class="menu-link">
-                                    <i class="menu-icon tf-icons bx bx-history"></i>
-                                    <div>Audit Log</div>
-                                </a>
-                            </li>
-                        @endcan
+                        <li class="menu-item {{ request()->routeIs('admin.audit-log.*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.audit-log.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-history"></i>
+                                <div>Audit Log</div>
+                            </a>
+                        </li>
 
-                        @can('kelola pengaturan')
-                            <li
-                                class="menu-item {{ request()->routeIs('admin.pengaturan-aplikasi.index') ? 'active' : '' }}">
-                                <a href="{{ route('admin.pengaturan-aplikasi.index') }}" class="menu-link">
-                                    <i class="menu-icon tf-icons bx bx-cog"></i>
-                                    <div>Identitas Sekolah</div>
-                                </a>
-                            </li>
-                        @endcan
-                    @elseif(auth()->user()->role === 'guru')
+                        <li
+                            class="menu-item {{ request()->routeIs('admin.pengaturan-sekolah.index') ? 'active' : '' }}">
+                            <a href="{{ route('admin.pengaturan-sekolah.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-cog"></i>
+                                <div>Identitas Sekolah</div>
+                            </a>
+                        </li>
+                    @elseif(auth()->user()->peran === 'guru')
                         <!-- Dashboard -->
                         <li class="menu-item {{ request()->routeIs('guru.dashboard') ? 'active' : '' }}">
                             <a href="{{ route('guru.dashboard') }}" class="menu-link">
@@ -344,7 +341,7 @@
                                 </a>
                             </li>
                         @endcan
-                    @elseif(auth()->user()->role === 'siswa')
+                    @elseif(auth()->user()->peran === 'siswa')
                         <!-- Dashboard -->
                         <li class="menu-item {{ request()->routeIs('siswa.dashboard') ? 'active' : '' }}">
                             <a href="{{ route('siswa.dashboard') }}" class="menu-link">
@@ -455,8 +452,9 @@
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
                                     data-bs-toggle="dropdown">
                                     <div class="avatar avatar-online">
-                                        <img src="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}" alt
-                                            class="w-px-40 h-auto rounded-circle" />
+                                        <img src="{{ auth()->user()->foto_profil ? Storage::url(auth()->user()->foto_profil) : asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}"
+                                            alt class="w-px-40 h-auto rounded-circle"
+                                            style="object-fit: cover; aspect-ratio: 1/1;" />
                                     </div>
                                 </a>
                                 <ul class="dropdown-menu dropdown-menu-end">
@@ -465,15 +463,16 @@
                                             <div class="d-flex">
                                                 <div class="flex-shrink-0 me-3">
                                                     <div class="avatar avatar-online">
-                                                        <img src="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}"
-                                                            alt class="w-px-40 h-auto rounded-circle" />
+                                                        <img src="{{ auth()->user()->foto_profil ? Storage::url(auth()->user()->foto_profil) : asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}"
+                                                            alt class="w-px-40 h-auto rounded-circle"
+                                                            style="object-fit: cover; aspect-ratio: 1/1;" />
                                                     </div>
                                                 </div>
                                                 <div class="flex-grow-1">
                                                     <span
                                                         class="fw-semibold d-block">{{ auth()->user()->nama_lengkap }}</span>
                                                     <small
-                                                        class="text-muted">{{ ucfirst(auth()->user()->role) }}</small>
+                                                        class="text-muted">{{ ucfirst(auth()->user()->peran) }}</small>
                                                 </div>
                                             </div>
                                         </a>
@@ -487,23 +486,24 @@
                                             <span class="align-middle">Profil Saya</span>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a class="dropdown-item" href="{{ route('profile.index') }}">
-                                            <i class="bx bx-cog me-2"></i>
-                                            <span class="align-middle">Pengaturan</span>
-                                        </a>
-                                    </li>
+                                    @if (auth()->user()->peran === 'admin')
+                                        <li>
+                                            <a class="dropdown-item"
+                                                href="{{ route('admin.pengaturan-sekolah.index') }}">
+                                                <i class="bx bx-cog me-2"></i>
+                                                <span class="align-middle">Pengaturan Sekolah</span>
+                                            </a>
+                                        </li>
+                                    @endif
                                     <li>
                                         <div class="dropdown-divider"></div>
                                     </li>
                                     <li>
-                                        <form action="{{ route('logout') }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="dropdown-item">
-                                                <i class="bx bx-power-off me-2"></i>
-                                                <span class="align-middle">Logout</span>
-                                            </button>
-                                        </form>
+                                        <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal"
+                                            data-bs-target="#logoutModal">
+                                            <i class="bx bx-power-off me-2"></i>
+                                            <span class="align-middle">Logout</span>
+                                        </a>
                                     </li>
                                 </ul>
                             </li>
@@ -575,6 +575,29 @@
 
     <!-- Dynamic Delete Modal -->
     @include('partials.delete-modal-dynamic')
+
+    <!-- Logout Confirmation Modal -->
+    <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="logoutModalLabel">Konfirmasi Logout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin keluar dari aplikasi?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Batal</button>
+                    <form action="{{ route('logout') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Ya, Logout</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     @stack('modals')
 </body>
 
