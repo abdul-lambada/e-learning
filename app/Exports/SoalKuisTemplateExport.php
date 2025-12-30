@@ -13,7 +13,6 @@ class SoalKuisTemplateExport implements FromCollection, WithHeadings, WithStyles
     {
         return collect([
             [
-                '1',
                 'pilihan_ganda',
                 'Berapa hasil dari 2 + 2?',
                 '4',
@@ -26,7 +25,6 @@ class SoalKuisTemplateExport implements FromCollection, WithHeadings, WithStyles
                 'Penjumlahan sederhana.'
             ],
             [
-                '2',
                 'essay',
                 'Jelaskan apa yang dimaksud dengan fotosintesis!',
                 '',
@@ -44,7 +42,6 @@ class SoalKuisTemplateExport implements FromCollection, WithHeadings, WithStyles
     public function headings(): array
     {
         return [
-            'Nomor Soal',
             'Tipe Soal',
             'Pertanyaan',
             'Pilihan A',

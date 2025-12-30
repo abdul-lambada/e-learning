@@ -24,7 +24,7 @@ class SoalKuisImport implements ToModel, WithHeadingRow, WithValidation
 
         return new SoalKuis([
             'kuis_id'      => $this->kuis_id,
-            'nomor_soal'   => $row['nomor_soal'] ?? $this->lastNo,
+            'nomor_soal'   => $this->lastNo,
             'tipe_soal'    => strtolower($row['tipe_soal']),
             'pertanyaan'   => $row['pertanyaan'],
             'pilihan_a'    => $row['pilihan_a'] ?? null,
