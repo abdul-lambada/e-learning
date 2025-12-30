@@ -14,10 +14,8 @@ class PendahuluanController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('permission:lihat pendahuluan')->only(['index', 'show']);
-        $this->middleware('permission:tambah pendahuluan')->only(['create', 'store']);
-        $this->middleware('permission:ubah pendahuluan')->only(['edit', 'update']);
-        $this->middleware('permission:hapus pendahuluan')->only(['destroy']);
+        $this->middleware('permission:lihat materi')->only(['index', 'show']);
+        $this->middleware('permission:kelola materi')->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
 
     /**

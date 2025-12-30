@@ -85,8 +85,8 @@
                         </a>
                     </li>
 
-                    <!-- Kegiatan Mengajar -->
-                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Kegiatan Mengajar</span>
+                    <!-- Pembelajaran -->
+                    <li class="menu-header small text-uppercase"><span class="menu-header-text">Pembelajaran</span>
                     </li>
 
                     @can('lihat jadwal')
@@ -101,7 +101,7 @@
                     @can('kelola materi')
                         <li
                             class="menu-item {{ request()->routeIs('guru.materi.*') || request()->routeIs('guru.pendahuluan.*') ? 'active' : '' }}">
-                            <a href="{{ route('guru.jadwal.index') }}" class="menu-link">
+                            <a href="{{ route('guru.pendahuluan.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-book-content"></i>
                                 <div>Materi & Pendahuluan</div>
                             </a>
@@ -112,7 +112,16 @@
                         <li class="menu-item {{ request()->routeIs('guru.tugas.*') ? 'active' : '' }}">
                             <a href="{{ route('guru.tugas.index') }}" class="menu-link">
                                 <i class="menu-icon tf-icons bx bx-task"></i>
-                                <div>Tugas</div>
+                                <div>Tugas Siswa</div>
+                            </a>
+                        </li>
+                    @endcan
+
+                    @can('kelola absensi')
+                        <li class="menu-item {{ request()->routeIs('guru.absensi.verifikasi.index') ? 'active' : '' }}">
+                            <a href="{{ route('guru.absensi.verifikasi.index') }}" class="menu-link">
+                                <i class="menu-icon tf-icons bx bx-user-check"></i>
+                                <div>Verifikasi Absensi</div>
                             </a>
                         </li>
                     @endcan
