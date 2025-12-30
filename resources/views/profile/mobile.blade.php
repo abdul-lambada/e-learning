@@ -41,7 +41,7 @@
 
                 <div class="relative inline-block group">
                     <img id="uploadedAvatar"
-                        src="{{ $user->foto_profil ? Storage::url($user->foto_profil) : asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}"
+                        src="{{ $user->foto_profil ? Storage::url($user->foto_profil) : 'https://ui-avatars.com/api/?name=' . urlencode($user->nama_lengkap) . '&color=7F9CF5&background=EBF4FF' }}"
                         class="w-24 h-24 rounded-3xl object-cover border-4 border-white shadow-md mx-auto" alt="Avatar">
                     <label for="upload"
                         class="absolute bottom-0 right-[-10px] w-8 h-8 bg-indigo-600 text-white rounded-lg flex items-center justify-center shadow-lg cursor-pointer active:scale-90 transition-transform">
