@@ -1,4 +1,4 @@
-@extends('layouts.siswa')
+@extends('layouts.app')
 
 @section('title', 'Pendahuluan - ' . $jadwal->mataPelajaran->nama_mapel)
 

@@ -1,4 +1,4 @@
-@extends('layouts.guru')
+@extends('layouts.app')
 @section('title', 'Kelola Pendahuluan - ' . $mataPelajaran->nama_mapel)
 
 @section('content')

@@ -233,7 +233,7 @@
                             <!-- User -->
                             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
-                                    data-bs-toggle="dropdown">
+                                    data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
                                     <div class="avatar avatar-online">
                                         <img src="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}" alt
                                             class="w-px-40 h-auto rounded-circle" />
@@ -340,24 +340,11 @@
     <!-- Main JS -->
     <script src="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/js/main.js') }}"></script>
 
+
+
     @stack('scripts')
 
     <!-- Initialize Bootstrap Dropdowns with Error Handling -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof bootstrap !== 'undefined') {
-                var dropdownElementList = [].slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
-                dropdownElementList.forEach(function(dropdownToggleEl) {
-                    try {
-                        new bootstrap.Dropdown(dropdownToggleEl);
-                    } catch (e) {
-                        console.error('Dropdown init error:', e);
-                    }
-                });
-            }
-        });
-    </script>
-
     <!-- Dynamic Delete Modal -->
     @include('partials.delete-modal-dynamic')
     @stack('modals')

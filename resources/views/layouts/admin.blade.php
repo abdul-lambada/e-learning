@@ -317,6 +317,7 @@
                                 </ul>
                             </li>
                             <!--/ User -->
+                            <!--/ User -->
                         </ul>
                     </div>
                 </nav>
@@ -367,24 +368,21 @@
     <!-- Main JS -->
     <script src="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/js/main.js') }}"></script>
 
+
+
     @stack('scripts')
 
-    <!-- Initialize Bootstrap Dropdowns with Error Handling -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            if (typeof bootstrap !== 'undefined') {
-                var dropdownElementList = [].slice.call(document.querySelectorAll('[data-bs-toggle="dropdown"]'));
-                dropdownElementList.forEach(function(dropdownToggleEl) {
-                    try {
-                        new bootstrap.Dropdown(dropdownToggleEl);
-                    } catch (e) {
-                        console.error('Dropdown init error:', e);
-                    }
-                });
-            }
+            var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+            var dropdownList = dropdownElementList.map(function(dropdownToggleEl) {
+                return new bootstrap.Dropdown(dropdownToggleEl)
+            });
         });
     </script>
 
+
+    <!-- Initialize Bootstrap Dropdowns with Error Handling -->
     <!-- Dynamic Delete Modal -->
     @include('partials.delete-modal-dynamic')
     @stack('modals')

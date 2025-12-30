@@ -1,4 +1,4 @@
-@extends('layouts.guru')
+@extends('layouts.app')
 @section('title', 'Pendahuluan Mata Pelajaran')
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
