@@ -74,4 +74,32 @@ class Pertemuan extends Model
     {
         return $query->where('status', $status);
     }
+
+    /**
+     * Update statuses based on current time
+     */
+    public static function updateStatuses()
+    {
+        $now = now();
+        $today = $now->toDateString();
+        $currentTime = $now->toTimeString();
+
+        // 1. Dijadwalkan -> Berlangsung
+        self::where('status', 'dijadwalkan')
+            ->whereDate('tanggal_pertemuan', $today)
+            ->whereTime('jam_mulai', '<=', $currentTime)
+            ->whereTime('jam_selesai', '>', $currentTime)
+            ->update(['status' => 'berlangsung']);
+
+        // 2. Berlangsung/Dijadwalkan -> Selesai
+        self::whereIn('status', ['dijadwalkan', 'berlangsung'])
+            ->where(function ($query) use ($today, $currentTime) {
+                $query->whereDate('tanggal_pertemuan', '<', $today)
+                    ->orWhere(function ($q) use ($today, $currentTime) {
+                        $q->whereDate('tanggal_pertemuan', $today)
+                            ->whereTime('jam_selesai', '<=', $currentTime);
+                    });
+            })
+            ->update(['status' => 'selesai']);
+    }
 }
