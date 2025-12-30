@@ -47,6 +47,8 @@
     <!-- Helpers -->
     <script src="/sneat-1.0.0/sneat-1.0.0/assets/vendor/js/helpers.js"></script>
     <script src="/sneat-1.0.0/sneat-1.0.0/assets/js/config.js"></script>
+
+    {!! htmlScriptTagJsApi() !!}
 </head>
 
 <body>
@@ -121,6 +123,15 @@
                                     <label class="form-check-label" for="remember"> Ingat Saya </label>
                                 </div>
                             </div>
+
+                            @if (config('recaptcha.api_site_key'))
+                                <div class="mb-3">
+                                    {!! htmlFormSnippet() !!}
+                                    @error('g-recaptcha-response')
+                                        <div class="text-danger mt-1"><small>{{ $message }}</small></div>
+                                    @enderror
+                                </div>
+                            @endif
 
                             <div class="mb-3">
                                 <button class="btn btn-primary d-grid w-100" type="submit">Login</button>

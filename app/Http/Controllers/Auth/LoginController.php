@@ -20,10 +20,18 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
+        $rules = [
             'email' => 'required|email',
             'password' => 'required',
-        ]);
+        ];
+
+        if (config('recaptcha.api_site_key')) {
+            $rules['g-recaptcha-response'] = 'recaptcha';
+        }
+
+        $request->validate($rules);
+
+        $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials, $request->filled('remember'))) {
             $request->session()->regenerate();
