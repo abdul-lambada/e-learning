@@ -155,13 +155,11 @@
                                                     aria-labelledby="materiOpt{{ $materi->id }}">
                                                     <a class="dropdown-item"
                                                         href="{{ route('guru.materi.edit', $materi->id) }}">Edit</a>
-                                                    <form action="{{ route('guru.materi.destroy', $materi->id) }}"
-                                                        method="POST" onsubmit="return confirm('Hapus materi ini?')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="dropdown-item text-danger">Hapus</button>
-                                                    </form>
+                                                    <button type="button" class="dropdown-item text-danger btn-delete"
+                                                        data-url="{{ route('guru.materi.destroy', $materi->id) }}"
+                                                        data-name="{{ $materi->judul_materi }}" data-title="Hapus Materi">
+                                                        Hapus
+                                                    </button>
                                                 </div>
                                             </div>
                                         @endcan
@@ -241,14 +239,11 @@
                                                 @can('kelola tugas')
                                                     <a class="dropdown-item"
                                                         href="{{ route('guru.tugas.edit', $tugas->id) }}">Edit</a>
-                                                    <form action="{{ route('guru.tugas.destroy', $tugas->id) }}"
-                                                        method="POST"
-                                                        onsubmit="return confirm('Hapus tugas ini? Semua pengumpulan siswa akan terhapus.')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="dropdown-item text-danger">Hapus</button>
-                                                    </form>
+                                                    <button type="button" class="dropdown-item text-danger btn-delete"
+                                                        data-url="{{ route('guru.tugas.destroy', $tugas->id) }}"
+                                                        data-name="{{ $tugas->judul_tugas }}" data-title="Hapus Tugas">
+                                                        Hapus
+                                                    </button>
                                                 @endcan
                                             </div>
                                         </div>
@@ -316,13 +311,11 @@
                                                 @can('kelola kuis')
                                                     <a class="dropdown-item"
                                                         href="{{ route('guru.kuis.edit', $kuis->id) }}">Edit Pengaturan</a>
-                                                    <form action="{{ route('guru.kuis.destroy', $kuis->id) }}" method="POST"
-                                                        onsubmit="return confirm('Hapus kuis ini? Semua soal dan nilai siswa akan hilang.')">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit"
-                                                            class="dropdown-item text-danger">Hapus</button>
-                                                    </form>
+                                                    <button type="button" class="dropdown-item text-danger btn-delete"
+                                                        data-url="{{ route('guru.kuis.destroy', $kuis->id) }}"
+                                                        data-name="{{ $kuis->judul_kuis }}" data-title="Hapus Kuis">
+                                                        Hapus
+                                                    </button>
                                                 @endcan
                                             </div>
                                         </div>

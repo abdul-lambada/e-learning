@@ -102,15 +102,12 @@
                                                 class="btn btn-sm btn-outline-warning">
                                                 <i class="bx bx-edit me-1"></i> Edit
                                             </a>
-                                            <form action="{{ route('guru.pertemuan.destroy', $pertemuan->id) }}"
-                                                method="POST" class="d-inline"
-                                                onsubmit="return confirm('Yakin ingin menghapus pertemuan ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger">
-                                                    <i class="bx bx-trash me-1"></i> Hapus
-                                                </button>
-                                            </form>
+                                            <button type="button" class="btn btn-sm btn-outline-danger btn-delete"
+                                                data-url="{{ route('guru.pertemuan.destroy', $pertemuan->id) }}"
+                                                data-name="Pertemuan {{ $pertemuan->pertemuan_ke }}: {{ $pertemuan->judul_pertemuan }}"
+                                                data-title="Hapus Pertemuan">
+                                                <i class="bx bx-trash me-1"></i> Hapus
+                                            </button>
                                         </div>
                                     </div>
                                 </div>

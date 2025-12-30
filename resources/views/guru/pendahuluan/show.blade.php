@@ -66,13 +66,11 @@
                                                 class="btn btn-sm btn-icon btn-outline-warning">
                                                 <i class="bx bx-edit"></i>
                                             </a>
-                                            <form action="{{ route('guru.pendahuluan.destroy', $item->id) }}" method="POST"
-                                                class="d-inline" onsubmit="return confirm('Hapus item ini?')">
-                                                @csrf @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-icon btn-outline-danger">
-                                                    <i class="bx bx-trash"></i>
-                                                </button>
-                                            </form>
+                                            <button type="button" class="btn btn-sm btn-icon btn-outline-danger btn-delete"
+                                                data-url="{{ route('guru.pendahuluan.destroy', $item->id) }}"
+                                                data-name="{{ $item->judul }}" data-title="Hapus Item Pendahuluan">
+                                                <i class="bx bx-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 @empty

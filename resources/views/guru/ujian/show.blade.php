@@ -79,13 +79,13 @@
                                                     <a href="{{ route('guru.ujian.soal.edit', [$ujian->id, $soal->id]) }}"
                                                         class="btn btn-sm btn-icon btn-outline-secondary"><i
                                                             class="bx bx-edit"></i></a>
-                                                    <form
-                                                        action="{{ route('guru.ujian.soal.destroy', [$ujian->id, $soal->id]) }}"
-                                                        method="POST" onsubmit="return confirm('Hapus soal ini?')">
-                                                        @csrf @method('DELETE')
-                                                        <button type="submit" class="btn btn-sm btn-icon btn-outline-danger"><i
-                                                                class="bx bx-trash"></i></button>
-                                                    </form>
+                                                    <button type="button"
+                                                        class="btn btn-sm btn-icon btn-outline-danger btn-delete"
+                                                        data-url="{{ route('guru.ujian.soal.destroy', [$ujian->id, $soal->id]) }}"
+                                                        data-name="Soal No. {{ $soal->nomor_soal }}"
+                                                        data-title="Hapus Soal Ujian">
+                                                        <i class="bx bx-trash"></i>
+                                                    </button>
                                                 @endcan
                                             </div>
                                         </div>
@@ -134,14 +134,13 @@
                                                             class="btn btn-xs btn-icon btn-outline-info"
                                                             title="Lihat Hasil"><i class="bx bx-spreadsheet"></i></a>
                                                         @can('kelola ujian')
-                                                            <form
-                                                                action="{{ route('guru.ujian.jadwal.destroy', [$ujian->id, $jadwal->id]) }}"
-                                                                method="POST" onsubmit="return confirm('Hapus jadwal ini?')">
-                                                                @csrf @method('DELETE')
-                                                                <button type="submit"
-                                                                    class="btn btn-xs btn-icon btn-outline-danger"><i
-                                                                        class="bx bx-trash"></i></button>
-                                                            </form>
+                                                            <button type="button"
+                                                                class="btn btn-xs btn-icon btn-outline-danger btn-delete"
+                                                                data-url="{{ route('guru.ujian.jadwal.destroy', [$ujian->id, $jadwal->id]) }}"
+                                                                data-name="Jadwal {{ $jadwal->tanggal_ujian->format('d/m/Y') }}"
+                                                                data-title="Hapus Jadwal Ujian">
+                                                                <i class="bx bx-trash"></i>
+                                                            </button>
                                                         @endcan
                                                     </div>
                                                 </td>

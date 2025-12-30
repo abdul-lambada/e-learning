@@ -87,12 +87,11 @@
                                             @can('kelola kuis')
                                                 <a class="dropdown-item"
                                                     href="{{ route('guru.soal.edit', $soal->id) }}">Edit</a>
-                                                <form action="{{ route('guru.soal.destroy', $soal->id) }}" method="POST"
-                                                    onsubmit="return confirm('Hapus soal ini?')">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="dropdown-item text-danger">Hapus</button>
-                                                </form>
+                                                <button type="button" class="dropdown-item text-danger btn-delete"
+                                                    data-url="{{ route('guru.soal.destroy', $soal->id) }}"
+                                                    data-name="Soal #{{ $soal->nomor_soal }}" data-title="Hapus Soal">
+                                                    Hapus
+                                                </button>
                                             @endcan
                                         </div>
                                     </div>
