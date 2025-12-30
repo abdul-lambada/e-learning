@@ -463,14 +463,14 @@
                                     <li>
                                         <a class="dropdown-item" href="#">
                                             <div class="d-flex">
-                                                <div class="flex-shrink-0 me-3">
+                                                <div class="shrink-0 me-3">
                                                     <div class="avatar avatar-online">
                                                         <img src="{{ auth()->user()->foto_profil ? Storage::url(auth()->user()->foto_profil) : asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}"
                                                             alt class="w-px-40 h-auto rounded-circle"
                                                             style="object-fit: cover; aspect-ratio: 1/1;" />
                                                     </div>
                                                 </div>
-                                                <div class="flex-grow-1">
+                                                <div class="grow">
                                                     <span
                                                         class="fw-semibold d-block">{{ auth()->user()->nama_lengkap }}</span>
                                                     <small
@@ -518,7 +518,7 @@
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <!-- Content -->
-                    <div class="container-xxl flex-grow-1 container-p-y">
+                    <div class="container-xxl grow container-p-y">
                         @yield('content')
                     </div>
                     <!-- / Content -->

@@ -430,7 +430,7 @@
                                         </span>
                                     </div>
                                     <div class="d-flex gap-2">
-                                        <div class="flex-grow-1">
+                                        <div class="grow">
                                             <textarea class="form-control" name="pesan" id="diskusi-pesan" rows="2"
                                                 placeholder="Tulis pertanyaan atau tanggapan Anda..."></textarea>
                                         </div>
@@ -487,8 +487,15 @@
                 setInterval(loadDiscussion, 10000);
 
                 function loadDiscussion() {
-                    fetch("{{ route('diskusi.index', $pertemuan->id) }}")
-                        .then(response => response.json())
+                    fetch("{{ route('diskusi.index', $pertemuan->id) }}", {
+                            headers: {
+                                'Accept': 'application/json'
+                            }
+                        })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Failed to load');
+                            return response.json();
+                        })
                         .then(data => {
                             if (data.data.length > 0) {
                                 renderDiscussion(data.data);
@@ -504,7 +511,15 @@
                             }
                             lastFetchTime = new Date();
                         })
-                        .catch(err => console.error('Error loading discussion:', err));
+                        .catch(err => {
+                            console.error('Error loading discussion:', err);
+                            discussionContainer.innerHTML = `
+                                <div class="text-center py-5">
+                                    <i class="bx bx-error text-danger" style="font-size: 3rem;"></i>
+                                    <p class="mt-2 text-danger">Gagal memuat diskusi. Silakan coba lagi nanti.</p>
+                                </div>
+                            `;
+                        });
                 }
 
                 function renderDiscussion(comments) {
@@ -512,7 +527,7 @@
                     comments.forEach(comment => {
                         html += `
                             <div class="d-flex align-items-start mb-4">
-                                <div class="avatar avatar-sm me-3 flex-shrink-0">
+                                <div class="avatar avatar-sm me-3 shrink-0">
                                     <span class="avatar-initial rounded-circle bg-label-${comment.user.peran === 'guru' ? 'primary' : 'info'}">
                                         ${comment.user.nama_lengkap.charAt(0)}
                                     </span>
@@ -533,7 +548,10 @@
                                     <div class="d-flex gap-2">
                                         <button class="btn btn-xs text-primary p-0" onclick="prepareReply(${comment.id}, '${comment.user.nama_lengkap}')">Balas</button>
                                         ${(comment.user_id == {{ Auth::id() }} || {{ Auth::user()->isGuru() ? 'true' : 'false' }}) ?
-                                            `<button class="btn btn-xs text-danger p-0" onclick="deleteComment(${comment.id})">Hapus</button>` : ''}
+                                            `<button type="button" class="btn btn-xs text-danger p-0 btn-delete"
+                                                                        data-url="/diskusi/${comment.id}"
+                                                                        data-name="Pesan dari ${comment.user.nama_lengkap}"
+                                                                        data-title="Hapus Pesan">Hapus</button>` : ''}
                                     </div>
 
                                     <!-- Replies -->
@@ -552,7 +570,7 @@
                     replies.forEach(reply => {
                         html += `
                             <div class="d-flex align-items-start mb-3">
-                                <div class="avatar avatar-xs me-2 flex-shrink-0">
+                                <div class="avatar avatar-xs me-2 shrink-0">
                                     <span class="avatar-initial rounded-circle bg-label-${reply.user.peran === 'guru' ? 'primary' : 'info'}">
                                         ${reply.user.nama_lengkap.charAt(0)}
                                     </span>
@@ -572,7 +590,10 @@
                                     </div>
                                     <div class="d-flex gap-2">
                                         ${(reply.user_id == {{ Auth::id() }} || {{ Auth::user()->isGuru() ? 'true' : 'false' }}) ?
-                                            `<button class="btn btn-xs text-danger p-0" style="font-size: 0.7rem;" onclick="deleteComment(${reply.id})">Hapus</button>` : ''}
+                                            `<button type="button" class="btn btn-xs text-danger p-0 btn-delete"
+                                                                        data-url="/diskusi/${reply.id}"
+                                                                        data-name="Balasan dari ${reply.user.nama_lengkap}"
+                                                                        data-title="Hapus Balasan">Hapus</button>` : ''}
                                     </div>
                                 </div>
                             </div>
@@ -603,23 +624,7 @@
                     replyInfo.classList.add('d-none');
                 }
 
-                window.deleteComment = function(id) {
-                    if (confirm('Hapus pesan ini?')) {
-                        fetch(`/diskusi/${id}`, {
-                                method: 'DELETE',
-                                headers: {
-                                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                                    'Accept': 'application/json'
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(res => {
-                                if (res.success) {
-                                    loadDiscussion();
-                                }
-                            });
-                    }
-                }
+
 
                 formDiskusi.addEventListener('submit', function(e) {
                     e.preventDefault();

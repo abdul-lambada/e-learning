@@ -98,7 +98,11 @@ class DiskusiController extends Controller
 
         $diskusi->delete();
 
-        return response()->json(['success' => true, 'message' => 'Pesan dihapus']);
+        if (request()->ajax() || request()->wantsJson()) {
+            return response()->json(['success' => true, 'message' => 'Pesan dihapus']);
+        }
+
+        return back()->with('success', 'Pesan berhasil dihapus.');
     }
 
     private function checkAccess($pertemuanId)

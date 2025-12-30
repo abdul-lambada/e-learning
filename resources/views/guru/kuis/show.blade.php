@@ -3,7 +3,7 @@
 @section('title', 'Detail Kuis & Soal')
 
 @section('content')
-    <div class="container-xxl flex-grow-1 container-p-y">
+    <div class="container-xxl grow container-p-y">
         <div class="d-flex justify-content-between align-items-center py-3 mb-2">
             <h4 class="fw-bold m-0"><span class="text-muted fw-light">Kuis /</span> {{ $kuis->judul_kuis }}</h4>
             <div>

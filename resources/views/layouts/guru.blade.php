@@ -227,13 +227,13 @@
                                     <li>
                                         <a class="dropdown-item" href="#">
                                             <div class="d-flex">
-                                                <div class="flex-shrink-0 me-3">
+                                                <div class="shrink-0 me-3">
                                                     <div class="avatar avatar-online">
                                                         <img src="{{ asset('sneat-1.0.0/sneat-1.0.0/assets/img/avatars/1.png') }}"
                                                             alt class="w-px-40 h-auto rounded-circle" />
                                                     </div>
                                                 </div>
-                                                <div class="flex-grow-1">
+                                                <div class="grow">
                                                     <span
                                                         class="fw-semibold d-block">{{ auth()->user()->nama_lengkap }}</span>
                                                     <small class="text-muted">Guru</small>
@@ -279,7 +279,7 @@
                 <!-- Content wrapper -->
                 <div class="content-wrapper">
                     <!-- Content -->
-                    <div class="container-xxl flex-grow-1 container-p-y">
+                    <div class="container-xxl grow container-p-y">
                         @yield('content')
                     </div>
                     <!-- / Content -->
