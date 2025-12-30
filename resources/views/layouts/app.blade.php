@@ -269,7 +269,7 @@
                         @endcan
 
                         @can('lihat jadwal')
-                            <li class="menu-item {{ request()->routeIs('guru.jadwal.index') ? 'active' : '' }}">
+                            <li class="menu-item {{ request()->routeIs('guru.jadwal.*') ? 'active' : '' }}">
                                 <a href="{{ route('guru.jadwal.index') }}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-calendar"></i>
                                     <div>Jadwal Mengajar</div>
@@ -287,8 +287,7 @@
                         @endcan
 
                         @can('kelola absensi')
-                            <li
-                                class="menu-item {{ request()->routeIs('guru.absensi.verifikasi.index') ? 'active' : '' }}">
+                            <li class="menu-item {{ request()->routeIs('guru.absensi.verifikasi.*') ? 'active' : '' }}">
                                 <a href="{{ route('guru.absensi.verifikasi.index') }}" class="menu-link">
                                     <i class="menu-icon tf-icons bx bx-user-check"></i>
                                     <div>Verifikasi Absensi</div>
