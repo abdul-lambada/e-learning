@@ -59,17 +59,20 @@
                     <div class="card-body">
                         <!-- Logo -->
                         <div class="app-brand justify-content-center mb-4">
-                            <a href="/" class="app-brand-link gap-2">
+                            <a href="/"
+                                class="app-brand-link gap-2 d-flex flex-column align-items-center text-center">
                                 <span class="app-brand-logo demo">
                                     @if ($logo)
                                         <img src="{{ $logo }}" alt="Logo"
-                                            style="height: 40px; width: auto;">
+                                            style="max-width: 80px; max-height: 80px; width: auto; height: auto;">
                                     @else
                                         <i class='bx bxs-graduation' style="font-size: 40px; color: #696cff;"></i>
                                     @endif
                                 </span>
-                                <span
-                                    class="app-brand-text demo text-body fw-bolder fs-3">{{ $settings->nama_sekolah }}</span>
+                                <span class="app-brand-text demo text-uppercase fw-bolder mt-2 text-wrap"
+                                    style="font-size: 1.2rem; line-height: 1.3; color: #566a7f;">
+                                    {{ $settings->nama_sekolah }}
+                                </span>
                             </a>
                         </div>
                         <!-- /Logo -->
