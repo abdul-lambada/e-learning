@@ -14,6 +14,22 @@
             </button>
         </div>
 
+        @if (session('success'))
+            <div
+                class="bg-green-50 text-green-600 p-4 rounded-2xl border border-green-100 text-xs font-bold animate-in fade-in zoom-in duration-300">
+                <i class='bx bx-check-circle me-1'></i> {{ session('success') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div
+                class="bg-red-50 text-red-600 p-4 rounded-2xl border border-red-100 text-xs font-bold space-y-1 animate-in fade-in zoom-in duration-300">
+                @foreach ($errors->all() as $error)
+                    <p><i class='bx bx-error-circle me-1'></i> {{ $error }}</p>
+                @endforeach
+            </div>
+        @endif
+
         <!-- Profile Card -->
         <div class="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 relative overflow-hidden">
             <div class="absolute top-0 right-0 w-32 h-32 bg-indigo-50 rounded-full -mr-16 -mt-16 z-0"></div>

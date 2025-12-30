@@ -31,15 +31,15 @@ class ProfileController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'nama_lengkap' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
+            'nama_lengkap' => ['nullable', 'string', 'max:255'],
+            'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
             'no_telepon' => ['nullable', 'string', 'max:15'],
             'alamat' => ['nullable', 'string'],
             'foto_profil' => ['nullable', 'image', 'mimes:jpeg,png,jpg', 'max:2048'],
         ]);
 
-        $user->nama_lengkap = $request->nama_lengkap;
-        $user->email = $request->email;
+        if ($request->has('nama_lengkap')) $user->nama_lengkap = $request->nama_lengkap;
+        if ($request->has('email')) $user->email = $request->email;
         $user->no_telepon = $request->no_telepon;
         $user->alamat = $request->alamat;
 

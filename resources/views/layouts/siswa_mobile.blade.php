@@ -39,7 +39,7 @@
         class="bg-white/80 backdrop-blur-md sticky top-0 z-50 px-4 py-3 border-b border-gray-100 flex justify-between items-center shadow-sm">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl overflow-hidden border border-gray-200">
-                <img src="{{ Auth::user()->profile_photo_url ? Storage::url(Auth::user()->profile_photo_url) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->nama_lengkap) . '&color=7F9CF5&background=EBF4FF' }}"
+                <img src="{{ Auth::user()->foto_profil ? Storage::url(Auth::user()->foto_profil) : 'https://ui-avatars.com/api/?name=' . urlencode(Auth::user()->nama_lengkap) . '&color=7F9CF5&background=EBF4FF' }}"
                     class="w-full h-full object-cover">
             </div>
             <div>
